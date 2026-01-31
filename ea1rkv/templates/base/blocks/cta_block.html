@@ -1,0 +1,6 @@
+{% load wagtailcore_tags %}
+
+<div class="bg-primary text-white rounded p-5 my-4 text-center">
+    <div class="lead mb-3">{{ self.text|richtext }}</div>
+    <a href="{{ self.button_url }}" class="btn btn-light btn-lg">{{ self.button_text }}</a>
+</div>

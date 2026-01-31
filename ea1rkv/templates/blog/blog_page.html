@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}blog-page{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<article class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {# Header #}
+            <header class="mb-4">
+                <h1 class="mb-3">{{ self.title }}</h1>
+                <div class="d-flex align-items-center text-muted mb-3">
+                    <i class="bi bi-calendar3 me-1"></i>
+                    <time datetime="{{ self.date|date:'Y-m-d' }}">{{ self.date|date:"d F Y" }}</time>
+                    {% if self.author_name %}
+                        <span class="mx-2">|</span>
+                        <i class="bi bi-person me-1"></i>{{ self.author_name }}
+                    {% endif %}
+                </div>
+
+                {% if self.categories.all %}
+                <div class="mb-3">
+                    {% for category in self.categories.all %}
+                        <span class="badge bg-primary">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <p class="lead">{{ self.intro }}</p>
+            </header>
+
+            {# Header image #}
+            {% if self.header_image %}
+                <figure class="mb-4">
+                    {% image self.header_image width-800 class="img-fluid rounded" %}
+                </figure>
+            {% endif %}
+
+            {# Body content #}
+            <div class="article-body">
+                {% include_block self.body %}
+            </div>
+
+            {# Tags #}
+            {% if self.tags.all %}
+            <div class="mt-4 pt-3 border-top">
+                <i class="bi bi-tags me-1"></i>
+                {% for tag in self.tags.all %}
+                    <a href="{{ self.get_parent.url }}?tag={{ tag }}" class="badge bg-light text-dark text-decoration-none">
+                        #{{ tag }}
+                    </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {# Navigation #}
+            <nav class="mt-4 pt-3 border-top">
+                <div class="d-flex justify-content-between">
+                    {% if self.get_prev_siblings.live.first %}
+                        <a href="{% pageurl self.get_prev_siblings.live.first %}" class="text-decoration-none">
+                            &laquo; {{ self.get_prev_siblings.live.first.title|truncatewords:5 }}
+                        </a>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+
+                    {% if self.get_next_siblings.live.first %}
+                        <a href="{% pageurl self.get_next_siblings.live.first %}" class="text-decoration-none">
+                            {{ self.get_next_siblings.live.first.title|truncatewords:5 }} &raquo;
+                        </a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </div>
+</article>
+{% endblock %}

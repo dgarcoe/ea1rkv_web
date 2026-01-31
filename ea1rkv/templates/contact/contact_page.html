@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags navigation_tags i18n widget_tweaks %}
+
+{% block body_class %}contact-page{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-3">{{ self.title }}</h1>
+
+            {% if self.intro %}
+                <div class="mb-4">{{ self.intro|richtext }}</div>
+            {% endif %}
+
+            <div class="row g-5">
+                {# Contact Form #}
+                <div class="{% if self.map_embed_url %}col-lg-7{% else %}col-12{% endif %}">
+                    <form action="{% pageurl self %}" method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                    <span class="text-danger">*</span>
+                                {% endif %}
+                            </label>
+
+                            {% if field.field.widget.input_type == 'textarea' or 'Textarea' in field.field.widget.__class__.__name__ %}
+                                {% render_field field class="form-control" rows="5" %}
+                            {% elif field.field.widget.input_type == 'select' or 'Select' in field.field.widget.__class__.__name__ %}
+                                {% render_field field class="form-select" %}
+                            {% elif field.field.widget.input_type == 'checkbox' %}
+                                <div class="form-check">
+                                    {% render_field field class="form-check-input" %}
+                                </div>
+                            {% else %}
+                                {% render_field field class="form-control" %}
+                            {% endif %}
+
+                            {% if field.help_text %}
+                                <div class="form-text">{{ field.help_text }}</div>
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in field.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>{% trans "Send Message" %}
+                        </button>
+                    </form>
+                </div>
+
+                {# Map #}
+                {% if self.map_embed_url %}
+                <div class="col-lg-5">
+                    <div class="ratio ratio-1x1 rounded overflow-hidden shadow-sm">
+                        <iframe src="{{ self.map_embed_url }}"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="{% trans 'Club location map' %}">
+                        </iframe>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

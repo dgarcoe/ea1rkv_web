@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install ruff djlint
+
+      - name: Run ruff check
+        run: ruff check .
+
+      - name: Run ruff format check
+        run: ruff format --check .
+
+      - name: Lint templates
+        run: djlint ea1rkv/templates/ --lint
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: ea1rkv_test
+          POSTGRES_USER: ea1rkv
+          POSTGRES_PASSWORD: ea1rkv
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libjpeg-dev zlib1g-dev libwebp-dev
+
+      - name: Install Python dependencies
+        run: pip install -r requirements/dev.txt
+
+      - name: Run tests
+        env:
+          DJANGO_SETTINGS_MODULE: ea1rkv.settings.dev
+          POSTGRES_DB: ea1rkv_test
+          POSTGRES_USER: ea1rkv
+          POSTGRES_PASSWORD: ea1rkv
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+        run: pytest --tb=short -q

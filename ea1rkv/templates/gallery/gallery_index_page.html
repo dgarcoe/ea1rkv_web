@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}gallery-index{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-3">{{ self.title }}</h1>
+
+    {% if self.intro %}
+        <p class="lead text-muted mb-4">{{ self.intro }}</p>
+    {% endif %}
+
+    <div class="row g-4">
+        {% for gallery in galleries %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm gallery-card">
+                <a href="{% pageurl gallery %}" class="text-decoration-none">
+                    {% if gallery.cover_image %}
+                        {% image gallery.cover_image fill-400x300 class="card-img-top" %}
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center"
+                             style="height: 200px;">
+                            <i class="bi bi-images text-white fs-1"></i>
+                        </div>
+                    {% endif %}
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% pageurl gallery %}" class="text-decoration-none text-dark">{{ gallery.title }}</a>
+                    </h5>
+                    <p class="card-text small text-muted">
+                        <i class="bi bi-calendar3 me-1"></i>{{ gallery.date|date:"d M Y" }}
+                        <span class="ms-2">
+                            <i class="bi bi-images me-1"></i>{{ gallery.gallery_images.count }} {% trans "photos" %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted text-center py-5">{% trans "No galleries yet." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

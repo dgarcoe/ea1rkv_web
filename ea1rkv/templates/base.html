@@ -1,0 +1,53 @@
+{% load static wagtailcore_tags wagtailuserbar navigation_tags i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% elif self.title %}{{ self.title }} | EA1RKV{% endif %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ self.search_description|default:'EA1RKV - Vigo Val Miñor Radioclub' }}{% endblock %}">
+
+    {# Bootstrap 5 CSS #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YcnS/1WR6zNyY4ZiFqBFGqQXM/0T0DTB6Vd"
+          crossorigin="anonymous">
+
+    {# Bootstrap Icons #}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    {# Custom CSS #}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    {% wagtailuserbar %}
+
+    {# Header / Navigation #}
+    {% include "includes/header.html" %}
+
+    {# Breadcrumbs #}
+    {% block breadcrumbs %}{% endblock %}
+
+    {# Main Content #}
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    {# Footer #}
+    {% include "includes/footer.html" %}
+
+    {# Bootstrap 5 JS #}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+
+    {# Custom JS #}
+    <script src="{% static 'js/main.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

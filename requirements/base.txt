@@ -1,0 +1,6 @@
+# Core dependencies for EA1RKV Wagtail site
+wagtail>=6.3,<7.0
+Django>=5.1,<5.2
+psycopg[binary]>=3.1,<4.0
+Pillow>=10.4,<11.0
+django-widget-tweaks>=1.5,<2.0

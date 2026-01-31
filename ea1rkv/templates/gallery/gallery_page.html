@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}gallery-page{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .gallery-grid .gallery-item img {
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+    .gallery-grid .gallery-item img:hover {
+        transform: scale(1.03);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-2">{{ self.title }}</h1>
+    <p class="text-muted mb-4">
+        <i class="bi bi-calendar3 me-1"></i>{{ self.date|date:"d F Y" }}
+        <span class="ms-2">
+            <i class="bi bi-images me-1"></i>{{ self.gallery_images.count }} {% trans "photos" %}
+        </span>
+    </p>
+
+    {% if self.description %}
+        <div class="mb-4">{{ self.description|richtext }}</div>
+    {% endif %}
+
+    {# Photo Grid #}
+    <div class="gallery-grid row g-3">
+        {% for item in self.gallery_images.all %}
+        <div class="col-6 col-md-4 col-lg-3 gallery-item">
+            {% image item.image fill-400x400 class="img-fluid rounded shadow-sm" loading="lazy" %}
+            {% if item.caption %}
+                <p class="small text-muted mt-1">{{ item.caption }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{# Lightbox modal #}
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark border-0">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img src="" class="img-fluid" id="galleryModalImage" alt="">
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <p class="text-light small mb-0" id="galleryModalCaption"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = new bootstrap.Modal(document.getElementById('galleryModal'));
+    const modalImage = document.getElementById('galleryModalImage');
+    const modalCaption = document.getElementById('galleryModalCaption');
+
+    document.querySelectorAll('.gallery-item img').forEach(function(img) {
+        img.addEventListener('click', function() {
+            modalImage.src = this.src.replace(/fill-\d+x\d+/, 'width-1200');
+            modalCaption.textContent = this.closest('.gallery-item').querySelector('.text-muted')?.textContent || '';
+            modal.show();
+        });
+    });
+});
+</script>
+{% endblock %}

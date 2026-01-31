@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% for post in posts %}
+<div class="card mb-3 shadow-sm">
+    <div class="row g-0">
+        {% if post.header_image %}
+        <div class="col-4">
+            {% image post.header_image fill-200x150 class="img-fluid rounded-start" %}
+        </div>
+        {% endif %}
+        <div class="{% if post.header_image %}col-8{% else %}col-12{% endif %}">
+            <div class="card-body">
+                <h6 class="card-title mb-1">
+                    <a href="{% pageurl post %}" class="text-decoration-none text-dark">{{ post.title }}</a>
+                </h6>
+                <p class="card-text small text-muted">{{ post.date|date:"d M Y" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

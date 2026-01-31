@@ -1,0 +1,6 @@
+<blockquote class="blockquote border-start border-primary border-4 ps-4 my-4">
+    <p class="mb-0">{{ self.text }}</p>
+    {% if self.author %}
+        <footer class="blockquote-footer mt-2">{{ self.author }}</footer>
+    {% endif %}
+</blockquote>

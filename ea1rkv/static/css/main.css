@@ -1,0 +1,111 @@
+/* ==========================================================================
+   EA1RKV - Vigo Val Miñor Radioclub - Main Stylesheet
+   ========================================================================== */
+
+/* --- CSS Variables --- */
+:root {
+    --ea1rkv-primary: #0f3460;
+    --ea1rkv-secondary: #16213e;
+    --ea1rkv-accent: #e94560;
+    --ea1rkv-dark: #1a1a2e;
+    --ea1rkv-light: #f8f9fa;
+}
+
+/* --- Global Overrides --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, sans-serif;
+    color: #333;
+}
+
+a {
+    color: var(--ea1rkv-primary);
+}
+
+a:hover {
+    color: var(--ea1rkv-accent);
+}
+
+/* --- Navbar --- */
+.navbar-dark .navbar-brand strong {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
+
+.navbar-dark {
+    background-color: var(--ea1rkv-dark) !important;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    background-color: var(--ea1rkv-dark);
+}
+
+.hero-section h1 {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Cards --- */
+.card {
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+}
+
+/* --- Article Body --- */
+.article-body h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.article-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+}
+
+.article-body blockquote {
+    border-left: 4px solid var(--ea1rkv-primary);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    color: #555;
+}
+
+/* --- Gallery --- */
+.gallery-card:hover .card-img-top {
+    opacity: 0.9;
+}
+
+/* --- Footer --- */
+footer a:hover {
+    color: var(--ea1rkv-accent) !important;
+}
+
+/* --- Responsive Utilities --- */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 40vh !important;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+}
+
+/* --- Print Styles --- */
+@media print {
+    .navbar,
+    footer,
+    .breadcrumb {
+        display: none !important;
+    }
+
+    .hero-section {
+        min-height: auto !important;
+        padding: 1rem 0;
+    }
+}

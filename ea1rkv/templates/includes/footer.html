@@ -1,0 +1,92 @@
+{% load static wagtailcore_tags i18n wagtail_settings_tags %}
+
+{% get_settings use_default_site=True %}
+
+<footer class="bg-dark text-light py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            {# Club Info #}
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-3">EA1RKV</h5>
+                <p class="mb-1">Vigo Val Miñor Radioclub</p>
+                {% if settings.base.RadioclubSettings.address %}
+                    <p class="small text-secondary">{{ settings.base.RadioclubSettings.address }}</p>
+                {% endif %}
+                {% if settings.base.RadioclubSettings.email %}
+                    <p class="mb-1">
+                        <i class="bi bi-envelope me-1"></i>
+                        <a href="mailto:{{ settings.base.RadioclubSettings.email }}" class="text-light text-decoration-none">
+                            {{ settings.base.RadioclubSettings.email }}
+                        </a>
+                    </p>
+                {% endif %}
+                {% if settings.base.RadioclubSettings.locator %}
+                    <p class="small text-secondary">
+                        <i class="bi bi-geo-alt me-1"></i>
+                        {% trans "Grid Locator" %}: {{ settings.base.RadioclubSettings.locator }}
+                    </p>
+                {% endif %}
+            </div>
+
+            {# Quick Links #}
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h5 class="text-uppercase mb-3">{% trans "Quick Links" %}</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-1"><a href="/blog/" class="text-secondary text-decoration-none">{% trans "News" %}</a></li>
+                    <li class="mb-1"><a href="/events/" class="text-secondary text-decoration-none">{% trans "Events" %}</a></li>
+                    <li class="mb-1"><a href="/gallery/" class="text-secondary text-decoration-none">{% trans "Gallery" %}</a></li>
+                    <li class="mb-1"><a href="/members/" class="text-secondary text-decoration-none">{% trans "Members" %}</a></li>
+                    <li class="mb-1"><a href="/contact/" class="text-secondary text-decoration-none">{% trans "Contact" %}</a></li>
+                    <li class="mb-1"><a href="/feed/" class="text-secondary text-decoration-none"><i class="bi bi-rss me-1"></i>RSS Feed</a></li>
+                </ul>
+            </div>
+
+            {# Social Media #}
+            <div class="col-lg-4">
+                <h5 class="text-uppercase mb-3">{% trans "Follow Us" %}</h5>
+                <div class="d-flex gap-3 fs-4">
+                    {% if settings.base.SocialMediaSettings.facebook %}
+                        <a href="{{ settings.base.SocialMediaSettings.facebook }}" class="text-light" target="_blank" rel="noopener" aria-label="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.base.SocialMediaSettings.twitter %}
+                        <a href="{{ settings.base.SocialMediaSettings.twitter }}" class="text-light" target="_blank" rel="noopener" aria-label="Twitter/X">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.base.SocialMediaSettings.instagram %}
+                        <a href="{{ settings.base.SocialMediaSettings.instagram }}" class="text-light" target="_blank" rel="noopener" aria-label="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.base.SocialMediaSettings.youtube %}
+                        <a href="{{ settings.base.SocialMediaSettings.youtube }}" class="text-light" target="_blank" rel="noopener" aria-label="YouTube">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                    {% endif %}
+                    {% if settings.base.SocialMediaSettings.qrz %}
+                        <a href="{{ settings.base.SocialMediaSettings.qrz }}" class="text-light" target="_blank" rel="noopener" aria-label="QRZ.com">
+                            <i class="bi bi-broadcast"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary my-4">
+
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="small text-secondary mb-0">
+                    &copy; {% now "Y" %} EA1RKV - Vigo Val Miñor Radioclub. {% trans "All rights reserved." %}
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p class="small text-secondary mb-0">
+                    {% trans "Powered by" %} <a href="https://wagtail.org" class="text-secondary" target="_blank" rel="noopener">Wagtail</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

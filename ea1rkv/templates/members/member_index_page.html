@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}members-page{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-3">{{ self.title }}</h1>
+
+    {% if self.intro %}
+        <p class="lead text-muted mb-4">{{ self.intro }}</p>
+    {% endif %}
+
+    {# Board Members #}
+    {% with board_members=self.members.all %}
+    {% for member in board_members %}
+        {% if member.is_board_member and forloop.first %}
+        <h2 class="mb-4 mt-4">{% trans "Board of Directors" %}</h2>
+        <div class="row g-4 mb-5">
+        {% endif %}
+
+        {% if member.is_board_member %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm text-center">
+                {% if member.photo %}
+                    {% image member.photo fill-250x250 class="card-img-top" %}
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-person-circle text-secondary" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title mb-1">{{ member.callsign }}</h5>
+                    <p class="mb-1">{{ member.name }}</p>
+                    {% if member.role %}
+                        <span class="badge bg-primary">{{ member.role }}</span>
+                    {% endif %}
+                    {% if member.bio %}
+                        <p class="card-text small text-muted mt-2">{{ member.bio|truncatewords:20 }}</p>
+                    {% endif %}
+                    {% if member.qrz_url %}
+                        <a href="{{ member.qrz_url }}" class="btn btn-sm btn-outline-secondary mt-2"
+                           target="_blank" rel="noopener">
+                            <i class="bi bi-broadcast me-1"></i>QRZ
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if member.is_board_member and forloop.last %}
+        </div>
+        {% endif %}
+    {% endfor %}
+    {% endwith %}
+
+    {# Regular Members #}
+    <h2 class="mb-4">{% trans "Members" %}</h2>
+    <div class="row g-4">
+        {% for member in self.members.all %}
+        {% if not member.is_board_member %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm text-center">
+                {% if member.photo %}
+                    {% image member.photo fill-250x250 class="card-img-top" %}
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                        <i class="bi bi-person-circle text-secondary" style="font-size: 4rem;"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title mb-1">{{ member.callsign }}</h5>
+                    <p class="mb-0">{{ member.name }}</p>
+                    {% if member.qrz_url %}
+                        <a href="{{ member.qrz_url }}" class="btn btn-sm btn-outline-secondary mt-2"
+                           target="_blank" rel="noopener">
+                            <i class="bi bi-broadcast me-1"></i>QRZ
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

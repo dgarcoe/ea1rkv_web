@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}event-page{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<article class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <header class="mb-4">
+                <span class="badge bg-secondary mb-2">{{ self.get_event_type_display }}</span>
+                {% if self.is_past %}
+                    <span class="badge bg-warning text-dark mb-2">{% trans "Past Event" %}</span>
+                {% endif %}
+                <h1 class="mb-3">{{ self.title }}</h1>
+                <p class="lead">{{ self.intro }}</p>
+            </header>
+
+            {# Event details card #}
+            <div class="card bg-light mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <p class="mb-1"><strong><i class="bi bi-calendar3 me-1"></i> {% trans "Date" %}:</strong></p>
+                            <p class="mb-0">
+                                {{ self.start_date|date:"d F Y" }}
+                                {% if self.is_multiday %} - {{ self.end_date|date:"d F Y" }}{% endif %}
+                            </p>
+                        </div>
+                        {% if self.start_time %}
+                        <div class="col-sm-6">
+                            <p class="mb-1"><strong><i class="bi bi-clock me-1"></i> {% trans "Time" %}:</strong></p>
+                            <p class="mb-0">
+                                {{ self.start_time|time:"H:i" }}
+                                {% if self.end_time %} - {{ self.end_time|time:"H:i" }}{% endif %}
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% if self.location %}
+                        <div class="col-sm-6">
+                            <p class="mb-1"><strong><i class="bi bi-geo-alt me-1"></i> {% trans "Location" %}:</strong></p>
+                            <p class="mb-0">{{ self.location }}{% if self.locator %} ({{ self.locator }}){% endif %}</p>
+                        </div>
+                        {% endif %}
+                        {% if self.frequency %}
+                        <div class="col-sm-6">
+                            <p class="mb-1"><strong><i class="bi bi-broadcast me-1"></i> {% trans "Frequency" %}:</strong></p>
+                            <p class="mb-0">{{ self.frequency }}{% if self.mode %} / {{ self.mode }}{% endif %}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# Header image #}
+            {% if self.header_image %}
+                <figure class="mb-4">
+                    {% image self.header_image width-800 class="img-fluid rounded" %}
+                </figure>
+            {% endif %}
+
+            {# Body content #}
+            {% if self.body %}
+            <div class="article-body">
+                {% include_block self.body %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endblock %}

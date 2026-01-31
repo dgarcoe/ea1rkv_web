@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}blog-index{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-3">{{ self.title }}</h1>
+
+    {% if self.intro %}
+        <p class="lead text-muted mb-4">{{ self.intro }}</p>
+    {% endif %}
+
+    {# Category filters #}
+    {% if categories %}
+    <div class="mb-4">
+        <a href="{% pageurl self %}" class="btn btn-sm {% if not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+            {% trans "All" %}
+        </a>
+        {% for category in categories %}
+            <a href="{% pageurl self %}?category={{ category.slug }}"
+               class="btn btn-sm {% if request.GET.category == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {# Posts #}
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                {% if post.header_image %}
+                    <a href="{% pageurl post %}">
+                        {% image post.header_image fill-400x250 class="card-img-top" %}
+                    </a>
+                {% endif %}
+                <div class="card-body">
+                    <p class="card-text small text-muted mb-1">
+                        <i class="bi bi-calendar3 me-1"></i>{{ post.date|date:"d M Y" }}
+                        {% if post.author_name %}
+                            <span class="ms-2"><i class="bi bi-person me-1"></i>{{ post.author_name }}</span>
+                        {% endif %}
+                    </p>
+                    <h5 class="card-title">
+                        <a href="{% pageurl post %}" class="text-decoration-none text-dark">{{ post.title }}</a>
+                    </h5>
+                    <p class="card-text">{{ post.intro|truncatewords:30 }}</p>
+                    {% if post.tags.all %}
+                    <div class="mt-2">
+                        {% for tag in post.tags.all %}
+                            <a href="{% pageurl self %}?tag={{ tag }}" class="badge bg-light text-dark text-decoration-none">
+                                #{{ tag }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{% pageurl post %}" class="btn btn-sm btn-outline-primary">{% trans "Read more" %}</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted text-center py-5">{% trans "No posts found." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

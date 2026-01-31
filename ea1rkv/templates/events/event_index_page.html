@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block body_class %}events-index{% endblock %}
+
+{% block breadcrumbs %}
+    {% breadcrumbs self %}
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-3">{{ self.title }}</h1>
+
+    {% if self.intro %}
+        <p class="lead text-muted mb-4">{{ self.intro }}</p>
+    {% endif %}
+
+    {# Toggle past/upcoming #}
+    <div class="mb-4 d-flex gap-2 flex-wrap">
+        <a href="{% pageurl self %}"
+           class="btn btn-sm {% if not show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            {% trans "Upcoming" %}
+        </a>
+        <a href="{% pageurl self %}?past=true"
+           class="btn btn-sm {% if show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            {% trans "Past Events" %}
+        </a>
+
+        <span class="border-start mx-2"></span>
+
+        {% for value, label in event_types %}
+            <a href="{% pageurl self %}?{% if show_past %}past=true&{% endif %}type={{ value }}"
+               class="btn btn-sm {% if request.GET.type == value %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+                {{ label }}
+            </a>
+        {% endfor %}
+    </div>
+
+    {# Events list #}
+    <div class="row g-4">
+        {% for event in events %}
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="bg-primary text-white rounded p-2 text-center me-3 flex-shrink-0" style="min-width: 70px;">
+                            <div class="fw-bold fs-3 lh-1">{{ event.start_date|date:"d" }}</div>
+                            <div class="small text-uppercase">{{ event.start_date|date:"M Y" }}</div>
+                        </div>
+                        <div>
+                            <span class="badge bg-secondary mb-1">{{ event.get_event_type_display }}</span>
+                            <h5 class="mb-1">
+                                <a href="{% pageurl event %}" class="text-decoration-none text-dark">{{ event.title }}</a>
+                            </h5>
+                            <p class="mb-2 small">{{ event.intro|truncatewords:25 }}</p>
+                            <div class="small text-muted">
+                                {% if event.location %}
+                                    <span class="me-3"><i class="bi bi-geo-alt me-1"></i>{{ event.location }}</span>
+                                {% endif %}
+                                {% if event.start_time %}
+                                    <span><i class="bi bi-clock me-1"></i>{{ event.start_time|time:"H:i" }}</span>
+                                {% endif %}
+                            </div>
+                            {% if event.frequency %}
+                                <div class="small text-muted mt-1">
+                                    <i class="bi bi-broadcast me-1"></i>{{ event.frequency }}
+                                    {% if event.mode %} ({{ event.mode }}){% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-muted text-center py-5">
+                {% if show_past %}
+                    {% trans "No past events found." %}
+                {% else %}
+                    {% trans "No upcoming events." %}
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

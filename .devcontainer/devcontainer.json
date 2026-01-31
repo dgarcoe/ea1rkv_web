@@ -1,0 +1,44 @@
+{
+    "name": "EA1RKV Wagtail Development",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "web",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.linting.enabled": true,
+                "python.formatting.provider": "none",
+                "editor.formatOnSave": true,
+                "editor.rulers": [88],
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.codeActionsOnSave": {
+                        "source.fixAll": "explicit",
+                        "source.organizeImports": "explicit"
+                    }
+                },
+                "[html]": {
+                    "editor.defaultFormatter": "monosans.djlint"
+                },
+                "files.associations": {
+                    "*.html": "django-html"
+                }
+            },
+            "extensions": [
+                "ms-python.python",
+                "charliermarsh.ruff",
+                "batisteo.vscode-django",
+                "monosans.djlint",
+                "ms-python.debugpy",
+                "eamodio.gitlens"
+            ]
+        }
+    },
+    "forwardPorts": [8000, 5432],
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    }
+}
