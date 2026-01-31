@@ -29,6 +29,7 @@ services:
     tty: true
     environment:
       - DJANGO_SETTINGS_MODULE=ea1rkv.settings.dev
+      - USE_POSTGRES=1
       - POSTGRES_DB=ea1rkv
       - POSTGRES_USER=ea1rkv
       - POSTGRES_PASSWORD=ea1rkv

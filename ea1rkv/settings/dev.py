@@ -5,6 +5,9 @@ These settings are NOT suitable for production.
 See production.py for production configuration.
 """
 
+import os
+from pathlib import Path
+
 from .base import *  # noqa: F401, F403
 
 DEBUG = True
@@ -12,6 +15,20 @@ DEBUG = True
 SECRET_KEY = "django-insecure-dev-only-ea1rkv-change-me-in-production"
 
 ALLOWED_HOSTS = ["*"]
+
+# --- Database ---
+# Use SQLite by default for development (works in Codespaces without Docker).
+# Set USE_POSTGRES=1 to use PostgreSQL instead (e.g. in docker-compose).
+
+if os.environ.get("USE_POSTGRES"):
+    pass  # Keep the PostgreSQL config from base.py
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": Path(BASE_DIR) / "db.sqlite3",  # noqa: F405
+        }
+    }
 
 # --- Email ---
 
