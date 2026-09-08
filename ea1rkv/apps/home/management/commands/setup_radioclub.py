@@ -6,6 +6,7 @@ from wagtail.models import Locale, Page, Site
 from ea1rkv.apps.base.models import RadioclubSettings
 from ea1rkv.apps.blog.models import BlogIndexPage
 from ea1rkv.apps.home.models import HomePage
+from ea1rkv.apps.home.default_content import CLUB_DESCRIPTION
 
 
 class Command(BaseCommand):
@@ -35,13 +36,7 @@ class Command(BaseCommand):
                 hero_title="EA1RKV",
                 hero_subtitle="Unión de Radioafeccionados de Vigo-Val Miñor",
                 about_title="La radio nos reúne",
-                content=(
-                    "<p>Somos la Unión de Radioafeccionados de Vigo-Val Miñor, "
-                    "con indicativo EA1RKV. Un punto de encuentro para quienes "
-                    "compartimos el interés por la radioafición.</p>"
-                    "<p>En esta web podrás conocer el radioclub y seguir nuestro blog: "
-                    "noticias, experiencias y artículos sobre radio.</p>"
-                ),
+                content=CLUB_DESCRIPTION,
                 search_description="Conoce EA1RKV, la Unión de Radioafeccionados de Vigo-Val Miñor, y sigue nuestro blog de radioafición.",
             ))
             home.save_revision().publish()

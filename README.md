@@ -38,6 +38,8 @@ Abre `http://localhost:8000/` y `/admin/`. El sitio usa el idioma español bajo 
 
 ### Editor de texto enriquecido
 
+La portada incluye una descripción inicial del radioclub, su vocación de aprendizaje y lo que se encontrará en la web. Puedes reescribirla por completo en **Páginas > Inicio > Presentación del radioclub > Contenido** y pulsar **Publicar**. Al actualizar, solo se sustituye el texto inicial anterior; se respetan las modificaciones editoriales.
+
 Inicio y los artículos tienen un único campo **Contenido**, con barra de formato para títulos, negrita, cursiva, listas, enlaces, imágenes y contenido incrustado. No es necesario añadir bloques o secciones. En Inicio puedes escribir la presentación completa en ese campo.
 
 Para actualizar una instalación existente ejecuta `python manage.py migrate`. La migración convierte la presentación y los bloques anteriores a texto enriquecido, incluidos los borradores y revisiones. Las tarjetas se convierten en contenido consecutivo, y las citas en párrafos; los datos originales se conservan ocultos para recuperación. Esta migración de contenido no admite reversión automática; haz una copia de la base antes de actualizar. La foto la elige y sube el club.
