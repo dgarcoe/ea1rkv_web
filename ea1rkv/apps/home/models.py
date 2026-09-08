@@ -20,13 +20,13 @@ class HomePage(Page):
     )
     hero_subtitle = models.CharField(
         max_length=300,
-        default="Vigo Val Miñor Radioclub",
+        default="Unión de Radioafeccionados de Vigo-Val Miñor",
         help_text="Subtitle displayed below the hero heading",
     )
     hero_cta_text = models.CharField(
         max_length=50,
         blank=True,
-        default="Learn More",
+        default="Conoce el radioclub",
         help_text="Call-to-action button text",
     )
     hero_cta_url = models.CharField(
@@ -44,7 +44,7 @@ class HomePage(Page):
     )
 
     # About section
-    about_title = models.CharField(max_length=200, default="About Our Club")
+    about_title = models.CharField(max_length=200, default="Nuestro radioclub")
     about_text = RichTextField(blank=True)
 
     # Flexible body content
@@ -85,27 +85,14 @@ class HomePage(Page):
         verbose_name = "Home Page"
 
     def get_context(self, request, *args, **kwargs):
+        from ea1rkv.apps.blog.models import BlogIndexPage, BlogPage
+
         context = super().get_context(request, *args, **kwargs)
+        blog = BlogIndexPage.objects.child_of(self).live().public().first()
+        context["blog_index"] = blog
         context["latest_posts"] = (
-            self._get_latest_blog_posts()
-        )
-        context["upcoming_events"] = (
-            self._get_upcoming_events()
+            BlogPage.objects.child_of(blog).live().public()
+            .select_related("header_image").order_by("-date", "-pk")[:3]
+            if blog else BlogPage.objects.none()
         )
         return context
-
-    def _get_latest_blog_posts(self, count=3):
-        from ea1rkv.apps.blog.models import BlogPage
-
-        return BlogPage.objects.live().order_by("-date")[:count]
-
-    def _get_upcoming_events(self, count=3):
-        from django.utils import timezone
-
-        from ea1rkv.apps.events.models import EventPage
-
-        return (
-            EventPage.objects.live()
-            .filter(start_date__gte=timezone.now().date())
-            .order_by("start_date")[:count]
-        )

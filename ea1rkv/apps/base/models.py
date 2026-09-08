@@ -44,7 +44,7 @@ class RadioclubSettings(BaseSiteSetting):
     )
     club_name = models.CharField(
         max_length=200,
-        default="Vigo Val Miñor Radioclub",
+        default="Unión de Radioafeccionados de Vigo-Val Miñor",
     )
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -80,3 +80,4 @@ class RadioclubSettings(BaseSiteSetting):
 
     class Meta:
         verbose_name = "Radioclub Settings"
+

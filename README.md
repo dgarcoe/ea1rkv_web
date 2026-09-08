@@ -2,76 +2,59 @@
 
 Wagtail CMS website for the **EA1RKV - Vigo Val Miñor Radioclub** amateur radio club.
 
-## Features
+## Primera versión: Inicio + Blog
 
-- **Blog** - News, articles, and technical posts with categories and tags
-- **Events** - Contests, field days, meetings, and workshops calendar
-- **Photo Gallery** - Image galleries with lightbox viewer
-- **Members Directory** - Club members with callsigns, roles, and QRZ links
-- **Contact Form** - Configurable form with email notifications
-- **Search** - Full-text search across all content
-- **RSS Feed** - Syndication feed for blog posts
-- **Multilingual** - Spanish, Galician, and English support
-- **SEO** - Built-in Wagtail SEO features and sitemaps
-- **Responsive** - Bootstrap 5 mobile-first design
-- **Radio-specific fields** - Grid locators, frequencies, modes, callsigns
+Web de la **Unión de Radioafeccionados de Vigo-Val Miñor**, indicativo **EA1RKV**.
 
-## Tech Stack
+- Inicio con presentación editable, fotografía opcional y tres últimas publicaciones.
+- Blog con artículos, imágenes, autor/indicativo, categorías, etiquetas y paginación.
+- Administración Wagtail en `/admin/`: borradores, revisiones y publicación.
+- Diseño adaptable a móvil y escritorio, navegación por teclado y textos públicos en español.
+- Las secciones adicionales del proyecto se conservan para ampliaciones. La inicialización solo crea Inicio y Blog; el menú muestra las páginas publicadas marcadas para aparecer en él.
 
-- **Backend**: Django 5.1 + Wagtail 6.3
-- **Database**: PostgreSQL 16
-- **Frontend**: Bootstrap 5 + Bootstrap Icons
-- **Caching**: Redis (production)
-- **Server**: Gunicorn + Nginx (production)
-- **Containerization**: Docker + Docker Compose
-
-## Quick Start (GitHub Codespaces)
-
-1. Click **"Code" > "Codespaces" > "Create codespace on main"** in the GitHub repo
-2. Wait for the container to build and the post-create script to finish
-3. The site will be available at the forwarded port **8000**
-4. Admin panel: `/admin/` (login: `admin` / `admin`)
-
-## Local Development
-
-### Prerequisites
-
-- Docker and Docker Compose
-
-### Setup
+## Puesta en marcha local (Python 3.12)
 
 ```bash
-# Clone the repository
-git clone https://github.com/dgarcoe/ea1rkv_web_example.git
-cd ea1rkv_web_example
-
-# Build and start containers
-make build
-make up
-
-# Run migrations and create superuser
-make migrate
-make createsuperuser
-
-# Open the site
-# http://localhost:8000/
-# http://localhost:8000/admin/
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements/base.txt
+python manage.py migrate
+python manage.py setup_radioclub
+python manage.py createsuperuser
+python manage.py runserver
 ```
 
-### Useful Commands
+Abre `http://localhost:8000/` y `/admin/`. El sitio usa el idioma español bajo `/es/` (la raíz redirige) y SQLite en desarrollo. No necesitas Docker para empezar.
+
+`setup_radioclub` crea la portada y el blog en una base nueva. Se puede repetir sin duplicar páginas ni sobrescribir textos. Si encuentra otra portada personalizada, se detiene con instrucciones; no elimina páginas. No crea noticias ficticias ni inventa datos de contacto.
+
+### Editar y publicar
+
+1. En **Páginas > Inicio**, modifica título, presentación y fotografía opcional. Publica los cambios.
+2. En **Inicio > Blog**, usa **Añadir página > Blog Post**. Rellena título, fecha, resumen y cuerpo; añade una imagen y autor si lo deseas.
+3. Guarda un borrador o pulsa **Publicar**. Las entradas públicas aparecen automáticamente en el blog y en Inicio.
+4. En **Ajustes > Radioclub Settings**, introduce los datos reales de contacto y el nombre del club. Las redes se configuran en **Social Media Settings**.
+5. Las páginas privadas y los borradores no aparecen en los listados públicos ni en el RSS.
+
+### GitHub Codespaces
+
+Abre un Codespace en la rama de esta versión. La configuración instala dependencias, aplica migraciones e inicializa Inicio y Blog. Después ejecuta `python manage.py runserver 0.0.0.0:8000` y abre el puerto 8000. La configuración existente crea `admin` / `admin` para desarrollo; cambia esa contraseña y no la uses en producción.
+
+### Verificación
 
 ```bash
-make help            # Show all available commands
-make up              # Start development server
-make down            # Stop containers
-make logs            # Tail web container logs
-make shell           # Open Django shell
-make migrate         # Run database migrations
-make makemigrations  # Create new migrations
-make test            # Run tests
-make lint            # Run linter
-make format          # Format code
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py test ea1rkv.apps.home
 ```
+
+Se comprueban la inicialización repetible, portada/blog vacíos, publicación y privacidad, paginación, imágenes y acceso al panel.
+
+Esta rama incluye las migraciones iniciales que faltaban en el repositorio. Si ya creaste tablas manualmente en otra instalación, revisa su correspondencia antes de aplicar migraciones; las instrucciones anteriores están verificadas sobre una base vacía.
+
+## Entorno
+
+Se mantiene la configuración Django/Wagtail del repositorio, con PostgreSQL y Docker disponibles para producción. Bootstrap se carga desde CDN. Antes de publicar en Internet, configura dominio, HTTPS, credenciales y copias de seguridad y revisa las versiones soportadas de Django/Wagtail.
 
 ## Production Deployment (VPS with Docker)
 
@@ -160,3 +143,4 @@ After initial setup, configure the site through the Wagtail admin at `/admin/`:
 ## License
 
 This project is for the EA1RKV Radioclub. See repository for license details.
+

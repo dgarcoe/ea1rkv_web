@@ -19,7 +19,7 @@ def main_menu(context, parent=None, calling_page=None):
     if parent is None:
         parent = get_site_root(context)
 
-    menuitems = parent.get_children().live().in_menu()
+    menuitems = parent.get_children().live().public().in_menu()
 
     for menuitem in menuitems:
         menuitem.active = (
@@ -51,3 +51,4 @@ def breadcrumbs(context, calling_page=None):
         "ancestors": ancestors,
         "request": context["request"],
     }
+

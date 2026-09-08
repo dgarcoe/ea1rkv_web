@@ -1,5 +1,6 @@
 """Blog models for EA1RKV website news and articles."""
 
+from django.core.paginator import Paginator
 from django.db import models
 from django.utils import timezone
 
@@ -66,7 +67,9 @@ class BlogIndexPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        posts = BlogPage.objects.child_of(self).live().order_by("-date")
+        posts = (BlogPage.objects.child_of(self).live().public()
+                 .select_related("header_image").prefetch_related("tags")
+                 .order_by("-date", "-pk"))
 
         # Filter by category
         category_slug = request.GET.get("category")
@@ -78,7 +81,10 @@ class BlogIndexPage(Page):
         if tag:
             posts = posts.filter(tags__name=tag)
 
-        context["posts"] = posts
+        context["posts"] = Paginator(posts.distinct(), 9).get_page(request.GET.get("page"))
+        filters = request.GET.copy()
+        filters.pop("page", None)
+        context["pagination_query"] = filters.urlencode()
         context["categories"] = BlogCategory.objects.all()
         return context
 
@@ -139,3 +145,4 @@ class BlogPage(Page):
     class Meta:
         verbose_name = "Blog Post"
         ordering = ["-date"]
+

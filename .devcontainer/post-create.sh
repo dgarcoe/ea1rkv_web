@@ -22,6 +22,7 @@ pip install --no-cache-dir -r requirements/dev.txt
 # --- Django setup ---
 echo "Running migrations..."
 python manage.py migrate --noinput
+python manage.py setup_radioclub
 
 echo "Collecting static files..."
 python manage.py collectstatic --noinput --clear
@@ -44,3 +45,4 @@ echo "  Start the server with: python manage.py runserver 0.0.0.0:8000"
 echo "  Admin panel: http://localhost:8000/admin/"
 echo "  Login:       admin / admin"
 echo ""
+
