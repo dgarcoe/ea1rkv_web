@@ -30,11 +30,17 @@ Abre `http://localhost:8000/` y `/admin/`. El sitio usa el idioma español bajo 
 
 ### Editar y publicar
 
-1. En **Páginas > Inicio**, modifica título, presentación y fotografía opcional. Publica los cambios.
-2. En **Inicio > Blog**, usa **Añadir página > Blog Post**. Rellena título, fecha, resumen y cuerpo; añade una imagen y autor si lo deseas.
+1. En **Páginas > Inicio**, modifica el título y, en **Cabecera > Imagen de cabecera**, sube o selecciona tu foto de Vigo. Se muestra a todo lo ancho detrás del indicativo, con una capa oscura para facilitar la lectura. Puedes sustituirla o quitarla en cualquier momento. Usa **Créditos de la imagen** para el autor, fuente y licencia. Publica los cambios.
+2. En **Inicio > Blog**, usa **Añadir página > Blog Post**. Rellena título, fecha, resumen y **Contenido**; añade una imagen y autor si lo deseas.
 3. Guarda un borrador o pulsa **Publicar**. Las entradas públicas aparecen automáticamente en el blog y en Inicio.
 4. En **Ajustes > Radioclub Settings**, introduce los datos reales de contacto y el nombre del club. Las redes se configuran en **Social Media Settings**.
 5. Las páginas privadas y los borradores no aparecen en los listados públicos ni en el RSS.
+
+### Editor de texto enriquecido
+
+Inicio y los artículos tienen un único campo **Contenido**, con barra de formato para títulos, negrita, cursiva, listas, enlaces, imágenes y contenido incrustado. No es necesario añadir bloques o secciones. En Inicio puedes escribir la presentación completa en ese campo.
+
+Para actualizar una instalación existente ejecuta `python manage.py migrate`. La migración convierte la presentación y los bloques anteriores a texto enriquecido, incluidos los borradores y revisiones. Las tarjetas se convierten en contenido consecutivo, y las citas en párrafos; los datos originales se conservan ocultos para recuperación. Esta migración de contenido no admite reversión automática; haz una copia de la base antes de actualizar. La foto la elige y sube el club.
 
 ### GitHub Codespaces
 

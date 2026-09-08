@@ -2,7 +2,8 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 {% block body_class %}home-page{% endblock %}
 {% block content %}
-<section class="club-hero">
+<section class="club-hero{% if page.hero_image %} club-hero-with-image{% endif %}">
+    {% if page.hero_image %}{% image page.hero_image fill-1920x900 class="club-hero-image" alt="" %}{% endif %}
     <div class="container club-hero-layout">
         <div>
             <p class="eyebrow">RADIOAFICIÓN · VIGO & VAL MIÑOR</p>
@@ -15,16 +16,14 @@
                 {% else %}<a class="btn btn-outline-light" href="#radioclub">Conoce el radioclub</a>{% endif %}
             </div>
         </div>
-        {% if page.hero_image %}
-        <figure class="m-0">{% image page.hero_image fill-900x700 class="club-photo" %}</figure>
-        {% endif %}
     </div>
+    {% if page.hero_image and page.hero_image_credit %}<div class="container club-photo-credit">{{ page.hero_image_credit }}</div>{% endif %}
 </section>
 <section id="radioclub" class="container club-section">
     <div class="row g-4">
         <div class="col-lg-4"><p class="eyebrow">EL RADIOCLUB</p><h2>{{ page.about_title }}</h2></div>
-        <div class="col-lg-8 club-intro">{{ page.about_text|richtext }}
-            {% if page.body %}<div class="article-body mt-4">{% include_block page.body %}</div>{% endif %}
+        <div class="col-lg-8 club-intro">{{ page.content|richtext }}
+
         </div>
     </div>
 </section>

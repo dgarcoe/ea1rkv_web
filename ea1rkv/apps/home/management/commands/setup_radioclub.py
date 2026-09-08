@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 hero_title="EA1RKV",
                 hero_subtitle="Unión de Radioafeccionados de Vigo-Val Miñor",
                 about_title="La radio nos reúne",
-                about_text=(
+                content=(
                     "<p>Somos la Unión de Radioafeccionados de Vigo-Val Miñor, "
                     "con indicativo EA1RKV. Un punto de encuentro para quienes "
                     "compartimos el interés por la radioafición.</p>"

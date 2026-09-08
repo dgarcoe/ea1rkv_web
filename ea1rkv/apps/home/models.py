@@ -40,8 +40,11 @@ class HomePage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Background image for the hero section",
+        verbose_name="Imagen de cabecera",
+        help_text="Sube la fotografía de Vigo que quieras mostrar. Puedes cambiarla en cualquier momento.",
     )
+
+    hero_image_credit = models.CharField("Créditos de la imagen", max_length=300, blank=True, help_text="Autor, fuente y licencia, si corresponde.")
 
     # About section
     about_title = models.CharField(max_length=200, default="Nuestro radioclub")
@@ -49,6 +52,13 @@ class HomePage(Page):
 
     # Flexible body content
     body = StreamField(BODY_BLOCKS, blank=True, use_json_field=True)
+
+    # Legacy fields remain stored for recovery, but are not exposed in the editor.
+    content = RichTextField(
+        "Contenido", blank=True,
+        features=["h2", "h3", "bold", "italic", "ol", "ul", "link", "document-link", "image", "embed"],
+        help_text="Escribe y da formato al texto; puedes insertar imágenes y enlaces desde la barra de herramientas.",
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -58,17 +68,17 @@ class HomePage(Page):
                 FieldPanel("hero_cta_text"),
                 FieldPanel("hero_cta_url"),
                 FieldPanel("hero_image"),
+                FieldPanel("hero_image_credit"),
             ],
-            heading="Hero Section",
+            heading="Cabecera",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("about_title"),
-                FieldPanel("about_text"),
+                FieldPanel("content"),
             ],
-            heading="About Section",
+            heading="Presentación del radioclub",
         ),
-        FieldPanel("body"),
     ]
 
     max_count = 1

@@ -43,7 +43,7 @@
 
             {# Body content #}
             <div class="article-body">
-                {% include_block self.body %}
+                {{ page.content|richtext }}
             </div>
 
             {# Tags #}

@@ -8,7 +8,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
@@ -113,6 +113,13 @@ class BlogPage(Page):
         help_text="Author name or callsign",
     )
 
+    # Legacy fields remain stored for recovery, but are not exposed in the editor.
+    content = RichTextField(
+        "Contenido", blank=True,
+        features=["h2", "h3", "bold", "italic", "ol", "ul", "link", "document-link", "image", "embed"],
+        help_text="Escribe y da formato al texto; puedes insertar imágenes y enlaces desde la barra de herramientas.",
+    )
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -123,7 +130,7 @@ class BlogPage(Page):
         ),
         FieldPanel("header_image"),
         FieldPanel("intro"),
-        FieldPanel("body"),
+        FieldPanel("content"),
         MultiFieldPanel(
             [
                 FieldPanel("categories"),
@@ -135,7 +142,7 @@ class BlogPage(Page):
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
-        index.SearchField("body"),
+        index.SearchField("content"),
         index.SearchField("author_name"),
     ]
 
