@@ -61,7 +61,7 @@ STORAGES = {
 
 # --- Wagtail ---
 
-WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "https://ea1rkv.es")
+WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "https://ea1rkv.com")
 
 # --- Logging ---
 
