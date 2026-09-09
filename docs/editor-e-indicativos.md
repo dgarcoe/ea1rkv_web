@@ -108,5 +108,8 @@ docker compose -f docker-compose.prod.external.yml exec web python manage.py set
 docker compose -f docker-compose.prod.external.yml exec web python manage.py collectstatic --noinput
 ```
 
-El Nginx del servidor debe enviar el tráfico a `http://127.0.0.1:8001` y tener
-`client_max_body_size 200M`. El puerto 8001 no queda expuesto a Internet.
+El Nginx del otro Compose debe conectarse también a `ea1rfi-network` y enviar el
+tráfico a `http://ea1rkv-web:8000`. Los nombres `ea1rkv-web`, `ea1rkv-db` y
+`ea1rkv-redis` quedan fijados para que el DNS interno de Docker sea estable.
+Configura `client_max_body_size 200M` en ese Nginx. El puerto 8000 solo está
+disponible dentro de la red Docker.
