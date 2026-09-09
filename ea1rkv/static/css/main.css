@@ -173,8 +173,9 @@ footer a:hover { color: #f0c982 !important; }
 .rich-text td, .rich-text th { border: 1px solid #cbd5e1; padding: .65rem .9rem; }
 .rich-text th { background: #f1f5f9; }
 .callsign-library { scroll-margin-top: 6rem; }
+.callsign-cover { display: block; width: 100%; height: auto; }
 .library-description { overflow-wrap: anywhere; }
 .library-description > :last-child { margin-bottom: 0; }
-.library-image { width: 100%; max-height: 32rem; object-fit: contain; background: #f1f5f9; }
+.library-image { width: 100%; height: auto; max-height: 32rem; object-fit: contain; background: #f1f5f9; }
 .library-item video { max-height: 32rem; background: #101b2b; }
 @media (max-width: 600px) { .richtext-image.left, .richtext-image.right { float: none !important; margin: 1rem 0 !important; } }
