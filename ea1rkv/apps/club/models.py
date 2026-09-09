@@ -1,4 +1,6 @@
 from collections import OrderedDict
+import re
+from urllib.parse import parse_qs, urlencode, urlsplit
 
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
@@ -113,8 +115,7 @@ class SpecialCallsignPage(Page):
                          ("start_date", "end_date", "location", "bands", "modes", "schedule", "qrz_url")], heading="Ficha de la actividad"),
         FieldPanel("content", heading="Presentación / crónica"),
         FieldPanel("qsl_information"), FieldPanel("award_rules"),
-        InlinePanel("photos", label="Fotografías", heading="Álbum de fotos"),
-        InlinePanel("downloads", label="Documento", heading="Documentos y descargas"),
+        InlinePanel("media_items", label="Contenido", heading="Biblioteca del indicativo"),
     ]
     parent_page_types = ["club.CallsignsPage"]
     subpage_types = []
@@ -139,11 +140,26 @@ class SpecialCallsignPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
+        items = list(self.media_items.select_related("image", "asset").all())
+        selected_type = request.GET.get("tipo", "")
+        if selected_type not in dict(CallsignMedia.TYPES):
+            selected_type = ""
+        selected_group = request.GET.get("grupo", "")
+        group_names = list(dict.fromkeys(item.group for item in items if item.group))
+        filtered = [item for item in items if
+                    (not selected_type or item.kind == selected_type) and
+                    (not selected_group or item.group == selected_group)]
+        entries = Paginator(filtered, 12).get_page(request.GET.get("biblioteca_pagina"))
         groups = OrderedDict()
-        for photo in self.photos.select_related("image").all():
-            groups.setdefault(photo.group.strip() or "Fotografías", []).append(photo)
-        context["photo_groups"] = groups.items()
-        context["downloads"] = self.downloads.select_related("document").all()
+        for item in entries:
+            groups.setdefault(item.group or "Material de la actividad", []).append(item)
+        context.update({
+            "library_types": CallsignMedia.TYPES, "library_type": selected_type,
+            "library_group": selected_group, "library_group_names": group_names,
+            "library_groups": groups.items(), "library_entries": entries,
+            "library_total": len(items), "library_count": len(filtered),
+            "library_query": urlencode({"tipo": selected_type, "grupo": selected_group}),
+        })
         return context
 
 
@@ -169,3 +185,87 @@ class CallsignDownload(Orderable):
 
     class Meta(Orderable.Meta):
         verbose_name = "Documento del indicativo"
+
+
+def youtube_video_id(url):
+    """Accept individual YouTube videos, never arbitrary iframe URLs."""
+    try:
+        parts = urlsplit(url.strip())
+        if parts.scheme not in ("http", "https") or parts.username or parts.password:
+            return ""
+        if parts.port not in (None, 80, 443):
+            return ""
+        host = (parts.hostname or "").lower()
+        path = parts.path.strip("/").split("/")
+        if host in ("youtu.be", "www.youtu.be") and len(path) == 1:
+            video_id = path[0]
+        elif host in ("youtube.com", "www.youtube.com", "m.youtube.com", "www.youtube-nocookie.com"):
+            if parts.path == "/watch":
+                video_id = parse_qs(parts.query).get("v", [""])[0]
+            elif len(path) == 2 and path[0] in ("embed", "shorts", "live"):
+                video_id = path[1]
+            else:
+                return ""
+        else:
+            return ""
+        return video_id if re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id) else ""
+    except (ValueError, AttributeError):
+        return ""
+
+
+class CallsignMedia(Orderable):
+    TYPES = [("document", "Documentos"), ("image", "Imágenes"), ("video", "Vídeos"),
+             ("audio", "Audio"), ("youtube", "YouTube")]
+    VIDEO_EXTENSIONS = {"mp4", "webm", "m4v"}
+    AUDIO_EXTENSIONS = {"mp3", "wav", "ogg", "m4a", "flac"}
+    page = ParentalKey(SpecialCallsignPage, related_name="media_items", on_delete=models.CASCADE)
+    kind = models.CharField("Tipo de contenido", max_length=20, choices=TYPES, default="image")
+    title = models.CharField("Título", max_length=255)
+    description = RichTextField("Descripción", blank=True, features=FEATURES,
+                                help_text="Se muestra siempre junto al contenido, sin abrir desplegables.")
+    group = models.CharField("Grupo / álbum", max_length=100, blank=True,
+                             help_text="Usa el mismo nombre para agrupar varios elementos.")
+    credit = models.CharField("Autor / créditos", max_length=300, blank=True)
+    image = models.ForeignKey("wagtailimages.Image", null=True, blank=True,
+                              on_delete=models.PROTECT, related_name="+", verbose_name="Imagen")
+    asset = models.ForeignKey("wagtaildocs.Document", null=True, blank=True,
+                              on_delete=models.PROTECT, related_name="+",
+                              verbose_name="Archivo (documento, vídeo o audio)",
+                              help_text="Sube o elige el archivo. Vídeo: MP4, WebM o M4V. Audio: MP3, WAV, OGG, M4A o FLAC.")
+    youtube_url = models.URLField("Enlace de YouTube", blank=True,
+                                  help_text="Pega el enlace al vídeo, no el código de inserción.")
+    panels = [FieldPanel("kind"), FieldPanel("title"), FieldPanel("description"),
+              FieldPanel("group"), FieldPanel("credit"),
+              MultiFieldPanel([FieldPanel("image"), FieldPanel("asset"), FieldPanel("youtube_url")],
+                              heading="Contenido (completa solo el campo correspondiente al tipo)")]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "Contenido de la biblioteca"
+        verbose_name_plural = "Contenidos de la biblioteca"
+
+    @property
+    def youtube_embed_url(self):
+        video_id = youtube_video_id(self.youtube_url)
+        return f"https://www.youtube-nocookie.com/embed/{video_id}" if video_id else ""
+
+    def clean(self):
+        super().clean()
+        self.group = self.group.strip()
+        self.youtube_url = self.youtube_url.strip()
+        required = {"image": "image", "document": "asset", "video": "asset",
+                    "audio": "asset", "youtube": "youtube_url"}.get(self.kind)
+        errors = {}
+        values = {"image": self.image_id, "asset": self.asset_id, "youtube_url": self.youtube_url}
+        if required and not values[required]:
+            errors[required] = "Añade el contenido correspondiente al tipo seleccionado."
+        for field, value in values.items():
+            if value and field != required:
+                errors[field] = "Deja este campo vacío para el tipo seleccionado."
+        if self.kind == "youtube" and self.youtube_url and not youtube_video_id(self.youtube_url):
+            errors["youtube_url"] = "Introduce un enlace válido a un vídeo de YouTube."
+        if self.asset_id and self.kind in ("video", "audio"):
+            extensions = self.VIDEO_EXTENSIONS if self.kind == "video" else self.AUDIO_EXTENSIONS
+            if self.asset.file_extension.lower() not in extensions:
+                errors["asset"] = "El formato no corresponde al tipo seleccionado: " + ", ".join(sorted(extensions)) + "."
+        if errors:
+            raise ValidationError(errors)

@@ -38,15 +38,57 @@ En **Páginas → Inicio → Indicativos especiales → Añadir página**, elige
 - Indicativo, título, resumen e imagen de portada o diploma.
 - Fechas, lugar/locator, bandas, modos, horario con zona horaria y enlace a QRZ.
 - Presentación o crónica, instrucciones QSL y bases del diploma en texto rico.
-- Fotografías con pie, autor y nombre de álbum; puedes ordenarlas.
-- Documentos descargables, como bases o programas, con su descripción.
+- Biblioteca con imágenes, documentos, vídeos, audio y enlaces de YouTube.
 
 Actividad presenta primero el texto; Diploma destaca las bases antes del texto;
-Reportaje coloca los álbumes antes de la crónica. Puedes cambiar la plantilla sin
-reescribir ni perder los campos. Los apartados vacíos no aparecen en la web.
+Reportaje coloca la biblioteca antes de la crónica. Puedes cambiar la plantilla sin
+reescribir ni perder los campos. Los apartados de texto vacíos no aparecen en la web.
 Usa **Vista previa**, guarda un borrador o publica con los controles habituales.
 
-La organización por indicativo y álbum sigue la referencia del repositorio
-`special_callsign_media_sharing_web`. Esta versión gestiona la información, las
-fotografías y los documentos dentro de Wagtail; no conecta con la base de datos
-externa de aquella aplicación ni replica su subida pública o descarga ZIP.
+## Biblioteca multimedia
+
+En la ficha del indicativo, ve a **Biblioteca del indicativo → Añadir contenido**.
+Cada elemento tiene tipo, título, descripción con editor clásico, grupo/álbum
+opcional y autor/créditos. La descripción aparece completa junto al elemento en
+la web, también al filtrar. Puedes ordenar los elementos en el administrador.
+
+Elige uno de los cinco tipos y completa su fuente:
+
+| Tipo | Campo que debes completar | Presentación pública |
+| --- | --- | --- |
+| Documentos | Archivo, desde la biblioteca de documentos | Título, descripción y descarga |
+| Imágenes | Imagen, desde la biblioteca de imágenes | Imagen ampliable, descripción y descarga |
+| Vídeos | Archivo MP4, WebM o M4V | Reproductor, descripción y descarga |
+| Audio | Archivo MP3, WAV, OGG, M4A o FLAC | Reproductor, descripción y descarga |
+| YouTube | Enlace al vídeo | Vídeo incrustado, descripción y enlace a YouTube |
+
+Para vídeo y audio, la biblioteca de documentos de Wagtail permite subir también
+estos formatos. Para mayor compatibilidad entre navegadores utiliza MP4 con
+H.264/AAC y MP3. La extensión por sí sola no garantiza que un navegador soporte
+los códecs del archivo. No hay reproducción automática.
+
+YouTube admite enlaces normales, cortos (`youtu.be`), Shorts y directos. Se
+valida el identificador y se usa el reproductor de `youtube-nocookie.com`.
+No hace falta una clave de API ni copiar código HTML.
+
+El visitante puede combinar **Tipo de contenido** y **Grupo / álbum**, pulsar
+**Filtrar** y volver con **Mostrar todo**. Los filtros permanecen al pasar de
+página; se muestran hasta 12 elementos por página. Los enlaces de los filtros
+se pueden compartir. Los grupos reúnen todos los elementos con el mismo nombre.
+
+Las migraciones `club.0003` y `club.0004` incorporan automáticamente las fotos
+y los documentos anteriores, con sus descripciones, grupos y créditos. También
+convierten cada revisión antigua para preservar sus cambios propios. Las tablas
+anteriores se conservan para recuperación, pero ya no se editan por separado.
+No se copian ni se vuelven a subir los archivos. Los nuevos elementos siguen el
+flujo habitual de borrador, vista previa y publicación de la página.
+
+La organización por indicativo, grupo y tipo sigue la referencia de
+`special_callsign_media_sharing_web`. Esta versión gestiona el contenido dentro
+de Wagtail; no conecta con la base de datos externa de aquella aplicación ni
+replica su subida pública o descarga ZIP.
+
+El Nginx de producción admite peticiones de hasta 200 MB. Si hay otro proxy
+delante, su límite también debe permitir el tamaño del archivo. Los vídeos y
+audios se sirven mediante el endpoint de documentos de Wagtail para conservar
+sus comprobaciones de acceso, no mediante enlaces directos a su almacenamiento.

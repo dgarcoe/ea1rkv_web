@@ -164,6 +164,18 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES
 
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
+# Wagtail's document chooser also holds uploaded audio and video. Serve them
+# through its normal permission-aware endpoint, with playable MIME types.
+WAGTAILDOCS_EXTENSIONS = ["csv", "doc", "docx", "key", "odt", "pdf", "ppt", "pptx",
+                         "rtf", "txt", "xls", "xlsx", "zip", "mp4", "webm", "m4v",
+                         "mp3", "wav", "ogg", "m4a", "flac"]
+WAGTAILDOCS_CONTENT_TYPES = {
+    "mp4": "video/mp4", "webm": "video/webm", "m4v": "video/mp4",
+    "mp3": "audio/mpeg", "wav": "audio/wav", "ogg": "audio/ogg",
+    "m4a": "audio/mp4", "flac": "audio/flac",
+}
+WAGTAILDOCS_INLINE_CONTENT_TYPES = ["application/pdf", *set(WAGTAILDOCS_CONTENT_TYPES.values())]
+
 WAGTAILADMIN_COMMENTS_ENABLED = True
 
 WAGTAILADMIN_RICH_TEXT_EDITORS = {

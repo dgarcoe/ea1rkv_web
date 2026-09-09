@@ -12,15 +12,12 @@
     {% if page.activity_details %}<section class="card p-4 mb-5" aria-label="Ficha de la actividad"><dl class="row mb-0">
         {% for label, value in page.activity_details %}<dt class="col-sm-3">{{ label }}</dt><dd class="col-sm-9">{{ value }}</dd>{% endfor %}
     </dl></section>{% endif %}
-    {% if page.layout == 'report' %}{% include "club/includes/callsign_gallery.html" %}{% endif %}
+    {% if page.layout == 'report' %}{% include "club/includes/callsign_library.html" %}{% endif %}
     {% if page.layout == 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
     {% if page.content %}<section class="article-body mb-5"><h2>{% if page.layout == 'report' %}Crónica de la actividad{% else %}Sobre la actividad{% endif %}</h2>{{ page.content|richtext }}</section>{% endif %}
     {% if page.qsl_information %}<section class="article-body mb-5"><h2>QSL</h2>{{ page.qsl_information|richtext }}</section>{% endif %}
     {% if page.layout != 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
-    {% if page.layout != 'report' %}{% include "club/includes/callsign_gallery.html" %}{% endif %}
-    {% if downloads %}<section class="mb-5"><h2>Documentos y descargas</h2><ul class="list-group">
-        {% for item in downloads %}<li class="list-group-item"><a href="{{ item.document.url }}">{{ item.document.title }}</a>{% if item.description %}<p class="mb-0">{{ item.description }}</p>{% endif %}</li>{% endfor %}
-    </ul></section>{% endif %}
+    {% if page.layout != 'report' %}{% include "club/includes/callsign_library.html" %}{% endif %}
     <p class="mt-5"><a href="{% pageurl page.get_parent %}">Volver a indicativos especiales</a></p>
 </article>
 {% endblock %}

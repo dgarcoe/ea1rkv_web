@@ -12,7 +12,7 @@ from wagtail.documents import get_document_model
 from wagtail.models import PageViewRestriction
 
 from ea1rkv.apps.home.models import HomePage
-from .models import CallsignDownload, CallsignPhoto, CallsignsPage, ServicePage, ServicesPage, SpecialCallsignPage
+from .models import CallsignMedia, CallsignsPage, ServicePage, ServicesPage, SpecialCallsignPage
 
 
 class ClubSectionsTests(TestCase):
@@ -64,10 +64,10 @@ class ClubSectionsTests(TestCase):
                 content="<p>Información de la actividad.</p>", start_date=date(2026, 1, 1),
                 cover_image=image, locale=self.home.locale, live=False,
             ))
-            item.photos.add(CallsignPhoto(image=image, caption="Montaje <antena>", credit="Autor", group="Preparativos", sort_order=0))
-            item.photos.add(CallsignPhoto(image=image, caption="Operación", group="En las ondas", sort_order=1))
+            item.media_items.add(CallsignMedia(kind="image", image=image, title="Montaje <antena>", credit="Autor", group="Preparativos", sort_order=0))
+            item.media_items.add(CallsignMedia(kind="image", image=image, title="Operación", group="En las ondas", sort_order=1))
             document = get_document_model().objects.create(title="Programa", file=SimpleUploadedFile("programa.txt", b"Programa"))
-            item.downloads.add(CallsignDownload(document=document, description="Programa de la actividad"))
+            item.media_items.add(CallsignMedia(kind="document", asset=document, title="Programa", description="<p>Programa de la actividad</p>"))
             revision = item.save_revision()
             self.assertNotContains(self.client.get(self.callsigns.url), item.title)
             revision.publish()
@@ -79,8 +79,7 @@ class ClubSectionsTests(TestCase):
             self.assertContains(response, document.url)
             self.assertContains(self.client.get(self.callsigns.url), item.title)
             restored = revision.as_object()
-            self.assertEqual(restored.photos.count(), 2)
-            self.assertEqual(restored.downloads.count(), 1)
+            self.assertEqual(restored.media_items.count(), 3)
             item.layout = "report"
             item.save_revision().publish()
             html = self.client.get(item.url).content.decode()
