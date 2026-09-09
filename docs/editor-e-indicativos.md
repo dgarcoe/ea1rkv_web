@@ -92,3 +92,21 @@ El Nginx de producción admite peticiones de hasta 200 MB. Si hay otro proxy
 delante, su límite también debe permitir el tamaño del archivo. Los vídeos y
 audios se sirven mediante el endpoint de documentos de Wagtail para conservar
 sus comprobaciones de acceso, no mediante enlaces directos a su almacenamiento.
+
+## Despliegue detrás de un Nginx existente
+
+El archivo `docker-compose.prod.external.yml` levanta PostgreSQL, Redis y
+Wagtail sin crear otro Nginx. Todos los servicios se conectan a la red externa
+`ea1rfi-network` y Wagtail se publica únicamente en `127.0.0.1:8001`.
+
+```bash
+docker network inspect ea1rfi-network >/dev/null 2>&1 || docker network create ea1rfi-network
+docker compose -f docker-compose.prod.external.yml build
+docker compose -f docker-compose.prod.external.yml up -d
+docker compose -f docker-compose.prod.external.yml exec web python manage.py migrate
+docker compose -f docker-compose.prod.external.yml exec web python manage.py setup_radioclub
+docker compose -f docker-compose.prod.external.yml exec web python manage.py collectstatic --noinput
+```
+
+El Nginx del servidor debe enviar el tráfico a `http://127.0.0.1:8001` y tener
+`client_max_body_size 200M`. El puerto 8001 no queda expuesto a Internet.

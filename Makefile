@@ -67,6 +67,15 @@ prod-build: ## Build production containers
 prod-up: ## Start production server
 	docker compose -f docker-compose.prod.yml up -d
 
+prod-external-build: ## Build production containers behind an existing Nginx
+	docker compose -f docker-compose.prod.external.yml build
+
+prod-external-up: ## Start production server behind an existing Nginx
+	docker compose -f docker-compose.prod.external.yml up -d
+
+prod-external-migrate: ## Run migrations behind an existing Nginx
+	docker compose -f docker-compose.prod.external.yml exec web python manage.py migrate
+
 prod-down: ## Stop production containers
 	docker compose -f docker-compose.prod.yml down
 
