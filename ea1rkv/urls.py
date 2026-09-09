@@ -32,6 +32,7 @@ urlpatterns += i18n_patterns(
     path("documents/", include(wagtaildocs_urls)),
     path("search/", search, name="search"),
     path("", include(wagtail_urls)),
+    prefix_default_language=False,
 )
 
 if settings.DEBUG:
