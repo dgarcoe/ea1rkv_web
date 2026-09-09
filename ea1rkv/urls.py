@@ -18,8 +18,6 @@ sitemaps = {}
 
 urlpatterns = [
     path("django-admin/", admin.site.urls),
-    path("admin/", include(wagtailadmin_urls)),
-    path("documents/", include(wagtaildocs_urls)),
     path("feed/", BlogFeed(), name="blog_feed"),
     path(
         "sitemap.xml",
@@ -30,6 +28,8 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
+    path("admin/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
     path("search/", search, name="search"),
     path("", include(wagtail_urls)),
 )
