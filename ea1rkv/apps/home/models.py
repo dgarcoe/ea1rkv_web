@@ -84,6 +84,8 @@ class HomePage(Page):
     max_count = 1
     parent_page_types = ["wagtailcore.Page"]
     subpage_types = [
+        "club.ServicesPage",
+        "club.CallsignsPage",
         "blog.BlogIndexPage",
         "events.EventIndexPage",
         "gallery.GalleryIndexPage",
@@ -98,6 +100,9 @@ class HomePage(Page):
         from ea1rkv.apps.blog.models import BlogIndexPage, BlogPage
 
         context = super().get_context(request, *args, **kwargs)
+        from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
+        context["services_index"] = ServicesPage.objects.child_of(self).live().public().first()
+        context["callsigns_index"] = CallsignsPage.objects.child_of(self).live().public().first()
         blog = BlogIndexPage.objects.child_of(self).live().public().first()
         context["blog_index"] = blog
         context["latest_posts"] = (

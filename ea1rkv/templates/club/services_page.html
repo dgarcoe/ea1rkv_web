@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags navigation_tags %}
+{% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
+{% block content %}
+<div class="container club-section">
+    <header class="blog-heading"><p class="eyebrow">RECURSOS DE EA1RKV</p><h1>{{ page.title }}</h1><div class="article-body">{{ page.intro|richtext }}</div></header>
+    {% for label, entries in service_groups %}
+    {% if entries %}<section class="mb-5"><h2 class="mb-4">{{ label }}</h2><div class="row g-4">
+        {% for entry in entries %}<div class="col-md-6 col-lg-4"><article class="card post-card h-100"><div class="card-body p-4">
+            <h3 class="h4"><a href="{% pageurl entry %}">{{ entry.title }}</a></h3>
+            {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+            {% if entry.frequency %}<p class="mb-1">{{ entry.frequency }} MHz{% if entry.mode %} · {{ entry.mode }}{% endif %}</p>{% endif %}
+            {% if entry.equipment %}<p class="mb-1">{{ entry.equipment }}</p>{% endif %}
+            {% if entry.availability %}<p class="post-meta mb-0">{{ entry.availability }}</p>{% endif %}
+        </div></article></div>{% endfor %}
+    </div></section>{% endif %}
+    {% endfor %}
+    {% if not page.get_children.live.public %}<p class="empty-blog">Próximamente publicaremos los recursos y servicios del radioclub.</p>{% endif %}
+</div>
+{% endblock %}

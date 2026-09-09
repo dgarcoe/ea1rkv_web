@@ -5,12 +5,13 @@ from wagtail.models import Locale, Page, Site
 
 from ea1rkv.apps.base.models import RadioclubSettings
 from ea1rkv.apps.blog.models import BlogIndexPage
+from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
 from ea1rkv.apps.home.models import HomePage
 from ea1rkv.apps.home.default_content import CLUB_DESCRIPTION
 
 
 class Command(BaseCommand):
-    help = "Crea Inicio y Blog para EA1RKV sin sobrescribir páginas existentes."
+    help = "Prepara Inicio, Blog, Servicios e Indicativos especiales sin sobrescribir contenido."
 
     @transaction.atomic
     def handle(self, *args, **options):
@@ -53,7 +54,19 @@ class Command(BaseCommand):
                 search_description="Noticias y artículos de radioafición de EA1RKV.",
             ))
             blog.save_revision().publish()
+        for model, title, slug, intro in (
+            (ServicesPage, "Servicios", "servicios", "<p>Repetidores, frecuencias, equipos y otros recursos del radioclub. Consulta la ficha de cada recurso para conocer sus datos y condiciones de uso.</p>"),
+            (CallsignsPage, "Indicativos especiales", "indicativos-especiales", "<p>Información, fechas y fotografías de las actividades con indicativos especiales del radioclub.</p>"),
+        ):
+            if not model.objects.child_of(home).exists():
+                if home.get_children().filter(slug=slug).exists():
+                    raise CommandError(f"Ya existe una página con slug {slug}. Revísala antes de crear la sección.")
+                section = home.add_child(instance=model(
+                    title=title, slug=slug, locale=home.locale,
+                    intro=intro, show_in_menus=True,
+                ))
+                section.save_revision().publish()
         RadioclubSettings.objects.get_or_create(site=site)
         self.stdout.write(self.style.SUCCESS(
-            "Inicio y Blog preparados. Edita los contenidos desde /admin/."
+            "Inicio, Blog, Servicios e Indicativos especiales preparados. Edita los contenidos desde /admin/."
         ))

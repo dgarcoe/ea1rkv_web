@@ -27,6 +27,12 @@
         </div>
     </div>
 </section>
+{% if services_index or callsigns_index %}
+<section class="container pb-5" aria-label="Explora el radioclub"><div class="row g-4">
+    {% if services_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl services_index %}">{{ services_index.title }}</a></h2><p>Consulta los repetidores, frecuencias y equipos del radioclub.</p></div></article></div>{% endif %}
+    {% if callsigns_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl callsigns_index %}">{{ callsigns_index.title }}</a></h2><p>Descubre las actividades y sus álbumes de fotografías.</p></div></article></div>{% endif %}
+</div></section>
+{% endif %}
 <section class="club-news club-section">
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">

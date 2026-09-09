@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Project apps
     "ea1rkv.apps.base",
     "ea1rkv.apps.home",
+    "ea1rkv.apps.club",
     "ea1rkv.apps.blog",
     "ea1rkv.apps.events",
     "ea1rkv.apps.gallery",

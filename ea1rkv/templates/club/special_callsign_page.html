@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
+{% block content %}
+<article class="container club-section">
+    <header class="blog-heading"><p class="eyebrow">{{ page.callsign }}</p><h1>{{ page.title }}</h1>
+        {% include "club/includes/dates.html" with entry=page %}
+        {% if page.summary %}<p class="lead">{{ page.summary }}</p>{% endif %}
+        {% if page.qrz_url %}<p><a href="{{ page.qrz_url }}" rel="noopener noreferrer" target="_blank">Consultar {{ page.callsign }} en QRZ (nueva pestaña)</a></p>{% endif %}
+    </header>
+    {% if page.cover_image %}<figure>{% image page.cover_image width-1000 class="img-fluid rounded" %}</figure>{% endif %}
+    <div class="article-body mb-5">{{ page.content|richtext }}</div>
+    {% for label, photos in photo_groups %}<section class="mb-5"><h2 class="mb-4">{{ label }}</h2><div class="row g-4">
+        {% for photo in photos %}<figure class="col-sm-6 col-lg-4">
+            {% image photo.image width-1600 as large %}
+            <a href="{{ large.url }}" target="_blank" rel="noopener" aria-label="Ampliar {{ photo.caption|default:photo.image.title }} (nueva pestaña)">{% image photo.image fill-640x480 class="img-fluid rounded" loading="lazy" %}</a>
+            <figcaption class="mt-2">{% if photo.caption %}<p class="mb-1">{{ photo.caption }}</p>{% endif %}{% if photo.credit %}<p class="post-meta mb-1">{{ photo.credit }}</p>{% endif %}
+                <a href="{{ photo.image.file.url }}" download>Descargar original<span class="visually-hidden">: {{ photo.image.title }}</span></a>
+            </figcaption>
+        </figure>{% endfor %}
+    </div></section>{% endfor %}
+    <p class="mt-5"><a href="{% pageurl page.get_parent %}">Volver a indicativos especiales</a></p>
+</article>
+{% endblock %}

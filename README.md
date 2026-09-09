@@ -2,15 +2,40 @@
 
 Wagtail CMS website for the **EA1RKV - Vigo Val Miñor Radioclub** amateur radio club.
 
-## Primera versión: Inicio + Blog
+## Inicio, Blog, Servicios e Indicativos especiales
 
 Web de la **Unión de Radioafeccionados de Vigo-Val Miñor**, indicativo **EA1RKV**.
+
+## Actualizar una instalación existente
+
+Después de descargar los cambios, ejecuta estos comandos en el mismo entorno donde arrancas la web:
+
+```bash
+python manage.py migrate
+python manage.py setup_radioclub
+```
+
+Reinicia el servidor. Es necesario aplicar las migraciones antes de abrir `/admin/`; no borres la base de datos. El segundo comando añade las nuevas secciones al menú y a la portada sin duplicarlas ni sobrescribir sus textos.
+
+### Servicios
+
+En **Páginas > Inicio > Servicios**, edita la presentación o añade una página **Servicio / recurso**. Elige Repetidores, Frecuencias, Equipos de radio u Otros servicios. Completa el resumen, descripción en texto enriquecido y los datos que correspondan: frecuencia/salida y entrada en MHz, modo, tono o parámetros de acceso, ubicación/cobertura, modelo, disponibilidad y fotografía. Las fichas se agrupan por tipo y conservan el orden del árbol de páginas. Guarda borradores o publica cuando los datos estén confirmados.
+
+### Indicativos especiales
+
+En **Páginas > Inicio > Indicativos especiales**, añade una página **Indicativo especial** por actividad. Incluye título, indicativo, resumen, fechas opcionales, portada o diploma, enlace a QRZ e información/QSL en texto enriquecido.
+
+En **Álbum de fotos** selecciona imágenes y añade pies, créditos y, si lo deseas, un nombre de grupo. Puedes ordenar las fotos; las que comparten grupo se muestran juntas. Cada foto se puede ampliar y descargar. La descripción se escribe en un solo editor, sin bloques. También puedes insertar enlaces a documentos y vídeos mediante el editor.
+
+La organización por indicativo, fechas, descripción, QRZ y grupos de fotografías toma como referencia la rama `claude/fix-youtube-description-style-lYxVS` de `special_callsign_media_sharing_web`. Esta versión administra el contenido en Wagtail; no importa datos ni conecta con la base de Quendaward. Las imágenes se sirven con el almacenamiento habitual de Wagtail; restringir una página no convierte sus archivos multimedia en archivos privados.
+
+Las secciones comienzan vacías: no se añaden frecuencias, equipos ni indicativos de ejemplo como si fueran recursos reales del club.
 
 - Inicio con presentación editable, fotografía opcional y tres últimas publicaciones.
 - Blog con artículos, imágenes, autor/indicativo, categorías, etiquetas y paginación.
 - Administración Wagtail en `/admin/`: borradores, revisiones y publicación.
 - Diseño adaptable a móvil y escritorio, navegación por teclado y textos públicos en español.
-- Las secciones adicionales del proyecto se conservan para ampliaciones. La inicialización solo crea Inicio y Blog; el menú muestra las páginas publicadas marcadas para aparecer en él.
+- Servicios e Indicativos especiales con fichas editables y álbumes de fotografías. La inicialización crea las cuatro secciones; el menú muestra las páginas publicadas marcadas para aparecer en él.
 
 ## Puesta en marcha local (Python 3.12)
 
@@ -46,14 +71,14 @@ Para actualizar una instalación existente ejecuta `python manage.py migrate`. L
 
 ### GitHub Codespaces
 
-Abre un Codespace en la rama de esta versión. La configuración instala dependencias, aplica migraciones e inicializa Inicio y Blog. Después ejecuta `python manage.py runserver 0.0.0.0:8000` y abre el puerto 8000. La configuración existente crea `admin` / `admin` para desarrollo; cambia esa contraseña y no la uses en producción.
+Abre un Codespace en la rama de esta versión. La configuración instala dependencias, aplica migraciones e inicializa las cuatro secciones. Después ejecuta `python manage.py runserver 0.0.0.0:8000` y abre el puerto 8000. La configuración existente crea `admin` / `admin` para desarrollo; cambia esa contraseña y no la uses en producción.
 
 ### Verificación
 
 ```bash
 python manage.py check
 python manage.py makemigrations --check --dry-run
-python manage.py test ea1rkv.apps.home
+python manage.py test ea1rkv.apps.home ea1rkv.apps.club
 ```
 
 Se comprueban la inicialización repetible, portada/blog vacíos, publicación y privacidad, paginación, imágenes y acceso al panel.
@@ -151,4 +176,3 @@ After initial setup, configure the site through the Wagtail admin at `/admin/`:
 ## License
 
 This project is for the EA1RKV Radioclub. See repository for license details.
-
