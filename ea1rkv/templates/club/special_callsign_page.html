@@ -9,16 +9,18 @@
         {% if page.qrz_url %}<p><a href="{{ page.qrz_url }}" rel="noopener noreferrer" target="_blank">Consultar {{ page.callsign }} en QRZ (nueva pestaña)</a></p>{% endif %}
     </header>
     {% if page.cover_image %}<figure>{% image page.cover_image width-1000 class="img-fluid rounded" %}</figure>{% endif %}
-    <div class="article-body mb-5">{{ page.content|richtext }}</div>
-    {% for label, photos in photo_groups %}<section class="mb-5"><h2 class="mb-4">{{ label }}</h2><div class="row g-4">
-        {% for photo in photos %}<figure class="col-sm-6 col-lg-4">
-            {% image photo.image width-1600 as large %}
-            <a href="{{ large.url }}" target="_blank" rel="noopener" aria-label="Ampliar {{ photo.caption|default:photo.image.title }} (nueva pestaña)">{% image photo.image fill-640x480 class="img-fluid rounded" loading="lazy" %}</a>
-            <figcaption class="mt-2">{% if photo.caption %}<p class="mb-1">{{ photo.caption }}</p>{% endif %}{% if photo.credit %}<p class="post-meta mb-1">{{ photo.credit }}</p>{% endif %}
-                <a href="{{ photo.image.file.url }}" download>Descargar original<span class="visually-hidden">: {{ photo.image.title }}</span></a>
-            </figcaption>
-        </figure>{% endfor %}
-    </div></section>{% endfor %}
+    {% if page.activity_details %}<section class="card p-4 mb-5" aria-label="Ficha de la actividad"><dl class="row mb-0">
+        {% for label, value in page.activity_details %}<dt class="col-sm-3">{{ label }}</dt><dd class="col-sm-9">{{ value }}</dd>{% endfor %}
+    </dl></section>{% endif %}
+    {% if page.layout == 'report' %}{% include "club/includes/callsign_gallery.html" %}{% endif %}
+    {% if page.layout == 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
+    {% if page.content %}<section class="article-body mb-5"><h2>{% if page.layout == 'report' %}Crónica de la actividad{% else %}Sobre la actividad{% endif %}</h2>{{ page.content|richtext }}</section>{% endif %}
+    {% if page.qsl_information %}<section class="article-body mb-5"><h2>QSL</h2>{{ page.qsl_information|richtext }}</section>{% endif %}
+    {% if page.layout != 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
+    {% if page.layout != 'report' %}{% include "club/includes/callsign_gallery.html" %}{% endif %}
+    {% if downloads %}<section class="mb-5"><h2>Documentos y descargas</h2><ul class="list-group">
+        {% for item in downloads %}<li class="list-group-item"><a href="{{ item.document.url }}">{{ item.document.title }}</a>{% if item.description %}<p class="mb-0">{{ item.description }}</p>{% endif %}</li>{% endfor %}
+    </ul></section>{% endif %}
     <p class="mt-5"><a href="{% pageurl page.get_parent %}">Volver a indicativos especiales</a></p>
 </article>
 {% endblock %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "modelcluster",
     "taggit",
     "widget_tweaks",
+    "tinymce",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -164,6 +165,10 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
 WAGTAILADMIN_COMMENTS_ENABLED = True
+
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    "default": {"WIDGET": "ea1rkv.apps.base.editors.ClassicRichTextWidget"},
+}
 
 # --- Default Primary Key ---
 

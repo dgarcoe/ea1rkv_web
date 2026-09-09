@@ -88,22 +88,45 @@ class CallsignsPage(Page):
 
 
 class SpecialCallsignPage(Page):
+    LAYOUTS = [("activity", "Actividad: información primero"),
+               ("award", "Diploma: bases primero"), ("report", "Reportaje: fotografías primero")]
+    layout = models.CharField("Plantilla de presentación", max_length=20, choices=LAYOUTS, default="activity",
+                              help_text="Elige un diseño ya preparado. Puedes cambiarlo sin perder contenido.")
     callsign = models.CharField("Indicativo", max_length=30)
     summary = models.CharField("Resumen de la actividad", max_length=300, blank=True)
     content = RichTextField("Información de la actividad y QSL", blank=True, features=FEATURES)
     start_date = models.DateField("Fecha de inicio", null=True, blank=True)
     end_date = models.DateField("Fecha de fin", null=True, blank=True)
     qrz_url = models.URLField("Página en QRZ", blank=True)
+    location = models.CharField("Lugar / locator", max_length=200, blank=True)
+    bands = models.CharField("Bandas", max_length=200, blank=True)
+    modes = models.CharField("Modos", max_length=200, blank=True)
+    schedule = models.CharField("Horario y zona horaria", max_length=200, blank=True,
+                                help_text="Indica si los horarios son UTC o locales.")
+    qsl_information = RichTextField("Cómo solicitar la QSL", blank=True, features=FEATURES)
+    award_rules = RichTextField("Bases del diploma", blank=True, features=FEATURES)
     cover_image = models.ForeignKey("wagtailimages.Image", null=True, blank=True,
                                    on_delete=models.SET_NULL, related_name="+", verbose_name="Portada / diploma")
     content_panels = Page.content_panels + [
-        FieldPanel("callsign"), FieldPanel("summary"), FieldPanel("cover_image"),
-        MultiFieldPanel([FieldPanel("start_date"), FieldPanel("end_date"), FieldPanel("qrz_url")], heading="Datos de la actividad"),
-        FieldPanel("content"), InlinePanel("photos", label="Fotografías", heading="Álbum de fotos"),
+        FieldPanel("layout"), FieldPanel("callsign"), FieldPanel("summary"), FieldPanel("cover_image"),
+        MultiFieldPanel([FieldPanel(name) for name in
+                         ("start_date", "end_date", "location", "bands", "modes", "schedule", "qrz_url")], heading="Ficha de la actividad"),
+        FieldPanel("content", heading="Presentación / crónica"),
+        FieldPanel("qsl_information"), FieldPanel("award_rules"),
+        InlinePanel("photos", label="Fotografías", heading="Álbum de fotos"),
+        InlinePanel("downloads", label="Documento", heading="Documentos y descargas"),
     ]
     parent_page_types = ["club.CallsignsPage"]
     subpage_types = []
-    search_fields = Page.search_fields + [index.SearchField("callsign"), index.SearchField("summary"), index.SearchField("content")]
+    search_fields = Page.search_fields + [index.SearchField(name) for name in
+                                         ("callsign", "summary", "content", "qsl_information", "award_rules")]
+
+    @property
+    def activity_details(self):
+        return [(label, getattr(self, name)) for name, label in
+                [("location", "Lugar / locator"), ("bands", "Bandas"),
+                 ("modes", "Modos"), ("schedule", "Horario")]
+                if getattr(self, name)]
 
     class Meta:
         verbose_name = "Indicativo especial"
@@ -120,6 +143,7 @@ class SpecialCallsignPage(Page):
         for photo in self.photos.select_related("image").all():
             groups.setdefault(photo.group.strip() or "Fotografías", []).append(photo)
         context["photo_groups"] = groups.items()
+        context["downloads"] = self.downloads.select_related("document").all()
         return context
 
 
@@ -134,3 +158,14 @@ class CallsignPhoto(Orderable):
 
     class Meta(Orderable.Meta):
         verbose_name = "Fotografía del indicativo"
+
+
+class CallsignDownload(Orderable):
+    page = ParentalKey(SpecialCallsignPage, related_name="downloads", on_delete=models.CASCADE)
+    document = models.ForeignKey("wagtaildocs.Document", on_delete=models.CASCADE,
+                                 related_name="+", verbose_name="Documento")
+    description = models.CharField("Descripción", max_length=300, blank=True)
+    panels = [FieldPanel("document"), FieldPanel("description")]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "Documento del indicativo"

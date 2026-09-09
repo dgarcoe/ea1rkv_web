@@ -166,6 +166,9 @@ ea1rkv_web_example/
 
 ## Content Management
 
+Consulta la [guía del editor clásico y las plantillas de indicativos](docs/editor-e-indicativos.md)
+para actualizar una instalación existente y editar las nuevas fichas.
+
 After initial setup, configure the site through the Wagtail admin at `/admin/`:
 
 1. **Settings > Radioclub Settings** - Club callsign, address, grid locator

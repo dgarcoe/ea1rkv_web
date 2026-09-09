@@ -8,10 +8,11 @@ from django.core.management import call_command
 from django.test import TestCase, override_settings
 from PIL import Image as PillowImage
 from wagtail.images import get_image_model
+from wagtail.documents import get_document_model
 from wagtail.models import PageViewRestriction
 
 from ea1rkv.apps.home.models import HomePage
-from .models import CallsignPhoto, CallsignsPage, ServicePage, ServicesPage, SpecialCallsignPage
+from .models import CallsignDownload, CallsignPhoto, CallsignsPage, ServicePage, ServicesPage, SpecialCallsignPage
 
 
 class ClubSectionsTests(TestCase):
@@ -65,6 +66,8 @@ class ClubSectionsTests(TestCase):
             ))
             item.photos.add(CallsignPhoto(image=image, caption="Montaje <antena>", credit="Autor", group="Preparativos", sort_order=0))
             item.photos.add(CallsignPhoto(image=image, caption="Operación", group="En las ondas", sort_order=1))
+            document = get_document_model().objects.create(title="Programa", file=SimpleUploadedFile("programa.txt", b"Programa"))
+            item.downloads.add(CallsignDownload(document=document, description="Programa de la actividad"))
             revision = item.save_revision()
             self.assertNotContains(self.client.get(self.callsigns.url), item.title)
             revision.publish()
@@ -73,9 +76,15 @@ class ClubSectionsTests(TestCase):
             self.assertContains(response, "En las ondas")
             self.assertContains(response, "Montaje &lt;antena&gt;")
             self.assertContains(response, image.file.url)
+            self.assertContains(response, document.url)
             self.assertContains(self.client.get(self.callsigns.url), item.title)
             restored = revision.as_object()
             self.assertEqual(restored.photos.count(), 2)
+            self.assertEqual(restored.downloads.count(), 1)
+            item.layout = "report"
+            item.save_revision().publish()
+            html = self.client.get(item.url).content.decode()
+            self.assertLess(html.index("Preparativos"), html.index("Información de la actividad."))
             PageViewRestriction.objects.create(page=item, restriction_type="login")
             self.assertNotContains(self.client.get(self.callsigns.url), item.title)
 
@@ -86,10 +95,10 @@ class ClubSectionsTests(TestCase):
         item.end_date = date(2026, 2, 2)
         item.clean()
         self.assertEqual(item.callsign, "TEST")
-        from wagtail.admin.rich_text import DraftailRichTextArea
+        from ea1rkv.apps.base.editors import ClassicRichTextWidget
         for model in (ServicePage, SpecialCallsignPage):
             form = model.get_edit_handler().get_form_class()
-            self.assertIsInstance(form.base_fields["content"].widget, DraftailRichTextArea)
+            self.assertIsInstance(form.base_fields["content"].widget, ClassicRichTextWidget)
             self.assertNotIn("body", form.base_fields)
 
     def test_callsigns_pagination(self):
@@ -101,3 +110,21 @@ class ClubSectionsTests(TestCase):
         self.assertEqual(len(self.client.get(self.callsigns.url).context["callsigns"]), 12)
         self.assertEqual(len(self.client.get(self.callsigns.url, {"page": 2}).context["callsigns"]), 1)
         self.assertEqual(self.client.get(self.callsigns.url, {"page": "invalid"}).status_code, 200)
+
+    def test_predefined_layouts_preserve_fields_and_change_order(self):
+        item = self.callsigns.add_child(instance=SpecialCallsignPage(
+            title="Plantillas", slug="plantillas", callsign="TEST", locale=self.home.locale,
+            content="<p>Presentación conservada</p>", qsl_information="<p>Solicitud de prueba</p>",
+            award_rules="<p>Bases de prueba</p>", bands="HF", modes="CW", location="Vigo",
+        ))
+        for layout, _ in SpecialCallsignPage.LAYOUTS:
+            item.layout = layout
+            item.save_revision().publish()
+            response = self.client.get(item.url)
+            for value in ("Presentación conservada", "Solicitud de prueba", "Bases de prueba", "HF", "CW", "Vigo"):
+                self.assertContains(response, value)
+            html = response.content.decode()
+            if layout == "award":
+                self.assertLess(html.index("Bases de prueba"), html.index("Presentación conservada"))
+            else:
+                self.assertLess(html.index("Presentación conservada"), html.index("Bases de prueba"))

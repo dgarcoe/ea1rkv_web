@@ -88,10 +88,10 @@ class RadioclubTests(TestCase):
             self.assertContains(self.client.get(post.url), 'alt="Antena de prueba"')
 
     def test_editor_has_rich_text_without_block_fields(self):
-        from wagtail.admin.rich_text import DraftailRichTextArea
+        from ea1rkv.apps.base.editors import ClassicRichTextWidget
         for model in (HomePage, BlogPage):
             form = model.get_edit_handler().get_form_class()
-            self.assertIsInstance(form.base_fields["content"].widget, DraftailRichTextArea)
+            self.assertIsInstance(form.base_fields["content"].widget, ClassicRichTextWidget)
             self.assertNotIn("body", form.base_fields)
             self.assertNotIn("about_text", form.base_fields)
 

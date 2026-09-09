@@ -169,4 +169,7 @@ footer a:hover { color: #f0c982 !important; }
 .club-intro .richtext-image.left, .article-body .richtext-image.left { float: left; margin: 0 1.5rem 1rem 0; }
 .club-intro .richtext-image.right, .article-body .richtext-image.right { float: right; margin: 0 0 1rem 1.5rem; }
 .club-intro, .article-body { display: flow-root; }
+.rich-text table { border-collapse: collapse; max-width: 100%; display: block; overflow-x: auto; margin: 1.5rem 0; }
+.rich-text td, .rich-text th { border: 1px solid #cbd5e1; padding: .65rem .9rem; }
+.rich-text th { background: #f1f5f9; }
 @media (max-width: 600px) { .richtext-image.left, .richtext-image.right { float: none !important; margin: 1rem 0 !important; } }
