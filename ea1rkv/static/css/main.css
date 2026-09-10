@@ -179,3 +179,26 @@ footer a:hover { color: #f0c982 !important; }
 .library-image { width: 100%; height: auto; max-height: 32rem; object-fit: contain; background: #f1f5f9; }
 .library-item video { max-height: 32rem; background: #101b2b; }
 @media (max-width: 600px) { .richtext-image.left, .richtext-image.right { float: none !important; margin: 1rem 0 !important; } }
+
+/* Keep decorative slides layered while hidden so opacity can cross-fade.
+   Override Bootstrap's [hidden] display rule only for these backgrounds. */
+.club-hero .hero-slide {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 1200ms ease-in-out;
+}
+.club-hero .hero-slide[hidden] {
+    display: block !important;
+    opacity: 0;
+}
+.club-hero .hero-slide .club-hero-image {
+    z-index: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+    .club-hero .hero-slide {
+        transition: none;
+    }
+}
