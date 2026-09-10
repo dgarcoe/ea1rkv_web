@@ -52,6 +52,8 @@ USER app
 
 EXPOSE 8000
 
+ENTRYPOINT ["/app/docker/entrypoint.prod.sh"]
+
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD python -c "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/', headers={'Host': 'ea1rkv.com', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request, timeout=4)" || exit 1
 
