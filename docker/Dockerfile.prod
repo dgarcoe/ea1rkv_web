@@ -53,7 +53,7 @@ USER app
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/login/')" || exit 1
+    CMD python -c "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/', headers={'Host': 'ea1rkv.com', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request, timeout=4)" || exit 1
 
 CMD ["gunicorn", "ea1rkv.wsgi:application", \
      "--bind", "0.0.0.0:8000", \

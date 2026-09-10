@@ -1,4 +1,4 @@
-# Production deployment behind an existing host-level Nginx.
+# Production deployment behind a public reverse proxy on an external Docker network.
 # Create the external network once with:
 #   docker network create ea1rfi-network
 services:
@@ -61,7 +61,8 @@ services:
       - media_volume:/app/media:ro
       - ./docker/nginx/ea1rkv.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - ea1rfi-network
