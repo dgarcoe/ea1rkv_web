@@ -27,13 +27,6 @@
     <div class="container club-photo-credit">
         {% for slide in hero_slides %}<span class="hero-slide-credit" {% if not forloop.first %}hidden{% endif %}>{{ slide.credit }}</span>{% endfor %}
     </div>
-    {% if hero_slides|length > 1 %}
-    <div class="container mt-3 hero-controls" hidden>
-        <button type="button" class="btn btn-outline-light" data-hero-prev aria-label="Fotografía anterior">{% translate "Anterior" %}</button>
-        <button type="button" class="btn btn-outline-light" data-hero-toggle>{% translate "Pausar" %}</button>
-        <button type="button" class="btn btn-outline-light" data-hero-next aria-label="Fotografía siguiente">{% translate "Siguiente" %}</button>
-    </div>
-    {% endif %}
     {% elif page.hero_image and page.hero_image_credit %}<div class="container club-photo-credit">{{ page.hero_image_credit }}</div>{% endif %}
 </section>
 <section id="radioclub" class="container club-section">

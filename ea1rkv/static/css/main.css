@@ -202,3 +202,12 @@ footer a:hover { color: #f0c982 !important; }
         transition: none;
     }
 }
+
+/* Compact language links, above the main navigation without overlap. */
+.club-header { position: relative; padding-top: 2rem; }
+.club-language-corner { position: absolute; top: .25rem; right: .75rem; }
+.club-language-flags { display: flex; gap: .125rem; }
+.club-language-flag { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 28px; border-radius: 3px; }
+.club-language-flag svg { border: 1px solid #cbd5e1; border-radius: 2px; }
+.club-language-flag[aria-current] { background: #e2edf3; }
+.club-language-flag[aria-disabled] { opacity: .35; }

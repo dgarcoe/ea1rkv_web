@@ -99,9 +99,8 @@ En Páginas → Inicio → Cabecera → Cabecera rotatoria, añade fotografías 
 créditos (autor, fuente y licencia). Reordénalas y publica la página.
 La lista tiene prioridad sobre la imagen de cabecera individual, que se conserva
 como alternativa cuando la lista está vacía. Una sola fotografía permanece fija.
-Con varias, cambia cada seis segundos y ofrece Anterior, Pausar y Siguiente.
-Se pausa con el ratón, el foco del teclado o la pestaña oculta; la preferencia
-de movimiento reducido desactiva el avance automático inicialmente.
+Con varias, cambia automáticamente cada seis segundos, sin botones ni pausa con
+el ratón o el teclado. El fundido respeta la preferencia de movimiento reducido.
 Sin JavaScript se muestra la primera imagen.
 
 ## Despliegue detrás de un Nginx existente
