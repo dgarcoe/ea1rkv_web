@@ -10,6 +10,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    gettext \
     libpq-dev \
     gcc \
     libjpeg62-turbo-dev \
@@ -21,6 +22,8 @@ COPY requirements/ requirements/
 RUN pip install --no-cache-dir -r requirements/production.txt
 
 COPY . .
+
+RUN django-admin compilemessages
 
 RUN DJANGO_SETTINGS_MODULE=ea1rkv.settings.production \
     DJANGO_SECRET_KEY=build-placeholder \

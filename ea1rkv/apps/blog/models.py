@@ -58,7 +58,7 @@ class BlogIndexPage(Page):
         FieldPanel("intro"),
     ]
 
-    max_count = 1
+    max_count_per_parent = 1
     parent_page_types = ["home.HomePage"]
     subpage_types = ["blog.BlogPage"]
 

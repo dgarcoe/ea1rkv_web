@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: gl\n"
+
+msgid "RADIOAFICIÓN · VIGO & VAL MIÑOR"
+msgstr "RADIOAFECCIÓN · VIGO & VAL MIÑOR"
+
+msgid "Visita el blog"
+msgstr "Visita o blog"
+
+msgid "Conoce el radioclub"
+msgstr "Coñece o radioclub"
+
+msgid "EL RADIOCLUB"
+msgstr "O RADIOCLUB"
+
+msgid "Consulta los repetidores, frecuencias y equipos del radioclub."
+msgstr "Consulta os repetidores, frecuencias e equipos do radioclub."
+
+msgid "Descubre las actividades y sus álbumes de fotografías."
+msgstr "Descobre as actividades e os seus álbums de fotografías."
+
+msgid "DESDE EA1RKV"
+msgstr "DENDE EA1RKV"
+
+msgid "Últimas publicaciones"
+msgstr "Últimas publicacións"
+
+msgid "Ver todo el blog"
+msgstr "Ver todo o blog"
+
+msgid "Pronto compartiremos aquí las primeras noticias y artículos del radioclub."
+msgstr "Pronto compartiremos aquí as primeiras novas e artigos do radioclub."
+
+msgid "Anterior"
+msgstr "Anterior"
+
+msgid "Siguiente"
+msgstr "Seguinte"
+
+msgid "Pausar"
+msgstr "Pausar"
+
+msgid "Reanudar"
+msgstr "Retomar"
+
+msgid "EL BLOG DE EA1RKV"
+msgstr "O BLOG DE EA1RKV"
+
+msgid "Todas las publicaciones"
+msgstr "Todas as publicacións"
+
+msgid "Quitar filtros"
+msgstr "Quitar filtros"
+
+msgid "Ver todas"
+msgstr "Ver todas"
+
+msgid "No hay publicaciones con estos filtros."
+msgstr "Non hai publicacións con estes filtros."
+
+msgid "ACTIVIDADES EN LAS ONDAS"
+msgstr "ACTIVIDADES NAS ONDAS"
+
+msgid "Próximamente compartiremos información y fotos de nuestros indicativos especiales."
+msgstr "Proximamente compartiremos información e fotos dos nosos indicativos especiais."
+
+msgid "Fotografías, grabaciones y documentos de la actividad."
+msgstr "Fotografías, gravacións e documentos da actividade."
+
+msgid "Tipo de contenido"
+msgstr "Tipo de contido"
+
+msgid "Todos los tipos"
+msgstr "Todos os tipos"
+
+msgid "Grupo / álbum"
+msgstr "Grupo / álbum"
+
+msgid "Todos los grupos"
+msgstr "Todos os grupos"
+
+msgid "Filtrar"
+msgstr "Filtrar"
+
+msgid "Mostrar todo"
+msgstr "Mostrar todo"
+
+msgid "Descargar imagen"
+msgstr "Descargar imaxe"
+
+msgid "Descargar documento"
+msgstr "Descargar documento"
+
+msgid "Descargar vídeo"
+msgstr "Descargar vídeo"
+
+msgid "Descargar audio"
+msgstr "Descargar audio"
+
+msgid "Ver en YouTube (nueva pestaña)"
+msgstr "Ver en YouTube (nova pestana)"
+
+msgid "Tu navegador no puede reproducir este vídeo."
+msgstr "O teu navegador non pode reproducir este vídeo."
+
+msgid "Tu navegador no puede reproducir este audio."
+msgstr "O teu navegador non pode reproducir este audio."
+
+msgid "Todavía no hay contenido en la biblioteca de este indicativo."
+msgstr "Aínda non hai contido na biblioteca deste indicativo."
+
+msgid "No hay contenido con estos filtros. Prueba con otro tipo o grupo."
+msgstr "Non hai contido con estes filtros. Proba con outro tipo ou grupo."
+
+msgid "Saltar al contenido"
+msgstr "Saltar ao contido"

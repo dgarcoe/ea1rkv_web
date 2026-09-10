@@ -1,0 +1,9 @@
+<nav class="d-flex gap-2 align-items-center" aria-label="Galego / Español / English">
+{% for option in options %}
+    {% if option.url %}
+    <a href="{{ option.url }}" lang="{{ option.code }}" hreflang="{{ option.code }}" {% if option.active %}aria-current="true"{% endif %}>{{ option.label }}</a>
+    {% else %}
+    <span lang="{{ option.code }}" aria-disabled="true" class="text-secondary">{{ option.label }}</span>
+    {% endif %}
+{% endfor %}
+</nav>

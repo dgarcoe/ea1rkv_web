@@ -154,4 +154,4 @@ No uses down -v: elimina los volúmenes. La migración de cabecera añade una ta
 conserva la fotografía individual y no borra contenido.
 Para crear el administrador usa createsuperuser dentro del servicio web.
 El administrador está en /admin/, español en / y las rutas de otros idiomas
-usan /gl/ y /en/; el selector y las traducciones de contenido aún están pendientes.
+usan /gl/ y /en/; el selector está disponible y las traducciones editoriales se gestionan desde la acción Traducir. Consulta [Idiomas](idiomas.md).

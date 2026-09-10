@@ -4,8 +4,9 @@
     <nav class="container d-flex flex-wrap align-items-center justify-content-between gap-3 py-3" aria-label="Navegación principal">
         <a class="club-brand" href="{% pageurl site_root %}"><strong>EA1RKV</strong><span>Vigo · Val Miñor</span></a>
         <div class="d-flex flex-wrap align-items-center gap-3">
-            <a class="nav-link" href="{% pageurl site_root %}" {% if page.pk == site_root.pk %}aria-current="page"{% endif %}>Inicio</a>
+            <a class="nav-link" href="{% pageurl site_root %}" {% if page.pk == site_root.pk %}aria-current="page"{% endif %}>{% home_label %}</a>
             {% main_menu calling_page=page %}
         </div>
     </nav>
+    <div class="container pb-3">{% language_switcher %}</div>
 </header>

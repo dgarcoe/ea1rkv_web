@@ -83,7 +83,6 @@ class HomePage(Page):
         ),
     ]
 
-    max_count = 1
     parent_page_types = ["wagtailcore.Page"]
     subpage_types = [
         "club.ServicesPage",

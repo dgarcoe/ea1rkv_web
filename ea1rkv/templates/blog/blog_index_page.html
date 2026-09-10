@@ -1,23 +1,23 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags navigation_tags %}
+{% load i18n wagtailcore_tags navigation_tags %}
 {% block body_class %}blog-index{% endblock %}
 {% block breadcrumbs %}{% breadcrumbs self %}{% endblock %}
 {% block content %}
 <div class="container club-section">
-    <header class="blog-heading"><p class="eyebrow">EL BLOG DE EA1RKV</p><h1>{{ page.title }}</h1>{% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}</header>
+    <header class="blog-heading"><p class="eyebrow">{% translate "EL BLOG DE EA1RKV" %}</p><h1>{{ page.title }}</h1>{% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}</header>
     {% if categories %}<nav class="d-flex flex-wrap gap-2 mb-4" aria-label="Categorías del blog">
-        <a href="{% pageurl page %}" class="btn btn-outline-primary">Todas las publicaciones</a>
+        <a href="{% pageurl page %}" class="btn btn-outline-primary">{% translate "Todas las publicaciones" %}</a>
         {% for category in categories %}<a href="{% pageurl page %}?category={{ category.slug|urlencode }}" class="btn {% if request.GET.category == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ category.name }}</a>{% endfor %}
     </nav>{% endif %}
-    {% if request.GET.tag %}<p>Etiqueta: <strong>{{ request.GET.tag }}</strong> · <a href="{% pageurl page %}">Quitar filtros</a></p>{% endif %}
+    {% if request.GET.tag %}<p>Etiqueta: <strong>{{ request.GET.tag }}</strong> · <a href="{% pageurl page %}">{% translate "Quitar filtros" %}</a></p>{% endif %}
     <div class="row g-4">
         {% for post in posts %}<div class="col-md-6 col-lg-4">{% include "blog/includes/post_card.html" %}</div>
-        {% empty %}<div class="col-12"><p class="empty-blog">{% if request.GET.category or request.GET.tag %}No hay publicaciones con estos filtros. <a href="{% pageurl page %}">Ver todas</a>{% else %}Pronto compartiremos aquí las primeras noticias y artículos del radioclub.{% endif %}</p></div>{% endfor %}
+        {% empty %}<div class="col-12"><p class="empty-blog">{% if request.GET.category or request.GET.tag %}{% translate "No hay publicaciones con estos filtros." %} <a href="{% pageurl page %}">{% translate "Ver todas" %}</a>{% else %}{% translate "Pronto compartiremos aquí las primeras noticias y artículos del radioclub." %}{% endif %}</p></div>{% endfor %}
     </div>
     {% if posts.has_other_pages %}<nav class="d-flex flex-wrap justify-content-center align-items-center gap-3 mt-5" aria-label="Páginas del blog">
-        {% if posts.has_previous %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.previous_page_number }}">Anterior</a>{% endif %}
+        {% if posts.has_previous %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.previous_page_number }}">{% translate "Anterior" %}</a>{% endif %}
         <span>Página {{ posts.number }} de {{ posts.paginator.num_pages }}</span>
-        {% if posts.has_next %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.next_page_number }}">Siguiente</a>{% endif %}
+        {% if posts.has_next %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.next_page_number }}">{% translate "Siguiente" %}</a>{% endif %}
     </nav>{% endif %}
 </div>
 {% endblock %}

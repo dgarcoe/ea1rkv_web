@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load i18n wagtailcore_tags wagtailimages_tags static %}
 {% block body_class %}home-page{% endblock %}
 {% block content %}
 <section class="club-hero{% if hero_slides or page.hero_image %} club-hero-with-image{% endif %}">
@@ -12,14 +12,14 @@
     {% elif page.hero_image %}{% image page.hero_image fill-1920x900 class="club-hero-image" alt="" %}{% endif %}
     <div class="container club-hero-layout">
         <div>
-            <p class="eyebrow">RADIOAFICIÓN · VIGO & VAL MIÑOR</p>
+            <p class="eyebrow">{% translate "RADIOAFICIÓN · VIGO & VAL MIÑOR" %}</p>
             <h1>{{ page.hero_title }}</h1>
             <p class="club-subtitle">{{ page.hero_subtitle }}</p>
             <div class="d-flex flex-wrap gap-3 mt-4">
-                {% if blog_index %}<a class="btn btn-club" href="{% pageurl blog_index %}">Visita el blog</a>{% endif %}
+                {% if blog_index %}<a class="btn btn-club" href="{% pageurl blog_index %}">{% translate "Visita el blog" %}</a>{% endif %}
                 {% if page.hero_cta_text and page.hero_cta_url %}
                 <a class="btn btn-outline-light" href="{{ page.hero_cta_url }}">{{ page.hero_cta_text }}</a>
-                {% else %}<a class="btn btn-outline-light" href="#radioclub">Conoce el radioclub</a>{% endif %}
+                {% else %}<a class="btn btn-outline-light" href="#radioclub">{% translate "Conoce el radioclub" %}</a>{% endif %}
             </div>
         </div>
     </div>
@@ -29,16 +29,16 @@
     </div>
     {% if hero_slides|length > 1 %}
     <div class="container mt-3 hero-controls" hidden>
-        <button type="button" class="btn btn-outline-light" data-hero-prev aria-label="Fotografía anterior">Anterior</button>
-        <button type="button" class="btn btn-outline-light" data-hero-toggle>Pausar</button>
-        <button type="button" class="btn btn-outline-light" data-hero-next aria-label="Fotografía siguiente">Siguiente</button>
+        <button type="button" class="btn btn-outline-light" data-hero-prev aria-label="Fotografía anterior">{% translate "Anterior" %}</button>
+        <button type="button" class="btn btn-outline-light" data-hero-toggle>{% translate "Pausar" %}</button>
+        <button type="button" class="btn btn-outline-light" data-hero-next aria-label="Fotografía siguiente">{% translate "Siguiente" %}</button>
     </div>
     {% endif %}
     {% elif page.hero_image and page.hero_image_credit %}<div class="container club-photo-credit">{{ page.hero_image_credit }}</div>{% endif %}
 </section>
 <section id="radioclub" class="container club-section">
     <div class="row g-4">
-        <div class="col-lg-4"><p class="eyebrow">EL RADIOCLUB</p><h2>{{ page.about_title }}</h2></div>
+        <div class="col-lg-4"><p class="eyebrow">{% translate "EL RADIOCLUB" %}</p><h2>{{ page.about_title }}</h2></div>
         <div class="col-lg-8 club-intro">{{ page.content|richtext }}
 
         </div>
@@ -46,19 +46,19 @@
 </section>
 {% if services_index or callsigns_index %}
 <section class="container pb-5" aria-label="Explora el radioclub"><div class="row g-4">
-    {% if services_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl services_index %}">{{ services_index.title }}</a></h2><p>Consulta los repetidores, frecuencias y equipos del radioclub.</p></div></article></div>{% endif %}
-    {% if callsigns_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl callsigns_index %}">{{ callsigns_index.title }}</a></h2><p>Descubre las actividades y sus álbumes de fotografías.</p></div></article></div>{% endif %}
+    {% if services_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl services_index %}">{{ services_index.title }}</a></h2><p>{% translate "Consulta los repetidores, frecuencias y equipos del radioclub." %}</p></div></article></div>{% endif %}
+    {% if callsigns_index %}<div class="col-md-6"><article class="card post-card h-100"><div class="card-body p-4"><h2 class="h3"><a href="{% pageurl callsigns_index %}">{{ callsigns_index.title }}</a></h2><p>{% translate "Descubre las actividades y sus álbumes de fotografías." %}</p></div></article></div>{% endif %}
 </div></section>
 {% endif %}
 <section class="club-news club-section">
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-            <div><p class="eyebrow">DESDE EA1RKV</p><h2 class="mb-0">Últimas publicaciones</h2></div>
-            {% if blog_index %}<a href="{% pageurl blog_index %}">Ver todo el blog</a>{% endif %}
+            <div><p class="eyebrow">{% translate "DESDE EA1RKV" %}</p><h2 class="mb-0">{% translate "Últimas publicaciones" %}</h2></div>
+            {% if blog_index %}<a href="{% pageurl blog_index %}">{% translate "Ver todo el blog" %}</a>{% endif %}
         </div>
         <div class="row g-4">
             {% for post in latest_posts %}<div class="col-md-6 col-lg-4">{% include "blog/includes/post_card.html" %}</div>
-            {% empty %}<div class="col-12"><p class="empty-blog">Pronto compartiremos aquí las primeras noticias y artículos del radioclub.</p></div>{% endfor %}
+            {% empty %}<div class="col-12"><p class="empty-blog">{% translate "Pronto compartiremos aquí las primeras noticias y artículos del radioclub." %}</p></div>{% endfor %}
         </div>
     </div>
 </section>

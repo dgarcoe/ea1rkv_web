@@ -19,6 +19,8 @@ BASE_DIR = PROJECT_DIR.parent
 
 INSTALLED_APPS = [
     # Wagtail apps
+    "wagtail.locales",
+    "wagtail.contrib.simple_translation",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",

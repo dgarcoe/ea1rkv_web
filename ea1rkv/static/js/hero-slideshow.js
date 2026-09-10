@@ -8,6 +8,7 @@
     controls.hidden = false;
     const toggle = controls.querySelector('[data-hero-toggle]');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const labels = {es: ['Pausar', 'Reanudar'], gl: ['Pausar', 'Retomar'], en: ['Pause', 'Resume']}[document.documentElement.lang.split('-')[0]] || ['Pausar', 'Reanudar'];
     let paused = reducedMotion.matches;
     let current = 0;
     let timer;
@@ -18,7 +19,7 @@
     }
     function schedule() {
         clearInterval(timer);
-        toggle.textContent = paused ? 'Reanudar' : 'Pausar';
+        toggle.textContent = paused ? labels[1] : labels[0];
         if (!paused && !document.hidden && !hero.matches(':hover') && !hero.contains(document.activeElement)) {
             timer = setInterval(() => show(current + 1), 6000);
         }

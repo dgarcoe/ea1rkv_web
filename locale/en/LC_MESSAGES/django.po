@@ -1,0 +1,118 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+msgid "RADIOAFICIÓN · VIGO & VAL MIÑOR"
+msgstr "AMATEUR RADIO · VIGO & VAL MIÑOR"
+
+msgid "Visita el blog"
+msgstr "Visit the blog"
+
+msgid "Conoce el radioclub"
+msgstr "About the club"
+
+msgid "EL RADIOCLUB"
+msgstr "THE RADIO CLUB"
+
+msgid "Consulta los repetidores, frecuencias y equipos del radioclub."
+msgstr "Explore the club's repeaters, frequencies and radio equipment."
+
+msgid "Descubre las actividades y sus álbumes de fotografías."
+msgstr "Discover our activities and photo albums."
+
+msgid "DESDE EA1RKV"
+msgstr "FROM EA1RKV"
+
+msgid "Últimas publicaciones"
+msgstr "Latest posts"
+
+msgid "Ver todo el blog"
+msgstr "View all posts"
+
+msgid "Pronto compartiremos aquí las primeras noticias y artículos del radioclub."
+msgstr "Our first club news and articles will appear here soon."
+
+msgid "Anterior"
+msgstr "Previous"
+
+msgid "Siguiente"
+msgstr "Next"
+
+msgid "Pausar"
+msgstr "Pause"
+
+msgid "Reanudar"
+msgstr "Resume"
+
+msgid "EL BLOG DE EA1RKV"
+msgstr "THE EA1RKV BLOG"
+
+msgid "Todas las publicaciones"
+msgstr "All posts"
+
+msgid "Quitar filtros"
+msgstr "Clear filters"
+
+msgid "Ver todas"
+msgstr "View all"
+
+msgid "No hay publicaciones con estos filtros."
+msgstr "No posts match these filters."
+
+msgid "ACTIVIDADES EN LAS ONDAS"
+msgstr "ACTIVITIES ON THE AIR"
+
+msgid "Próximamente compartiremos información y fotos de nuestros indicativos especiales."
+msgstr "Information and photos of our special callsigns will appear here soon."
+
+msgid "Fotografías, grabaciones y documentos de la actividad."
+msgstr "Photos, recordings and documents from the activity."
+
+msgid "Tipo de contenido"
+msgstr "Content type"
+
+msgid "Todos los tipos"
+msgstr "All types"
+
+msgid "Grupo / álbum"
+msgstr "Group / album"
+
+msgid "Todos los grupos"
+msgstr "All groups"
+
+msgid "Filtrar"
+msgstr "Filter"
+
+msgid "Mostrar todo"
+msgstr "Show all"
+
+msgid "Descargar imagen"
+msgstr "Download image"
+
+msgid "Descargar documento"
+msgstr "Download document"
+
+msgid "Descargar vídeo"
+msgstr "Download video"
+
+msgid "Descargar audio"
+msgstr "Download audio"
+
+msgid "Ver en YouTube (nueva pestaña)"
+msgstr "Watch on YouTube (new tab)"
+
+msgid "Tu navegador no puede reproducir este vídeo."
+msgstr "Your browser cannot play this video."
+
+msgid "Tu navegador no puede reproducir este audio."
+msgstr "Your browser cannot play this audio."
+
+msgid "Todavía no hay contenido en la biblioteca de este indicativo."
+msgstr "There is no content in this callsign library yet."
+
+msgid "No hay contenido con estos filtros. Prueba con otro tipo o grupo."
+msgstr "No content matches these filters. Try another type or group."
+
+msgid "Saltar al contenido"
+msgstr "Skip to content"
