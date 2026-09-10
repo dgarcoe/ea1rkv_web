@@ -35,6 +35,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    gosu \
     libpq5 \
     libjpeg62-turbo \
     zlib1g \
@@ -47,8 +48,9 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app /app
 
-RUN chown -R app:app /app
-USER app
+RUN mkdir -p /app/media /app/staticfiles \
+    && chown -R app:app /app \
+    && chmod 755 /app/docker/entrypoint.prod.sh
 
 EXPOSE 8000
 

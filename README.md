@@ -49,7 +49,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Abre `http://localhost:8000/` y `/admin/`. El sitio usa el idioma español bajo `/es/` (la raíz redirige) y SQLite en desarrollo. No necesitas Docker para empezar.
+Abre `http://localhost:8000/` y `/admin/`. El sitio usa el idioma español en `/` y SQLite en desarrollo. No necesitas Docker para empezar.
 
 `setup_radioclub` crea la portada y el blog en una base nueva. Se puede repetir sin duplicar páginas ni sobrescribir textos. Si encuentra otra portada personalizada, se detiene con instrucciones; no elimina páginas. No crea noticias ficticias ni inventa datos de contacto.
 
@@ -87,7 +87,7 @@ Esta rama incluye las migraciones iniciales que faltaban en el repositorio. Si y
 
 ## Entorno
 
-Se mantiene la configuración Django/Wagtail del repositorio, con PostgreSQL y Docker disponibles para producción. Bootstrap se carga desde CDN. Antes de publicar en Internet, configura dominio, HTTPS, credenciales y copias de seguridad y revisa las versiones soportadas de Django/Wagtail.
+Se mantiene la configuración Django/Wagtail del repositorio, con PostgreSQL y Docker disponibles para producción. Bootstrap CSS y JavaScript se sirven localmente; Bootstrap Icons mantiene su CDN. Antes de publicar en Internet, configura dominio, HTTPS, credenciales y copias de seguridad y revisa las versiones soportadas de Django/Wagtail.
 
 ## Production Deployment (VPS with Docker)
 
@@ -179,3 +179,7 @@ After initial setup, configure the site through the Wagtail admin at `/admin/`:
 ## License
 
 This project is for the EA1RKV Radioclub. See repository for license details.
+
+## Cabecera y producción actualizadas
+
+Consulta [cabecera rotatoria y despliegue](docs/editor-e-indicativos.md#cabecera-rotatoria) para configurar fotografías, créditos y el proxy público. El Compose externo incluye un Nginx propio en `ea1rfi-network`, accesible como `ea1rkv_nginx:80`. El arranque prepara los permisos de los volúmenes nuevos y ejecuta Django como `app`.

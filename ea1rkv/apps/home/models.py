@@ -2,9 +2,10 @@
 
 from django.db import models
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Page
+from wagtail.models import Orderable, Page
+from modelcluster.fields import ParentalKey
 
 from ea1rkv.apps.base.blocks import BODY_BLOCKS
 
@@ -69,6 +70,7 @@ class HomePage(Page):
                 FieldPanel("hero_cta_url"),
                 FieldPanel("hero_image"),
                 FieldPanel("hero_image_credit"),
+                InlinePanel("hero_slides", label="Fotografía", heading="Cabecera rotatoria (opcional)"),
             ],
             heading="Cabecera",
         ),
@@ -100,6 +102,7 @@ class HomePage(Page):
         from ea1rkv.apps.blog.models import BlogIndexPage, BlogPage
 
         context = super().get_context(request, *args, **kwargs)
+        context["hero_slides"] = list(self.hero_slides.select_related("image").all())
         from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
         context["services_index"] = ServicesPage.objects.child_of(self).live().public().first()
         context["callsigns_index"] = CallsignsPage.objects.child_of(self).live().public().first()
@@ -111,3 +114,14 @@ class HomePage(Page):
             if blog else BlogPage.objects.none()
         )
         return context
+
+
+class HeroSlide(Orderable):
+    page = ParentalKey(HomePage, related_name="hero_slides", on_delete=models.CASCADE)
+    image = models.ForeignKey(
+        "wagtailimages.Image", on_delete=models.PROTECT, related_name="+",
+        verbose_name="Fotografía",
+    )
+    credit = models.CharField("Autor, fuente y licencia", max_length=300, blank=True)
+
+    panels = [FieldPanel("image"), FieldPanel("credit")]

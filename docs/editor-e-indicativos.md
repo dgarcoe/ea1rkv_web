@@ -93,23 +93,65 @@ delante, su límite también debe permitir el tamaño del archivo. Los vídeos y
 audios se sirven mediante el endpoint de documentos de Wagtail para conservar
 sus comprobaciones de acceso, no mediante enlaces directos a su almacenamiento.
 
+## Cabecera rotatoria
+
+En Páginas → Inicio → Cabecera → Cabecera rotatoria, añade fotografías y sus
+créditos (autor, fuente y licencia). Reordénalas y publica la página.
+La lista tiene prioridad sobre la imagen de cabecera individual, que se conserva
+como alternativa cuando la lista está vacía. Una sola fotografía permanece fija.
+Con varias, cambia cada seis segundos y ofrece Anterior, Pausar y Siguiente.
+Se pausa con el ratón, el foco del teclado o la pestaña oculta; la preferencia
+de movimiento reducido desactiva el avance automático inicialmente.
+Sin JavaScript se muestra la primera imagen.
+
 ## Despliegue detrás de un Nginx existente
 
-El archivo `docker-compose.prod.external.yml` levanta PostgreSQL, Redis y
-Wagtail sin crear otro Nginx. Todos los servicios se conectan a la red externa
-`ea1rfi-network` y Wagtail se publica únicamente en `127.0.0.1:8001`.
+El archivo docker-compose.prod.external.yml levanta PostgreSQL, Redis, Wagtail
+y un Nginx propio, conectado a ea1rfi-network. No publica puertos en el host.
+El Nginx propio comparte los volúmenes de estáticos y multimedia en modo lectura.
+El proxy público del otro Compose también debe pertenecer a ea1rfi-network.
 
-```bash
-docker network inspect ea1rfi-network >/dev/null 2>&1 || docker network create ea1rfi-network
-docker compose -f docker-compose.prod.external.yml build
-docker compose -f docker-compose.prod.external.yml up -d
-docker compose -f docker-compose.prod.external.yml exec web python manage.py migrate
-docker compose -f docker-compose.prod.external.yml exec web python manage.py setup_radioclub
-docker compose -f docker-compose.prod.external.yml exec web python manage.py collectstatic --noinput
+En el servidor HTTPS de ea1rkv.com, conserva las rutas de Quendaward y MQTT
+y usa este bloque para la web. No uses `location = /`: solo coincidiría con la raíz.
+
+```nginx
+location / {
+    proxy_pass http://ea1rkv_nginx:80;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
 ```
 
-El Nginx del otro Compose debe conectarse también a `ea1rfi-network` y enviar el
-tráfico a `http://ea1rkv_web:8000`. Los nombres `ea1rkv_web`, `ea1rkv_db` y
-`ea1rkv_redis` quedan fijados para que el DNS interno de Docker sea estable.
-Configura `client_max_body_size 200M` en ese Nginx. El puerto 8000 solo está
-disponible dentro de la red Docker.
+No añadas volúmenes de Wagtail al proxy público ni reglas locales para /static/
+o /media/. Configura client_max_body_size 200M en su servidor HTTPS si necesitas
+subir archivos grandes; el límite público anterior de 15 MB sigue prevaleciendo
+hasta cambiarlo. Las imágenes de Wagtail tienen además su límite de 10 MB.
+
+Antes de actualizar, guarda una copia de PostgreSQL y del volumen multimedia.
+
+```bash
+git pull --ff-only
+docker network inspect ea1rfi-network
+docker compose -f docker-compose.prod.external.yml up -d --build web nginx
+docker compose -f docker-compose.prod.external.yml logs --tail=100 web
+docker compose -f docker-compose.prod.external.yml exec nginx nginx -t
+```
+
+Si la red no existe, créala con docker network create ea1rfi-network.
+El arranque prepara los directorios raíz de los volúmenes como root y baja
+a app antes de migrar, inicializar páginas, recopilar estáticos y ejecutar Gunicorn.
+No realiza un cambio recursivo de propietario de archivos en cada arranque.
+Para un volumen antiguo con subdirectorios de otro propietario, la reparación
+puntual es:
+
+```bash
+docker compose -f docker-compose.prod.external.yml exec --user root web chown -R app:app /app/media
+```
+
+No uses down -v: elimina los volúmenes. La migración de cabecera añade una tabla,
+conserva la fotografía individual y no borra contenido.
+Para crear el administrador usa createsuperuser dentro del servicio web.
+El administrador está en /admin/, español en / y las rutas de otros idiomas
+usan /gl/ y /en/; el selector y las traducciones de contenido aún están pendientes.
