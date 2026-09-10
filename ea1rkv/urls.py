@@ -17,6 +17,8 @@ from ea1rkv.apps.search.views import search
 sitemaps = {}
 
 urlpatterns = [
+    path("admin/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
     path("django-admin/", admin.site.urls),
     path("feed/", BlogFeed(), name="blog_feed"),
     path(
@@ -28,8 +30,6 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path("admin/", include(wagtailadmin_urls)),
-    path("documents/", include(wagtaildocs_urls)),
     path("search/", search, name="search"),
     path("", include(wagtail_urls)),
     prefix_default_language=False,
