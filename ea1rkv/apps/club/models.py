@@ -17,7 +17,11 @@ FEATURES = ["h2", "h3", "bold", "italic", "ol", "ul", "link", "document-link", "
 
 class ServicesPage(Page):
     intro = RichTextField("Presentación", blank=True, features=FEATURES)
-    content_panels = Page.content_panels + [FieldPanel("intro")]
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        InlinePanel("frequencies", label="Frecuencia", heading="Tabla de frecuencias"),
+        InlinePanel("service_cards", label="Servicio", heading="Servicios y accesos remotos"),
+    ]
     parent_page_types = ["home.HomePage"]
     subpage_types = ["club.ServicePage"]
     max_count_per_parent = 1
@@ -33,6 +37,39 @@ class ServicesPage(Page):
             for value, label in ServicePage.KINDS
         ]
         return context
+
+
+class FrequencyEntry(Orderable):
+    page = ParentalKey(ServicesPage, related_name="frequencies", on_delete=models.CASCADE)
+    name = models.CharField("Nombre / servicio", max_length=160)
+    callsign = models.CharField("Indicativo", max_length=40, blank=True)
+    frequency = models.CharField("Frecuencia", max_length=80)
+    mode = models.CharField("Modo / tono", max_length=100, blank=True)
+    status = models.CharField("Estado", max_length=120, blank=True)
+    notes = models.CharField("Notas", max_length=300, blank=True)
+    panels = [FieldPanel("name"), FieldPanel("callsign"), FieldPanel("frequency"), FieldPanel("mode"), FieldPanel("status"), FieldPanel("notes")]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "Frecuencia"
+        verbose_name_plural = "Frecuencias"
+
+
+class ClubService(Orderable):
+    ICONS = [("qsl", "QSL"), ("aprs", "APRS"), ("echolink", "Echolink"), ("remote", "Acceso remoto"), ("training", "Formación"), ("contest", "Concursos"), ("other", "Otros")]
+    page = ParentalKey(ServicesPage, related_name="service_cards", on_delete=models.CASCADE)
+    title = models.CharField("Nombre del servicio", max_length=160)
+    icon = models.CharField("Icono", max_length=20, choices=ICONS, default="other")
+    description = RichTextField("Descripción", blank=True, features=FEATURES)
+    remote_address = models.CharField("Dirección / remoto", max_length=200, blank=True)
+    remote_port = models.CharField("Puerto / canal", max_length=80, blank=True)
+    link_url = models.URLField("Enlace", blank=True)
+    link_label = models.CharField("Texto del enlace", max_length=80, blank=True)
+    status = models.CharField("Estado", max_length=120, blank=True)
+    panels = [FieldPanel("title"), FieldPanel("icon"), FieldPanel("description"), MultiFieldPanel([FieldPanel("remote_address"), FieldPanel("remote_port"), FieldPanel("status")], heading="Acceso remoto"), MultiFieldPanel([FieldPanel("link_url"), FieldPanel("link_label")], heading="Enlace opcional")]
+
+    class Meta(Orderable.Meta):
+        verbose_name = "Servicio del radioclub"
+        verbose_name_plural = "Servicios del radioclub"
 
 
 class ServicePage(Page):

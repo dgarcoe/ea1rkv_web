@@ -211,3 +211,13 @@ footer a:hover { color: #f0c982 !important; }
 .club-language-flag svg { border: 1px solid #cbd5e1; border-radius: 2px; }
 .club-language-flag[aria-current] { background: #e2edf3; }
 .club-language-flag[aria-disabled] { opacity: .35; }
+
+.services-page .frequency-table { min-width: 760px; }
+.frequency-table th { background: #102735; color: #fff; white-space: nowrap; }
+.frequency-value { font-weight: 700; color: #164b68; white-space: nowrap; }
+.service-card { border: 1px solid #dae4e9; border-radius: .5rem; padding: 1.5rem; background: #fff; box-shadow: 0 .25rem 1rem rgba(16,39,53,.06); }
+.service-card h3 { margin-top: .75rem; font-size: 1.35rem; }
+.service-icon { width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-items: center; background: #12bfe3; color: #fff; font-weight: 700; text-transform: uppercase; }
+.service-remote { margin-top: 1rem; padding: .75rem 1rem; background: #edf3f6; border-left: 3px solid #12bfe3; }
+.service-remote dt { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+.service-remote dd { margin: .25rem 0 0; overflow-wrap: anywhere; }

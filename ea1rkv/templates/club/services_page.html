@@ -2,19 +2,10 @@
 {% load wagtailcore_tags navigation_tags %}
 {% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
 {% block content %}
-<div class="container club-section">
-    <header class="blog-heading"><p class="eyebrow">RECURSOS DE EA1RKV</p><h1>{{ page.title }}</h1><div class="article-body">{{ page.intro|richtext }}</div></header>
-    {% for label, entries in service_groups %}
-    {% if entries %}<section class="mb-5"><h2 class="mb-4">{{ label }}</h2><div class="row g-4">
-        {% for entry in entries %}<div class="col-md-6 col-lg-4"><article class="card post-card h-100"><div class="card-body p-4">
-            <h3 class="h4"><a href="{% pageurl entry %}">{{ entry.title }}</a></h3>
-            {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
-            {% if entry.frequency %}<p class="mb-1">{{ entry.frequency }} MHz{% if entry.mode %} · {{ entry.mode }}{% endif %}</p>{% endif %}
-            {% if entry.equipment %}<p class="mb-1">{{ entry.equipment }}</p>{% endif %}
-            {% if entry.availability %}<p class="post-meta mb-0">{{ entry.availability }}</p>{% endif %}
-        </div></article></div>{% endfor %}
-    </div></section>{% endif %}
-    {% endfor %}
-    {% if not page.get_children.live.public %}<p class="empty-blog">Próximamente publicaremos los recursos y servicios del radioclub.</p>{% endif %}
+<div class="container club-section services-page">
+<header class="blog-heading"><p class="eyebrow">RECURSOS DE EA1RKV</p><h1>{{ page.title }}</h1>{% if page.intro %}<div class="article-body">{{ page.intro|richtext }}</div>{% endif %}</header>
+{% if page.frequencies.all %}<section class="mb-5" aria-labelledby="frequencies-title"><h2 id="frequencies-title">Frecuencias en Vigo y Val Miñor</h2><div class="table-responsive"><table class="table table-striped table-bordered align-middle frequency-table"><thead><tr><th>Servicio</th><th>Indicativo</th><th>Frecuencia</th><th>Modo / tono</th><th>Estado</th><th>Notas</th></tr></thead><tbody>{% for item in page.frequencies.all %}<tr><td>{{ item.name }}</td><td>{{ item.callsign }}</td><td class="frequency-value">{{ item.frequency }}</td><td>{{ item.mode }}</td><td>{{ item.status }}</td><td>{{ item.notes }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% if page.service_cards.all %}<section aria-labelledby="services-title"><h2 id="services-title">Servicios del radioclub</h2><div class="row g-4">{% for service in page.service_cards.all %}<div class="col-md-6 col-lg-4"><article class="service-card h-100"><div class="service-icon" aria-hidden="true">{{ service.get_icon_display|first }}</div><h3>{{ service.title }}</h3>{% if service.description %}<div class="article-body service-description">{{ service.description|richtext }}</div>{% endif %}{% if service.remote_address %}<dl class="service-remote"><dt>Acceso remoto</dt><dd>{{ service.remote_address }}{% if service.remote_port %} · {{ service.remote_port }}{% endif %}</dd></dl>{% endif %}{% if service.status %}<p class="post-meta">{{ service.status }}</p>{% endif %}{% if service.link_url %}<a href="{{ service.link_url }}" target="_blank" rel="noopener">{{ service.link_label|default:"Más información" }}</a>{% endif %}</article></div>{% endfor %}</div></section>{% endif %}
+{% if not page.frequencies.all and not page.service_cards.all %}<p class="empty-blog">Añade frecuencias y servicios desde el editor de esta página.</p>{% endif %}
 </div>
 {% endblock %}
