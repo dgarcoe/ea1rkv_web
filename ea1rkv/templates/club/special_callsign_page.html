@@ -1,23 +1,23 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
 {% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
 {% block content %}
 <article class="container club-section">
     <header class="blog-heading"><p class="eyebrow">{{ page.callsign }}</p><h1>{{ page.title }}</h1>
         {% include "club/includes/dates.html" with entry=page %}
         {% if page.summary %}<p class="lead">{{ page.summary }}</p>{% endif %}
-        {% if page.qrz_url %}<p><a href="{{ page.qrz_url }}" rel="noopener noreferrer" target="_blank">Consultar {{ page.callsign }} en QRZ (nueva pestaña)</a></p>{% endif %}
+        {% if page.qrz_url %}<p><a href="{{ page.qrz_url }}" rel="noopener noreferrer" target="_blank">{% blocktranslate with callsign=page.callsign %}Consultar {{ callsign }} en QRZ (nueva pestaña){% endblocktranslate %}</a></p>{% endif %}
     </header>
     {% if page.cover_image %}<figure>{% image page.cover_image width-1000 class="img-fluid rounded" %}</figure>{% endif %}
-    {% if page.activity_details %}<section class="card p-4 mb-5" aria-label="Ficha de la actividad"><dl class="row mb-0">
+    {% if page.activity_details %}<section class="card p-4 mb-5" aria-label="{% translate 'Ficha de la actividad' %}"><dl class="row mb-0">
         {% for label, value in page.activity_details %}<dt class="col-sm-3">{{ label }}</dt><dd class="col-sm-9">{{ value }}</dd>{% endfor %}
     </dl></section>{% endif %}
     {% if page.layout == 'report' %}{% include "club/includes/callsign_library.html" %}{% endif %}
     {% if page.layout == 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
-    {% if page.content %}<section class="article-body mb-5"><h2>{% if page.layout == 'report' %}Crónica de la actividad{% else %}Sobre la actividad{% endif %}</h2>{{ page.content|richtext }}</section>{% endif %}
+    {% if page.content %}<section class="article-body mb-5"><h2>{% if page.layout == 'report' %}{% translate "Crónica de la actividad" %}{% else %}{% translate "Sobre la actividad" %}{% endif %}</h2>{{ page.content|richtext }}</section>{% endif %}
     {% if page.qsl_information %}<section class="article-body mb-5"><h2>QSL</h2>{{ page.qsl_information|richtext }}</section>{% endif %}
     {% if page.layout != 'award' %}{% include "club/includes/callsign_award.html" %}{% endif %}
     {% if page.layout != 'report' %}{% include "club/includes/callsign_library.html" %}{% endif %}
-    <p class="mt-5"><a href="{% pageurl page.get_parent %}">Volver a indicativos especiales</a></p>
+    <p class="mt-5"><a href="{% pageurl page.get_parent %}">{% translate "Volver a indicativos especiales" %}</a></p>
 </article>
 {% endblock %}

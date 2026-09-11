@@ -1,2 +1,2 @@
-{% load wagtailcore_tags %}
-{% if page.award_rules %}<section class="article-body mb-5"><h2>Bases del diploma</h2>{{ page.award_rules|richtext }}</section>{% endif %}
+{% load i18n wagtailcore_tags %}
+{% if page.award_rules %}<section class="article-body mb-5"><h2>{% translate "Bases del diploma" %}</h2>{{ page.award_rules|richtext }}</section>{% endif %}

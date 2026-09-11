@@ -2,6 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "RADIOAFICIÓN · VIGO & VAL MIÑOR"
 msgstr "AMATEUR RADIO · VIGO & VAL MIÑOR"
@@ -116,3 +117,88 @@ msgstr "No content matches these filters. Try another type or group."
 
 msgid "Saltar al contenido"
 msgstr "Skip to content"
+
+#, python-format
+msgid "Biblioteca de %(callsign)s"
+msgstr "Library for %(callsign)s"
+
+#, python-format
+msgid "Consultar %(callsign)s en QRZ (nueva pestaña)"
+msgstr "Look up %(callsign)s on QRZ (new tab)"
+
+msgid "Ficha de la actividad"
+msgstr "Activity details"
+
+msgid "Crónica de la actividad"
+msgstr "Activity report"
+
+msgid "Sobre la actividad"
+msgstr "About the activity"
+
+msgid "Volver a indicativos especiales"
+msgstr "Back to special callsigns"
+
+msgid "Bases del diploma"
+msgstr "Award rules"
+
+msgid "Desde"
+msgstr "From"
+
+msgid "hasta"
+msgstr "until"
+
+msgid "Lugar / locator"
+msgstr "Location / grid locator"
+
+msgid "Bandas"
+msgstr "Bands"
+
+msgid "Modos"
+msgstr "Modes"
+
+msgid "Horario"
+msgstr "Schedule"
+
+msgid "Material de la actividad"
+msgstr "Activity material"
+
+msgid "Documentos"
+msgstr "Documents"
+
+msgid "Imágenes"
+msgstr "Images"
+
+msgid "Vídeos"
+msgstr "Videos"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "YouTube"
+msgstr "YouTube"
+
+#, python-format
+msgid "Ampliar %(title)s (nueva pestaña)"
+msgstr "Enlarge %(title)s (new tab)"
+
+msgid "Páginas de la biblioteca"
+msgstr "Library pages"
+
+#, python-format
+msgid "Página %(number)s de %(total)s"
+msgstr "Page %(number)s of %(total)s"
+
+msgid "Descargar original"
+msgstr "Download original"
+
+#, python-format
+msgid "%(count)s elemento"
+msgid_plural "%(count)s elementos"
+msgstr[0] "%(count)s item"
+msgstr[1] "%(count)s items"
+
+#, python-format
+msgid "%(count)s elemento de %(total)s"
+msgid_plural "%(count)s elementos de %(total)s"
+msgstr[0] "%(count)s item of %(total)s"
+msgstr[1] "%(count)s items of %(total)s"

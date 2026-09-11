@@ -2,6 +2,7 @@ msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "RADIOAFICIÓN · VIGO & VAL MIÑOR"
 msgstr "RADIOAFECCIÓN · VIGO & VAL MIÑOR"
@@ -116,3 +117,88 @@ msgstr "Non hai contido con estes filtros. Proba con outro tipo ou grupo."
 
 msgid "Saltar al contenido"
 msgstr "Saltar ao contido"
+
+#, python-format
+msgid "Biblioteca de %(callsign)s"
+msgstr "Biblioteca de %(callsign)s"
+
+#, python-format
+msgid "Consultar %(callsign)s en QRZ (nueva pestaña)"
+msgstr "Consultar %(callsign)s en QRZ (nova pestana)"
+
+msgid "Ficha de la actividad"
+msgstr "Ficha da actividade"
+
+msgid "Crónica de la actividad"
+msgstr "Crónica da actividade"
+
+msgid "Sobre la actividad"
+msgstr "Sobre a actividade"
+
+msgid "Volver a indicativos especiales"
+msgstr "Volver aos indicativos especiais"
+
+msgid "Bases del diploma"
+msgstr "Bases do diploma"
+
+msgid "Desde"
+msgstr "Desde"
+
+msgid "hasta"
+msgstr "ata"
+
+msgid "Lugar / locator"
+msgstr "Lugar / locator"
+
+msgid "Bandas"
+msgstr "Bandas"
+
+msgid "Modos"
+msgstr "Modos"
+
+msgid "Horario"
+msgstr "Horario"
+
+msgid "Material de la actividad"
+msgstr "Material da actividade"
+
+msgid "Documentos"
+msgstr "Documentos"
+
+msgid "Imágenes"
+msgstr "Imaxes"
+
+msgid "Vídeos"
+msgstr "Vídeos"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "YouTube"
+msgstr "YouTube"
+
+#, python-format
+msgid "Ampliar %(title)s (nueva pestaña)"
+msgstr "Ampliar %(title)s (nova pestana)"
+
+msgid "Páginas de la biblioteca"
+msgstr "Páxinas da biblioteca"
+
+#, python-format
+msgid "Página %(number)s de %(total)s"
+msgstr "Páxina %(number)s de %(total)s"
+
+msgid "Descargar original"
+msgstr "Descargar orixinal"
+
+#, python-format
+msgid "%(count)s elemento"
+msgid_plural "%(count)s elementos"
+msgstr[0] "%(count)s elemento"
+msgstr[1] "%(count)s elementos"
+
+#, python-format
+msgid "%(count)s elemento de %(total)s"
+msgid_plural "%(count)s elementos de %(total)s"
+msgstr[0] "%(count)s elemento de %(total)s"
+msgstr[1] "%(count)s elementos de %(total)s"

@@ -1,4 +1,5 @@
+{% load i18n %}
 {% if entry.start_date or entry.end_date %}<p class="post-meta">
-    {% if entry.start_date %}Desde <time datetime="{{ entry.start_date|date:'Y-m-d' }}">{{ entry.start_date|date:"d F Y" }}</time>{% endif %}
-    {% if entry.end_date %} hasta <time datetime="{{ entry.end_date|date:'Y-m-d' }}">{{ entry.end_date|date:"d F Y" }}</time>{% endif %}
+    {% if entry.start_date %}{% translate "Desde" %} <time datetime="{{ entry.start_date|date:'Y-m-d' }}">{{ entry.start_date|date:"d F Y" }}</time>{% endif %}
+    {% if entry.end_date %} {% translate "hasta" %} <time datetime="{{ entry.end_date|date:'Y-m-d' }}">{{ entry.end_date|date:"d F Y" }}</time>{% endif %}
 </p>{% endif %}

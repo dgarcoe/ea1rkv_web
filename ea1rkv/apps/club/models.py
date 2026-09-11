@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlencode, urlsplit
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db import models
+from django.utils.translation import gettext as _, gettext_noop
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField
@@ -162,8 +163,8 @@ class SpecialCallsignPage(Page):
     @property
     def activity_details(self):
         return [(label, getattr(self, name)) for name, label in
-                [("location", "Lugar / locator"), ("bands", "Bandas"),
-                 ("modes", "Modos"), ("schedule", "Horario")]
+                [("location", _("Lugar / locator")), ("bands", _("Bandas")),
+                 ("modes", _("Modos")), ("schedule", _("Horario"))]
                 if getattr(self, name)]
 
     class Meta:
@@ -189,7 +190,7 @@ class SpecialCallsignPage(Page):
         entries = Paginator(filtered, 12).get_page(request.GET.get("biblioteca_pagina"))
         groups = OrderedDict()
         for item in entries:
-            groups.setdefault(item.group or "Material de la actividad", []).append(item)
+            groups.setdefault(item.group or _("Material de la actividad"), []).append(item)
         context.update({
             "library_types": CallsignMedia.TYPES, "library_type": selected_type,
             "library_group": selected_group, "library_group_names": group_names,
@@ -251,8 +252,8 @@ def youtube_video_id(url):
 
 
 class CallsignMedia(Orderable):
-    TYPES = [("document", "Documentos"), ("image", "Imágenes"), ("video", "Vídeos"),
-             ("audio", "Audio"), ("youtube", "YouTube")]
+    TYPES = [("document", gettext_noop("Documentos")), ("image", gettext_noop("Imágenes")), ("video", gettext_noop("Vídeos")),
+             ("audio", gettext_noop("Audio")), ("youtube", gettext_noop("YouTube"))]
     VIDEO_EXTENSIONS = {"mp4", "webm", "m4v"}
     AUDIO_EXTENSIONS = {"mp3", "wav", "ogg", "m4a", "flac"}
     page = ParentalKey(SpecialCallsignPage, related_name="media_items", on_delete=models.CASCADE)
