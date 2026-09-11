@@ -29,7 +29,30 @@ def main_menu(context, parent=None, calling_page=None):
 
     if parent is None:
         return {"menuitems": [], "request": context["request"]}
-    menuitems = parent.get_children().live().public().in_menu()
+    menuitems = list(parent.get_children().live().public().in_menu())
+
+    # Translation trees have independent path order. Use the site's primary
+    # locale as the shared ordering reference, matching pages by translation_key.
+    # Keep visibility checks on the translated pages, not the source pages.
+    site = Site.find_for_request(context["request"])
+    reference_parent = None
+    if site is not None:
+        reference_parent = parent.get_translations(inclusive=True).filter(
+            locale_id=site.root_page.locale_id
+        ).first()
+    if reference_parent is not None:
+        positions = {
+            key: position
+            for position, key in enumerate(
+                reference_parent.get_children().order_by("path").values_list(
+                    "translation_key", flat=True
+                )
+            )
+        }
+        menuitems.sort(key=lambda item: (
+            positions.get(item.translation_key, len(positions)),
+            str(item.translation_key),
+        ))
 
     for menuitem in menuitems:
         menuitem.active = (
