@@ -1,76 +1,23 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
-
+{% load i18n wagtailcore_tags navigation_tags %}
 {% block body_class %}blog-index{% endblock %}
-
-{% block breadcrumbs %}
-    {% breadcrumbs self %}
-{% endblock %}
-
+{% block breadcrumbs %}{% breadcrumbs self %}{% endblock %}
 {% block content %}
-<div class="container py-5">
-    <h1 class="mb-3">{{ self.title }}</h1>
-
-    {% if self.intro %}
-        <p class="lead text-muted mb-4">{{ self.intro }}</p>
-    {% endif %}
-
-    {# Category filters #}
-    {% if categories %}
-    <div class="mb-4">
-        <a href="{% pageurl self %}" class="btn btn-sm {% if not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
-            {% trans "All" %}
-        </a>
-        {% for category in categories %}
-            <a href="{% pageurl self %}?category={{ category.slug }}"
-               class="btn btn-sm {% if request.GET.category == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
-                {{ category.name }}
-            </a>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {# Posts #}
+<div class="container club-section">
+    <header class="blog-heading"><p class="eyebrow">{% translate "EL BLOG DE EA1RKV" %}</p><h1>{{ page.title }}</h1>{% if page.intro %}<p class="lead">{{ page.intro }}</p>{% endif %}</header>
+    {% if categories %}<nav class="d-flex flex-wrap gap-2 mb-4" aria-label="Categorías del blog">
+        <a href="{% pageurl page %}" class="btn btn-outline-primary">{% translate "Todas las publicaciones" %}</a>
+        {% for category in categories %}<a href="{% pageurl page %}?category={{ category.slug|urlencode }}" class="btn {% if request.GET.category == category.slug %}btn-primary{% else %}btn-outline-primary{% endif %}">{{ category.name }}</a>{% endfor %}
+    </nav>{% endif %}
+    {% if request.GET.tag %}<p>Etiqueta: <strong>{{ request.GET.tag }}</strong> · <a href="{% pageurl page %}">{% translate "Quitar filtros" %}</a></p>{% endif %}
     <div class="row g-4">
-        {% for post in posts %}
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                {% if post.header_image %}
-                    <a href="{% pageurl post %}">
-                        {% image post.header_image fill-400x250 class="card-img-top" %}
-                    </a>
-                {% endif %}
-                <div class="card-body">
-                    <p class="card-text small text-muted mb-1">
-                        <i class="bi bi-calendar3 me-1"></i>{{ post.date|date:"d M Y" }}
-                        {% if post.author_name %}
-                            <span class="ms-2"><i class="bi bi-person me-1"></i>{{ post.author_name }}</span>
-                        {% endif %}
-                    </p>
-                    <h5 class="card-title">
-                        <a href="{% pageurl post %}" class="text-decoration-none text-dark">{{ post.title }}</a>
-                    </h5>
-                    <p class="card-text">{{ post.intro|truncatewords:30 }}</p>
-                    {% if post.tags.all %}
-                    <div class="mt-2">
-                        {% for tag in post.tags.all %}
-                            <a href="{% pageurl self %}?tag={{ tag }}" class="badge bg-light text-dark text-decoration-none">
-                                #{{ tag }}
-                            </a>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="card-footer bg-transparent border-top-0">
-                    <a href="{% pageurl post %}" class="btn btn-sm btn-outline-primary">{% trans "Read more" %}</a>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12">
-            <p class="text-muted text-center py-5">{% trans "No posts found." %}</p>
-        </div>
-        {% endfor %}
+        {% for post in posts %}<div class="col-md-6 col-lg-4">{% include "blog/includes/post_card.html" %}</div>
+        {% empty %}<div class="col-12"><p class="empty-blog">{% if request.GET.category or request.GET.tag %}{% translate "No hay publicaciones con estos filtros." %} <a href="{% pageurl page %}">{% translate "Ver todas" %}</a>{% else %}{% translate "Pronto compartiremos aquí las primeras noticias y artículos del radioclub." %}{% endif %}</p></div>{% endfor %}
     </div>
+    {% if posts.has_other_pages %}<nav class="d-flex flex-wrap justify-content-center align-items-center gap-3 mt-5" aria-label="Páginas del blog">
+        {% if posts.has_previous %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.previous_page_number }}">{% translate "Anterior" %}</a>{% endif %}
+        <span>Página {{ posts.number }} de {{ posts.paginator.num_pages }}</span>
+        {% if posts.has_next %}<a class="btn btn-outline-primary" href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ posts.next_page_number }}">{% translate "Siguiente" %}</a>{% endif %}
+    </nav>{% endif %}
 </div>
 {% endblock %}

@@ -2,9 +2,10 @@
 
 from django.db import models
 
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
-from wagtail.models import Page
+from wagtail.models import Orderable, Page
+from modelcluster.fields import ParentalKey
 
 from ea1rkv.apps.base.blocks import BODY_BLOCKS
 
@@ -20,13 +21,13 @@ class HomePage(Page):
     )
     hero_subtitle = models.CharField(
         max_length=300,
-        default="Vigo Val Miñor Radioclub",
+        default="Unión de Radioafeccionados de Vigo-Val Miñor",
         help_text="Subtitle displayed below the hero heading",
     )
     hero_cta_text = models.CharField(
         max_length=50,
         blank=True,
-        default="Learn More",
+        default="Conoce el radioclub",
         help_text="Call-to-action button text",
     )
     hero_cta_url = models.CharField(
@@ -40,15 +41,25 @@ class HomePage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text="Background image for the hero section",
+        verbose_name="Imagen de cabecera",
+        help_text="Sube la fotografía de Vigo que quieras mostrar. Puedes cambiarla en cualquier momento.",
     )
 
+    hero_image_credit = models.CharField("Créditos de la imagen", max_length=300, blank=True, help_text="Autor, fuente y licencia, si corresponde.")
+
     # About section
-    about_title = models.CharField(max_length=200, default="About Our Club")
+    about_title = models.CharField(max_length=200, default="Nuestro radioclub")
     about_text = RichTextField(blank=True)
 
     # Flexible body content
     body = StreamField(BODY_BLOCKS, blank=True, use_json_field=True)
+
+    # Legacy fields remain stored for recovery, but are not exposed in the editor.
+    content = RichTextField(
+        "Contenido", blank=True,
+        features=["h2", "h3", "bold", "italic", "ol", "ul", "link", "document-link", "image", "embed"],
+        help_text="Escribe y da formato al texto; puedes insertar imágenes y enlaces desde la barra de herramientas.",
+    )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
@@ -58,22 +69,24 @@ class HomePage(Page):
                 FieldPanel("hero_cta_text"),
                 FieldPanel("hero_cta_url"),
                 FieldPanel("hero_image"),
+                FieldPanel("hero_image_credit"),
+                InlinePanel("hero_slides", label="Fotografía", heading="Cabecera rotatoria (opcional)"),
             ],
-            heading="Hero Section",
+            heading="Cabecera",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("about_title"),
-                FieldPanel("about_text"),
+                FieldPanel("content"),
             ],
-            heading="About Section",
+            heading="Presentación del radioclub",
         ),
-        FieldPanel("body"),
     ]
 
-    max_count = 1
     parent_page_types = ["wagtailcore.Page"]
     subpage_types = [
+        "club.ServicesPage",
+        "club.CallsignsPage",
         "blog.BlogIndexPage",
         "events.EventIndexPage",
         "gallery.GalleryIndexPage",
@@ -85,27 +98,29 @@ class HomePage(Page):
         verbose_name = "Home Page"
 
     def get_context(self, request, *args, **kwargs):
+        from ea1rkv.apps.blog.models import BlogIndexPage, BlogPage
+
         context = super().get_context(request, *args, **kwargs)
+        context["hero_slides"] = list(self.hero_slides.select_related("image").all())
+        from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
+        context["services_index"] = ServicesPage.objects.child_of(self).live().public().first()
+        context["callsigns_index"] = CallsignsPage.objects.child_of(self).live().public().first()
+        blog = BlogIndexPage.objects.child_of(self).live().public().first()
+        context["blog_index"] = blog
         context["latest_posts"] = (
-            self._get_latest_blog_posts()
-        )
-        context["upcoming_events"] = (
-            self._get_upcoming_events()
+            BlogPage.objects.child_of(blog).live().public()
+            .select_related("header_image").order_by("-date", "-pk")[:3]
+            if blog else BlogPage.objects.none()
         )
         return context
 
-    def _get_latest_blog_posts(self, count=3):
-        from ea1rkv.apps.blog.models import BlogPage
 
-        return BlogPage.objects.live().order_by("-date")[:count]
+class HeroSlide(Orderable):
+    page = ParentalKey(HomePage, related_name="hero_slides", on_delete=models.CASCADE)
+    image = models.ForeignKey(
+        "wagtailimages.Image", on_delete=models.PROTECT, related_name="+",
+        verbose_name="Fotografía",
+    )
+    credit = models.CharField("Autor, fuente y licencia", max_length=300, blank=True)
 
-    def _get_upcoming_events(self, count=3):
-        from django.utils import timezone
-
-        from ea1rkv.apps.events.models import EventPage
-
-        return (
-            EventPage.objects.live()
-            .filter(start_date__gte=timezone.now().date())
-            .order_by("start_date")[:count]
-        )
+    panels = [FieldPanel("image"), FieldPanel("credit")]

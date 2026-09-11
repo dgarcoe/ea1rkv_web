@@ -10,6 +10,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    gettext \
     libpq-dev \
     gcc \
     libjpeg62-turbo-dev \
@@ -21,6 +22,8 @@ COPY requirements/ requirements/
 RUN pip install --no-cache-dir -r requirements/production.txt
 
 COPY . .
+
+RUN django-admin compilemessages
 
 RUN DJANGO_SETTINGS_MODULE=ea1rkv.settings.production \
     DJANGO_SECRET_KEY=build-placeholder \
@@ -35,6 +38,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    gosu \
     libpq5 \
     libjpeg62-turbo \
     zlib1g \
@@ -47,13 +51,16 @@ COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app /app
 
-RUN chown -R app:app /app
-USER app
+RUN mkdir -p /app/media /app/staticfiles \
+    && chown -R app:app /app \
+    && chmod 755 /app/docker/entrypoint.prod.sh
 
 EXPOSE 8000
 
+ENTRYPOINT ["/app/docker/entrypoint.prod.sh"]
+
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/login/')" || exit 1
+    CMD python -c "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/', headers={'Host': 'ea1rkv.com', 'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request, timeout=4)" || exit 1
 
 CMD ["gunicorn", "ea1rkv.wsgi:application", \
      "--bind", "0.0.0.0:8000", \

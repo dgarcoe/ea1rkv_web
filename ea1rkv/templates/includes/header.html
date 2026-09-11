@@ -1,56 +1,12 @@
-{% load static navigation_tags wagtailcore_tags i18n %}
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <strong>EA1RKV</strong>
-            <span class="ms-2 d-none d-md-inline small text-light">Vigo Val Miñor Radioclub</span>
-        </a>
-
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarMain"
-                aria-controls="navbarMain"
-                aria-expanded="false"
-                aria-label="{% trans 'Toggle navigation' %}">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarMain">
-            {% main_menu calling_page=self %}
-
-            {# Search form #}
-            <form class="d-flex ms-auto" action="{% url 'search' %}" method="get" role="search">
-                <div class="input-group input-group-sm">
-                    <input class="form-control" type="search" name="query"
-                           placeholder="{% trans 'Search...' %}" aria-label="{% trans 'Search' %}">
-                    <button class="btn btn-outline-light" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
-            </form>
-
-            {# Language selector #}
-            {% get_current_language as CURRENT_LANGUAGE %}
-            <ul class="navbar-nav ms-2">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-translate"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        {% get_available_languages as LANGUAGES %}
-                        {% for lang_code, lang_name in LANGUAGES %}
-                        <li>
-                            <a class="dropdown-item {% if lang_code == CURRENT_LANGUAGE %}active{% endif %}"
-                               href="/{{ lang_code }}/">
-                                {{ lang_name }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            </ul>
+{% load navigation_tags wagtailcore_tags %}
+{% get_site_root as site_root %}
+<header class="club-header">
+    <nav class="container d-flex flex-wrap align-items-center justify-content-between gap-3 py-3" aria-label="Navegación principal">
+        <a class="club-brand" href="{% pageurl site_root %}"><strong>EA1RKV</strong><span>Vigo · Val Miñor</span></a>
+        <div class="d-flex flex-wrap align-items-center gap-3">
+            <a class="nav-link" href="{% pageurl site_root %}" {% if page.pk == site_root.pk %}aria-current="page"{% endif %}>{% home_label %}</a>
+            {% main_menu calling_page=page %}
         </div>
-    </div>
-</nav>
+    </nav>
+    <div class="club-language-corner">{% language_switcher %}</div>
+</header>

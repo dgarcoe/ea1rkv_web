@@ -1,0 +1,10 @@
+{% load i18n wagtailimages_tags %}
+{% for label, photos in photo_groups %}<section class="mb-5"><h2 class="mb-4">{{ label }}</h2><div class="row g-4">
+    {% for photo in photos %}<figure class="col-sm-6 col-lg-4">
+        {% image photo.image width-1600 as large %}
+        <a href="{{ large.url }}" target="_blank" rel="noopener" aria-label="{% blocktranslate with title=photo.caption|default:photo.image.title %}Ampliar {{ title }} (nueva pestaña){% endblocktranslate %}">{% image photo.image fill-640x480 class="img-fluid rounded" loading="lazy" %}</a>
+        <figcaption class="mt-2">{% if photo.caption %}<p class="mb-1">{{ photo.caption }}</p>{% endif %}{% if photo.credit %}<p class="post-meta mb-1">{{ photo.credit }}</p>{% endif %}
+            <a href="{{ photo.image.file.url }}" download>{% translate "Descargar original" %}<span class="visually-hidden">: {{ photo.image.title }}</span></a>
+        </figcaption>
+    </figure>{% endfor %}
+</div></section>{% endfor %}

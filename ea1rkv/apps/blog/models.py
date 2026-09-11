@@ -1,5 +1,6 @@
 """Blog models for EA1RKV website news and articles."""
 
+from django.core.paginator import Paginator
 from django.db import models
 from django.utils import timezone
 
@@ -7,7 +8,7 @@ from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey, ParentalManyToManyField
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
@@ -57,7 +58,7 @@ class BlogIndexPage(Page):
         FieldPanel("intro"),
     ]
 
-    max_count = 1
+    max_count_per_parent = 1
     parent_page_types = ["home.HomePage"]
     subpage_types = ["blog.BlogPage"]
 
@@ -66,7 +67,9 @@ class BlogIndexPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        posts = BlogPage.objects.child_of(self).live().order_by("-date")
+        posts = (BlogPage.objects.child_of(self).live().public()
+                 .select_related("header_image").prefetch_related("tags")
+                 .order_by("-date", "-pk"))
 
         # Filter by category
         category_slug = request.GET.get("category")
@@ -78,7 +81,10 @@ class BlogIndexPage(Page):
         if tag:
             posts = posts.filter(tags__name=tag)
 
-        context["posts"] = posts
+        context["posts"] = Paginator(posts.distinct(), 9).get_page(request.GET.get("page"))
+        filters = request.GET.copy()
+        filters.pop("page", None)
+        context["pagination_query"] = filters.urlencode()
         context["categories"] = BlogCategory.objects.all()
         return context
 
@@ -107,6 +113,13 @@ class BlogPage(Page):
         help_text="Author name or callsign",
     )
 
+    # Legacy fields remain stored for recovery, but are not exposed in the editor.
+    content = RichTextField(
+        "Contenido", blank=True,
+        features=["h2", "h3", "bold", "italic", "ol", "ul", "link", "document-link", "image", "embed"],
+        help_text="Escribe y da formato al texto; puedes insertar imágenes y enlaces desde la barra de herramientas.",
+    )
+
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
@@ -117,7 +130,7 @@ class BlogPage(Page):
         ),
         FieldPanel("header_image"),
         FieldPanel("intro"),
-        FieldPanel("body"),
+        FieldPanel("content"),
         MultiFieldPanel(
             [
                 FieldPanel("categories"),
@@ -129,7 +142,7 @@ class BlogPage(Page):
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
-        index.SearchField("body"),
+        index.SearchField("content"),
         index.SearchField("author_name"),
     ]
 
@@ -139,3 +152,4 @@ class BlogPage(Page):
     class Meta:
         verbose_name = "Blog Post"
         ordering = ["-date"]
+

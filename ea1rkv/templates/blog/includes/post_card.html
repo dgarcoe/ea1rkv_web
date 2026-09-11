@@ -1,0 +1,9 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<article class="card post-card h-100">
+    {% if post.header_image %}{% image post.header_image fill-640x400 class="card-img-top" loading="lazy" %}{% endif %}
+    <div class="card-body p-4">
+        <p class="post-meta"><time datetime="{{ post.date|date:'Y-m-d' }}">{{ post.date|date:"d F Y" }}</time>{% if post.author_name %} · {{ post.author_name }}{% endif %}</p>
+        <h3 class="h4"><a href="{% pageurl post %}">{{ post.title }}</a></h3>
+        <p class="mb-0">{{ post.intro|truncatewords:30 }}</p>
+    </div>
+</article>

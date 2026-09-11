@@ -19,6 +19,8 @@ BASE_DIR = PROJECT_DIR.parent
 
 INSTALLED_APPS = [
     # Wagtail apps
+    "wagtail.locales",
+    "wagtail.contrib.simple_translation",
     "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.embeds",
@@ -37,6 +39,7 @@ INSTALLED_APPS = [
     "modelcluster",
     "taggit",
     "widget_tweaks",
+    "tinymce",
     # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -48,6 +51,7 @@ INSTALLED_APPS = [
     # Project apps
     "ea1rkv.apps.base",
     "ea1rkv.apps.home",
+    "ea1rkv.apps.club",
     "ea1rkv.apps.blog",
     "ea1rkv.apps.events",
     "ea1rkv.apps.gallery",
@@ -149,6 +153,11 @@ MEDIA_URL = "/media/"
 WAGTAIL_SITE_NAME = "EA1RKV - Vigo Val Miñor Radioclub"
 
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
+WAGTAIL_SITE_HOSTNAME = os.environ.get("WAGTAIL_SITE_HOSTNAME", "")
+WAGTAIL_SITE_PORT = os.environ.get("WAGTAIL_SITE_PORT", "443")
+
+# Paste only the token supplied by Google Search Console, not the full meta tag.
+GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "").strip()
 
 WAGTAILSEARCH_BACKENDS = {
     "default": {
@@ -162,7 +171,23 @@ WAGTAIL_CONTENT_LANGUAGES = LANGUAGES
 
 WAGTAILIMAGES_MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10 MB
 
+# Wagtail's document chooser also holds uploaded audio and video. Serve them
+# through its normal permission-aware endpoint, with playable MIME types.
+WAGTAILDOCS_EXTENSIONS = ["csv", "doc", "docx", "key", "odt", "pdf", "ppt", "pptx",
+                         "rtf", "txt", "xls", "xlsx", "zip", "mp4", "webm", "m4v",
+                         "mp3", "wav", "ogg", "m4a", "flac"]
+WAGTAILDOCS_CONTENT_TYPES = {
+    "mp4": "video/mp4", "webm": "video/webm", "m4v": "video/mp4",
+    "mp3": "audio/mpeg", "wav": "audio/wav", "ogg": "audio/ogg",
+    "m4a": "audio/mp4", "flac": "audio/flac",
+}
+WAGTAILDOCS_INLINE_CONTENT_TYPES = ["application/pdf", *set(WAGTAILDOCS_CONTENT_TYPES.values())]
+
 WAGTAILADMIN_COMMENTS_ENABLED = True
+
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    "default": {"WIDGET": "ea1rkv.apps.base.editors.ClassicRichTextWidget"},
+}
 
 # --- Default Primary Key ---
 

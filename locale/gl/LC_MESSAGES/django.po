@@ -1,0 +1,207 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: gl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "RADIOAFICIÓN · VIGO & VAL MIÑOR"
+msgstr "RADIOAFECCIÓN · VIGO & VAL MIÑOR"
+
+msgid "Visita el blog"
+msgstr "Visita o blog"
+
+msgid "Conoce el radioclub"
+msgstr "Coñece o radioclub"
+
+msgid "EL RADIOCLUB"
+msgstr "O RADIOCLUB"
+
+msgid "Consulta los repetidores, frecuencias y equipos del radioclub."
+msgstr "Consulta os repetidores, frecuencias e equipos do radioclub."
+
+msgid "Descubre las actividades y sus álbumes de fotografías."
+msgstr "Descobre as actividades e os seus álbums de fotografías."
+
+msgid "DESDE EA1RKV"
+msgstr "DENDE EA1RKV"
+
+msgid "Últimas publicaciones"
+msgstr "Últimas publicacións"
+
+msgid "Ver todo el blog"
+msgstr "Ver todo o blog"
+
+msgid "Pronto compartiremos aquí las primeras noticias y artículos del radioclub."
+msgstr "Pronto compartiremos aquí as primeiras novas e artigos do radioclub."
+
+msgid "Anterior"
+msgstr "Anterior"
+
+msgid "Siguiente"
+msgstr "Seguinte"
+
+msgid "Pausar"
+msgstr "Pausar"
+
+msgid "Reanudar"
+msgstr "Retomar"
+
+msgid "EL BLOG DE EA1RKV"
+msgstr "O BLOG DE EA1RKV"
+
+msgid "Todas las publicaciones"
+msgstr "Todas as publicacións"
+
+msgid "Quitar filtros"
+msgstr "Quitar filtros"
+
+msgid "Ver todas"
+msgstr "Ver todas"
+
+msgid "No hay publicaciones con estos filtros."
+msgstr "Non hai publicacións con estes filtros."
+
+msgid "ACTIVIDADES EN LAS ONDAS"
+msgstr "ACTIVIDADES NAS ONDAS"
+
+msgid "Próximamente compartiremos información y fotos de nuestros indicativos especiales."
+msgstr "Proximamente compartiremos información e fotos dos nosos indicativos especiais."
+
+msgid "Fotografías, grabaciones y documentos de la actividad."
+msgstr "Fotografías, gravacións e documentos da actividade."
+
+msgid "Tipo de contenido"
+msgstr "Tipo de contido"
+
+msgid "Todos los tipos"
+msgstr "Todos os tipos"
+
+msgid "Grupo / álbum"
+msgstr "Grupo / álbum"
+
+msgid "Todos los grupos"
+msgstr "Todos os grupos"
+
+msgid "Filtrar"
+msgstr "Filtrar"
+
+msgid "Mostrar todo"
+msgstr "Mostrar todo"
+
+msgid "Descargar imagen"
+msgstr "Descargar imaxe"
+
+msgid "Descargar documento"
+msgstr "Descargar documento"
+
+msgid "Descargar vídeo"
+msgstr "Descargar vídeo"
+
+msgid "Descargar audio"
+msgstr "Descargar audio"
+
+msgid "Ver en YouTube (nueva pestaña)"
+msgstr "Ver en YouTube (nova pestana)"
+
+msgid "Tu navegador no puede reproducir este vídeo."
+msgstr "O teu navegador non pode reproducir este vídeo."
+
+msgid "Tu navegador no puede reproducir este audio."
+msgstr "O teu navegador non pode reproducir este audio."
+
+msgid "Todavía no hay contenido en la biblioteca de este indicativo."
+msgstr "Aínda non hai contido na biblioteca deste indicativo."
+
+msgid "No hay contenido con estos filtros. Prueba con otro tipo o grupo."
+msgstr "Non hai contido con estes filtros. Proba con outro tipo ou grupo."
+
+msgid "Saltar al contenido"
+msgstr "Saltar ao contido"
+
+msgid "Próximamente publicaremos aquí los servicios, repetidores y frecuencias del radioclub."
+msgstr "Proximamente publicaremos aquí os servizos, repetidores e frecuencias do radioclub."
+
+#, python-format
+msgid "Biblioteca de %(callsign)s"
+msgstr "Biblioteca de %(callsign)s"
+
+#, python-format
+msgid "Consultar %(callsign)s en QRZ (nueva pestaña)"
+msgstr "Consultar %(callsign)s en QRZ (nova pestana)"
+
+msgid "Ficha de la actividad"
+msgstr "Ficha da actividade"
+
+msgid "Crónica de la actividad"
+msgstr "Crónica da actividade"
+
+msgid "Sobre la actividad"
+msgstr "Sobre a actividade"
+
+msgid "Volver a indicativos especiales"
+msgstr "Volver aos indicativos especiais"
+
+msgid "Bases del diploma"
+msgstr "Bases do diploma"
+
+msgid "Desde"
+msgstr "Desde"
+
+msgid "hasta"
+msgstr "ata"
+
+msgid "Lugar / locator"
+msgstr "Lugar / locator"
+
+msgid "Bandas"
+msgstr "Bandas"
+
+msgid "Modos"
+msgstr "Modos"
+
+msgid "Horario"
+msgstr "Horario"
+
+msgid "Material de la actividad"
+msgstr "Material da actividade"
+
+msgid "Documentos"
+msgstr "Documentos"
+
+msgid "Imágenes"
+msgstr "Imaxes"
+
+msgid "Vídeos"
+msgstr "Vídeos"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "YouTube"
+msgstr "YouTube"
+
+#, python-format
+msgid "Ampliar %(title)s (nueva pestaña)"
+msgstr "Ampliar %(title)s (nova pestana)"
+
+msgid "Páginas de la biblioteca"
+msgstr "Páxinas da biblioteca"
+
+#, python-format
+msgid "Página %(number)s de %(total)s"
+msgstr "Páxina %(number)s de %(total)s"
+
+msgid "Descargar original"
+msgstr "Descargar orixinal"
+
+#, python-format
+msgid "%(count)s elemento"
+msgid_plural "%(count)s elementos"
+msgstr[0] "%(count)s elemento"
+msgstr[1] "%(count)s elementos"
+
+#, python-format
+msgid "%(count)s elemento de %(total)s"
+msgid_plural "%(count)s elementos de %(total)s"
+msgstr[0] "%(count)s elemento de %(total)s"
+msgstr[1] "%(count)s elementos de %(total)s"

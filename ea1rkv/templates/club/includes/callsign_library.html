@@ -1,0 +1,74 @@
+{% load i18n wagtailcore_tags wagtailimages_tags %}
+<section id="biblioteca" class="callsign-library mb-5" aria-labelledby="library-title">
+    <h2 id="library-title">{% blocktranslate with callsign=page.callsign %}Biblioteca de {{ callsign }}{% endblocktranslate %}</h2>
+    <p>{% translate "Fotografías, grabaciones y documentos de la actividad." %}</p>
+    <form method="get" action="#biblioteca" class="library-filters card p-3 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="library-type" class="form-label">{% translate "Tipo de contenido" %}</label>
+                <select id="library-type" name="tipo" class="form-select">
+                    <option value="">{% translate "Todos los tipos" %}</option>
+                    {% for value, label in library_types %}<option value="{{ value }}"{% if library_type == value %} selected{% endif %}>{% translate label %}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="library-group" class="form-label">{% translate "Grupo / álbum" %}</label>
+                <select id="library-group" name="grupo" class="form-select">
+                    <option value="">{% translate "Todos los grupos" %}</option>
+                    {% for group in library_group_names %}<option value="{{ group }}"{% if library_group == group %} selected{% endif %}>{{ group }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 d-flex gap-3 align-items-center flex-wrap">
+                <button type="submit" class="btn btn-primary">{% translate "Filtrar" %}</button>
+                {% if library_type or library_group %}<a href="?#biblioteca">{% translate "Mostrar todo" %}</a>{% endif %}
+            </div>
+        </div>
+    </form>
+    <p class="post-meta">{% if library_type or library_group %}{% blocktranslate count count=library_count with total=library_total %}{{ count }} elemento de {{ total }}{% plural %}{{ count }} elementos de {{ total }}{% endblocktranslate %}{% else %}{% blocktranslate count count=library_count %}{{ count }} elemento{% plural %}{{ count }} elementos{% endblocktranslate %}{% endif %}</p>
+    {% for group, items in library_groups %}
+    <section class="mb-5" aria-label="{{ group }}">
+        <h3 class="mb-3">{{ group }}</h3>
+        <div class="row g-4">
+            {% for item in items %}<div class="col-md-6">
+                <article class="card h-100 library-item">
+                    <div class="card-body">
+                        <p class="eyebrow">{% translate item.get_kind_display %}</p>
+                        <h4 class="h5">{{ item.title }}</h4>
+                        {% if item.description %}<div class="library-description rich-text mb-3">{{ item.description|richtext }}</div>{% endif %}
+                        {% if item.credit %}<p class="post-meta">{{ item.credit }}</p>{% endif %}
+                        {% if item.kind == 'image' and item.image %}
+                            {% image item.image width-1600 as large %}
+                            <a href="{{ large.url }}" target="_blank" rel="noopener" aria-label="{% blocktranslate with title=item.title %}Ampliar {{ title }} (nueva pestaña){% endblocktranslate %}">{% image item.image width-800 class="img-fluid rounded library-image" loading="lazy" alt=item.title %}</a>
+                            <p class="mt-3 mb-0"><a href="{{ item.image.file.url }}" download>{% translate "Descargar imagen" %}<span class="visually-hidden">: {{ item.title }}</span></a></p>
+                        {% elif item.kind == 'video' and item.asset %}
+                            <video controls preload="none" playsinline class="w-100 rounded" aria-label="{{ item.title }}">
+                                <source src="{{ item.asset.url }}" type="{{ item.asset.content_type }}">
+                                {% translate "Tu navegador no puede reproducir este vídeo." %}
+                            </video>
+                            <p class="mt-3 mb-0"><a href="{{ item.asset.url }}" download>{% translate "Descargar vídeo" %}<span class="visually-hidden">: {{ item.title }}</span></a></p>
+                        {% elif item.kind == 'audio' and item.asset %}
+                            <audio controls preload="none" class="w-100" aria-label="{{ item.title }}">
+                                <source src="{{ item.asset.url }}" type="{{ item.asset.content_type }}">
+                                {% translate "Tu navegador no puede reproducir este audio." %}
+                            </audio>
+                            <p class="mt-3 mb-0"><a href="{{ item.asset.url }}" download>{% translate "Descargar audio" %}<span class="visually-hidden">: {{ item.title }}</span></a></p>
+                        {% elif item.kind == 'youtube' and item.youtube_embed_url %}
+                            <div class="ratio ratio-16x9"><iframe src="{{ item.youtube_embed_url }}" title="{{ item.title }}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+                            <p class="mt-3 mb-0"><a href="{{ item.youtube_url }}" target="_blank" rel="noopener noreferrer">{% translate "Ver en YouTube (nueva pestaña)" %}</a></p>
+                        {% elif item.kind == 'document' and item.asset %}
+                            <a class="btn btn-outline-primary" href="{{ item.asset.url }}" download>{% translate "Descargar documento" %}<span class="visually-hidden">: {{ item.title }}</span></a>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>{% endfor %}
+        </div>
+    </section>
+    {% empty %}
+        <p class="alert alert-light border">{% if library_total %}{% translate "No hay contenido con estos filtros. Prueba con otro tipo o grupo." %}{% else %}{% translate "Todavía no hay contenido en la biblioteca de este indicativo." %}{% endif %}</p>
+    {% endfor %}
+    {% if library_entries.has_other_pages %}<nav aria-label="{% translate 'Páginas de la biblioteca' %}" class="d-flex gap-3 align-items-center flex-wrap">
+        {% if library_entries.has_previous %}<a href="?{{ library_query }}&amp;biblioteca_pagina={{ library_entries.previous_page_number }}#biblioteca">{% translate "Anterior" %}</a>{% endif %}
+        <span>{% blocktranslate with number=library_entries.number total=library_entries.paginator.num_pages %}Página {{ number }} de {{ total }}{% endblocktranslate %}</span>
+        {% if library_entries.has_next %}<a href="?{{ library_query }}&amp;biblioteca_pagina={{ library_entries.next_page_number }}#biblioteca">{% translate "Siguiente" %}</a>{% endif %}
+    </nav>{% endif %}
+</section>

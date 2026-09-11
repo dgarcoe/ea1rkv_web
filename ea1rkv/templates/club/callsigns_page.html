@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
+{% block content %}
+<div class="container club-section">
+    <header class="blog-heading"><p class="eyebrow">{% translate "ACTIVIDADES EN LAS ONDAS" %}</p><h1>{{ page.title }}</h1><div class="article-body">{{ page.intro|richtext }}</div></header>
+    <div class="row g-4">
+        {% for entry in callsigns %}<div class="col-md-6 col-lg-4"><article class="card post-card h-100">
+            {% if entry.cover_image %}{% image entry.cover_image width-960 class="card-img-top callsign-cover" loading="lazy" %}{% endif %}
+            <div class="card-body p-4"><p class="eyebrow">{{ entry.callsign }}</p><h2 class="h4"><a href="{% pageurl entry %}">{{ entry.title }}</a></h2>
+                {% include "club/includes/dates.html" with entry=entry %}
+                {% if entry.summary %}<p>{{ entry.summary }}</p>{% endif %}
+            </div>
+        </article></div>{% empty %}<p class="empty-blog">{% translate "Próximamente compartiremos información y fotos de nuestros indicativos especiales." %}</p>{% endfor %}
+    </div>
+    {% if callsigns.has_other_pages %}<nav class="d-flex flex-wrap gap-3 justify-content-center mt-5" aria-label="Páginas de indicativos">
+        {% if callsigns.has_previous %}<a href="?page={{ callsigns.previous_page_number }}">{% translate "Anterior" %}</a>{% endif %}
+        <span>Página {{ callsigns.number }} de {{ callsigns.paginator.num_pages }}</span>
+        {% if callsigns.has_next %}<a href="?page={{ callsigns.next_page_number }}">{% translate "Siguiente" %}</a>{% endif %}
+    </nav>{% endif %}
+</div>
+{% endblock %}
