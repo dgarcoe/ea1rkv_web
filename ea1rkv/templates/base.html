@@ -1,11 +1,13 @@
-{% load static wagtailcore_tags wagtailuserbar navigation_tags i18n %}
+{% load static wagtailcore_tags wagtailuserbar navigation_tags seo_tags i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% elif self.title %}{{ self.title }} | EA1RKV{% endif %}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{{ self.search_description|default:'EA1RKV · Unión de Radioafeccionados de Vigo-Val Miñor' }}{% endblock %}">
+    {% if page or self %}{% seo_meta %}{% else %}
+    <title>{% block title %}EA1RKV{% endblock %}</title>
+    <meta name="robots" content="noindex,follow">
+    {% endif %}
 
     {# Bootstrap 5 CSS #}
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
@@ -47,4 +49,3 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
-

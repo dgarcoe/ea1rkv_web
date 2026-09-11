@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags navigation_tags %}
+{% load i18n wagtailcore_tags navigation_tags %}
 {% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
 {% block content %}
 <div class="container club-section services-page">
@@ -19,6 +19,6 @@
     </div></section>{% endif %}
     {% endfor %}
 
-{% if not page.frequencies.all and not page.service_cards.all and not service_groups %}<p class="empty-blog">Añade frecuencias y servicios desde el editor de esta página.</p>{% endif %}
+{% if not page.frequencies.all and not page.service_cards.all and not has_service_groups %}<p class="empty-blog">{% translate "Próximamente publicaremos aquí los servicios, repetidores y frecuencias del radioclub." %}</p>{% endif %}
 </div>
 {% endblock %}

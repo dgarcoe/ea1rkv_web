@@ -153,6 +153,11 @@ MEDIA_URL = "/media/"
 WAGTAIL_SITE_NAME = "EA1RKV - Vigo Val Miñor Radioclub"
 
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
+WAGTAIL_SITE_HOSTNAME = os.environ.get("WAGTAIL_SITE_HOSTNAME", "")
+WAGTAIL_SITE_PORT = os.environ.get("WAGTAIL_SITE_PORT", "443")
+
+# Paste only the token supplied by Google Search Console, not the full meta tag.
+GOOGLE_SITE_VERIFICATION = os.environ.get("GOOGLE_SITE_VERIFICATION", "").strip()
 
 WAGTAILSEARCH_BACKENDS = {
     "default": {

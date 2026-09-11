@@ -118,6 +118,9 @@ msgstr "No content matches these filters. Try another type or group."
 msgid "Saltar al contenido"
 msgstr "Skip to content"
 
+msgid "Próximamente publicaremos aquí los servicios, repetidores y frecuencias del radioclub."
+msgstr "The club's services, repeaters and frequencies will be published here soon."
+
 #, python-format
 msgid "Biblioteca de %(callsign)s"
 msgstr "Library for %(callsign)s"

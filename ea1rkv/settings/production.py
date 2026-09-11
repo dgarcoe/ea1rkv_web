@@ -69,6 +69,8 @@ STORAGES = {
 # --- Wagtail ---
 
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "https://ea1rkv.com")
+WAGTAIL_SITE_HOSTNAME = os.environ.get("WAGTAIL_SITE_HOSTNAME", "ea1rkv.com")
+WAGTAIL_SITE_PORT = os.environ.get("WAGTAIL_SITE_PORT", "443")
 
 # --- Logging ---
 

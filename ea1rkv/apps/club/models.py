@@ -37,6 +37,9 @@ class ServicesPage(Page):
             (label, [entry for entry in entries if entry.kind == value])
             for value, label in ServicePage.KINDS
         ]
+        context["has_service_groups"] = any(
+            entries for _, entries in context["service_groups"]
+        )
         return context
 
 
