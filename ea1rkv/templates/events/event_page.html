@@ -14,7 +14,7 @@
             <header class="mb-4">
                 <span class="badge bg-secondary mb-2">{{ self.get_event_type_display }}</span>
                 {% if self.is_past %}
-                    <span class="badge bg-warning text-dark mb-2">{% trans "Past Event" %}</span>
+                    <span class="badge bg-warning text-dark mb-2">{% trans "Actividad finalizada" %}</span>
                 {% endif %}
                 <h1 class="mb-3">{{ self.title }}</h1>
                 <p class="lead">{{ self.intro }}</p>
@@ -25,7 +25,7 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <p class="mb-1"><strong><i class="bi bi-calendar3 me-1"></i> {% trans "Date" %}:</strong></p>
+                            <p class="mb-1"><strong><i class="bi bi-calendar3 me-1"></i> {% trans "Fecha" %}:</strong></p>
                             <p class="mb-0">
                                 {{ self.start_date|date:"d F Y" }}
                                 {% if self.is_multiday %} - {{ self.end_date|date:"d F Y" }}{% endif %}
@@ -33,22 +33,23 @@
                         </div>
                         {% if self.start_time %}
                         <div class="col-sm-6">
-                            <p class="mb-1"><strong><i class="bi bi-clock me-1"></i> {% trans "Time" %}:</strong></p>
+                            <p class="mb-1"><strong><i class="bi bi-clock me-1"></i> {% trans "Horario" %}:</strong></p>
                             <p class="mb-0">
                                 {{ self.start_time|time:"H:i" }}
                                 {% if self.end_time %} - {{ self.end_time|time:"H:i" }}{% endif %}
+                                <small>({% trans "Hora local de Vigo" %})</small>
                             </p>
                         </div>
                         {% endif %}
                         {% if self.location %}
                         <div class="col-sm-6">
-                            <p class="mb-1"><strong><i class="bi bi-geo-alt me-1"></i> {% trans "Location" %}:</strong></p>
+                            <p class="mb-1"><strong><i class="bi bi-geo-alt me-1"></i> {% trans "Lugar" %}:</strong></p>
                             <p class="mb-0">{{ self.location }}{% if self.locator %} ({{ self.locator }}){% endif %}</p>
                         </div>
                         {% endif %}
                         {% if self.frequency %}
                         <div class="col-sm-6">
-                            <p class="mb-1"><strong><i class="bi bi-broadcast me-1"></i> {% trans "Frequency" %}:</strong></p>
+                            <p class="mb-1"><strong><i class="bi bi-broadcast me-1"></i> {% trans "Frecuencia" %}:</strong></p>
                             <p class="mb-0">{{ self.frequency }}{% if self.mode %} / {{ self.mode }}{% endif %}</p>
                         </div>
                         {% endif %}
@@ -64,7 +65,9 @@
             {% endif %}
 
             {# Body content #}
-            {% if self.body %}
+            {% if self.content %}
+            <div class="article-body">{{ self.content|richtext }}</div>
+            {% elif self.body %}
             <div class="article-body">
                 {% include_block self.body %}
             </div>

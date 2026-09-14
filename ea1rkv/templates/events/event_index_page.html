@@ -19,11 +19,11 @@
     <div class="mb-4 d-flex gap-2 flex-wrap">
         <a href="{% pageurl self %}"
            class="btn btn-sm {% if not show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            {% trans "Upcoming" %}
+            {% trans "Próximas actividades" %}
         </a>
         <a href="{% pageurl self %}?past=true"
            class="btn btn-sm {% if show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            {% trans "Past Events" %}
+            {% trans "Actividades anteriores" %}
         </a>
 
         <span class="border-start mx-2"></span>
@@ -49,9 +49,9 @@
                         </div>
                         <div>
                             <span class="badge bg-secondary mb-1">{{ event.get_event_type_display }}</span>
-                            <h5 class="mb-1">
+                            <h2 class="h5 mb-1">
                                 <a href="{% pageurl event %}" class="text-decoration-none text-dark">{{ event.title }}</a>
-                            </h5>
+                            </h2>
                             <p class="mb-2 small">{{ event.intro|truncatewords:25 }}</p>
                             <div class="small text-muted">
                                 {% if event.location %}
@@ -76,9 +76,9 @@
         <div class="col-12">
             <p class="text-muted text-center py-5">
                 {% if show_past %}
-                    {% trans "No past events found." %}
+                    {% trans "Todavía no hay actividades anteriores." %}
                 {% else %}
-                    {% trans "No upcoming events." %}
+                    {% trans "Próximamente anunciaremos nuevas actividades." %}
                 {% endif %}
             </p>
         </div>

@@ -9,6 +9,7 @@ from wagtail.models import Locale, Page, Site
 
 from ea1rkv.apps.base.models import RadioclubSettings
 from ea1rkv.apps.blog.models import BlogIndexPage
+from ea1rkv.apps.events.models import EventIndexPage
 from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
 from ea1rkv.apps.home.default_content import CLUB_DESCRIPTION
 from ea1rkv.apps.home.models import HomePage
@@ -80,6 +81,12 @@ class Command(BaseCommand):
             blog.save_revision().publish()
         for model, title, slug, intro in (
             (
+                EventIndexPage,
+                "Agenda",
+                "agenda",
+                "Actividades, concursos, talleres y encuentros de EA1RKV en Vigo y Val Miñor.",
+            ),
+            (
                 ServicesPage,
                 "Servicios",
                 "servicios",
@@ -107,6 +114,25 @@ class Command(BaseCommand):
                     )
                 )
                 section.save_revision().publish()
+        agenda = EventIndexPage.objects.child_of(home).first()
+        for translated_home in home.get_translations().specific():
+            code = translated_home.locale.language_code
+            if code not in {"gl", "en"}:
+                continue
+            if EventIndexPage.objects.child_of(translated_home).exists():
+                continue
+            slug = "agenda" if code == "gl" else "events"
+            if translated_home.get_children().filter(slug=slug).exists():
+                self.stdout.write(self.style.WARNING(f"No se creó la Agenda en {code}: el slug {slug} ya existe."))
+                continue
+            translated = translated_home.add_child(instance=EventIndexPage(
+                title="Axenda" if code == "gl" else "Events",
+                slug=slug, locale=translated_home.locale,
+                translation_key=agenda.translation_key, show_in_menus=True,
+                intro=("Actividades, concursos, obradoiros e encontros de EA1RKV en Vigo e Val Miñor."
+                       if code == "gl" else "EA1RKV activities, contests, workshops and gatherings in Vigo and Val Miñor."),
+            ))
+            translated.save_revision().publish()
         hostname = settings.WAGTAIL_SITE_HOSTNAME.strip().lower()
         if hostname:
             if not re.fullmatch(r"[a-z0-9.-]+", hostname):

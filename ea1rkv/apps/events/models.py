@@ -2,9 +2,12 @@
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.db.models.functions import Coalesce
+from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 
@@ -14,12 +17,12 @@ from ea1rkv.apps.base.blocks import BODY_BLOCKS
 class EventType(models.TextChoices):
     """Types of radioclub events."""
 
-    CONTEST = "contest", "Contest"
-    FIELD_DAY = "field_day", "Field Day"
-    MEETING = "meeting", "Meeting"
-    WORKSHOP = "workshop", "Workshop"
-    SOCIAL = "social", "Social Event"
-    OTHER = "other", "Other"
+    CONTEST = "contest", _("Concurso")
+    FIELD_DAY = "field_day", _("Actividad al aire libre")
+    MEETING = "meeting", _("Reunión")
+    WORKSHOP = "workshop", _("Taller")
+    SOCIAL = "social", _("Encuentro social")
+    OTHER = "other", _("Otra actividad")
 
 
 class EventIndexPage(Page):
@@ -31,27 +34,29 @@ class EventIndexPage(Page):
         FieldPanel("intro"),
     ]
 
-    max_count = 1
+    max_count_per_parent = 1
     parent_page_types = ["home.HomePage"]
     subpage_types = ["events.EventPage"]
 
     class Meta:
-        verbose_name = "Events Index"
+        verbose_name = "Agenda"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
         show_past = request.GET.get("past", "").lower() == "true"
-        events = EventPage.objects.child_of(self).live()
+        events = EventPage.objects.child_of(self).live().public().annotate(
+            effective_end=Coalesce("end_date", "start_date")
+        )
 
         if show_past:
             events = events.filter(
-                start_date__lt=timezone.now().date()
+                effective_end__lt=timezone.localdate()
             ).order_by("-start_date")
         else:
             events = events.filter(
-                start_date__gte=timezone.now().date()
-            ).order_by("start_date")
+                effective_end__gte=timezone.localdate()
+            ).order_by("start_date", "start_time", "pk")
 
         # Filter by event type
         event_type = request.GET.get("type")
@@ -101,6 +106,7 @@ class EventPage(Page):
         help_text="Brief event description for listings",
     )
     body = StreamField(BODY_BLOCKS, use_json_field=True, blank=True)
+    content = RichTextField("Descripción", blank=True)
     header_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -118,30 +124,31 @@ class EventPage(Page):
                 FieldPanel("start_time"),
                 FieldPanel("end_time"),
             ],
-            heading="Date & Time",
+            heading="Fechas y horario (hora local de Vigo)",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("location"),
                 FieldPanel("locator"),
             ],
-            heading="Location",
+            heading="Lugar",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("frequency"),
                 FieldPanel("mode"),
             ],
-            heading="Radio Details",
+            heading="Datos de radio",
         ),
         FieldPanel("header_image"),
         FieldPanel("intro"),
-        FieldPanel("body"),
+        FieldPanel("content"),
     ]
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
         index.SearchField("body"),
+        index.SearchField("content"),
         index.SearchField("location"),
     ]
 
@@ -149,12 +156,21 @@ class EventPage(Page):
     subpage_types = []
 
     class Meta:
-        verbose_name = "Event"
+        verbose_name = "Actividad"
         ordering = ["-start_date"]
 
     @property
     def is_past(self):
-        return self.start_date < timezone.now().date()
+        return (self.end_date or self.start_date) < timezone.localdate()
+
+    def clean(self):
+        super().clean()
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValidationError({"end_date": "La fecha final debe ser igual o posterior a la inicial."})
+        if (self.start_time and self.end_time
+                and (not self.end_date or self.end_date == self.start_date)
+                and self.end_time <= self.start_time):
+            raise ValidationError({"end_time": "La hora final debe ser posterior a la inicial; para actividades nocturnas indica la fecha final."})
 
     @property
     def is_multiday(self):

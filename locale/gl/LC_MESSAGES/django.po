@@ -205,3 +205,48 @@ msgid "%(count)s elemento de %(total)s"
 msgid_plural "%(count)s elementos de %(total)s"
 msgstr[0] "%(count)s elemento de %(total)s"
 msgstr[1] "%(count)s elementos de %(total)s"
+
+msgid "Próximas actividades"
+msgstr "Próximas actividades"
+
+msgid "Actividades anteriores"
+msgstr "Actividades anteriores"
+
+msgid "Todavía no hay actividades anteriores."
+msgstr "Aínda non hai actividades anteriores."
+
+msgid "Próximamente anunciaremos nuevas actividades."
+msgstr "Proximamente anunciaremos novas actividades."
+
+msgid "Actividad finalizada"
+msgstr "Actividade finalizada"
+
+msgid "Fecha"
+msgstr "Data"
+
+msgid "Lugar"
+msgstr "Lugar"
+
+msgid "Frecuencia"
+msgstr "Frecuencia"
+
+msgid "Concurso"
+msgstr "Concurso"
+
+msgid "Actividad al aire libre"
+msgstr "Actividade ao aire libre"
+
+msgid "Reunión"
+msgstr "Reunión"
+
+msgid "Taller"
+msgstr "Obradoiro"
+
+msgid "Encuentro social"
+msgstr "Encontro social"
+
+msgid "Otra actividad"
+msgstr "Outra actividade"
+
+msgid "Hora local de Vigo"
+msgstr "Hora local de Vigo"
