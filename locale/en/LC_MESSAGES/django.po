@@ -250,3 +250,33 @@ msgstr "Other activity"
 
 msgid "Hora local de Vigo"
 msgstr "Vigo local time"
+
+msgid "Calendario"
+msgstr "Calendar"
+
+msgid "Actividades e indicativos especiales"
+msgstr "Activities and special callsigns"
+
+msgid "Indicativos especiales"
+msgstr "Special callsigns"
+
+msgid "Lunes"
+msgstr "Monday"
+
+msgid "Martes"
+msgstr "Tuesday"
+
+msgid "Miércoles"
+msgstr "Wednesday"
+
+msgid "Jueves"
+msgstr "Thursday"
+
+msgid "Viernes"
+msgstr "Friday"
+
+msgid "Sábado"
+msgstr "Saturday"
+
+msgid "Domingo"
+msgstr "Sunday"

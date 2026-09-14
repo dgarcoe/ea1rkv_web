@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from django.db.models.functions import Coalesce
 from django.utils.translation import gettext_lazy as _
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
@@ -44,28 +43,9 @@ class EventIndexPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        show_past = request.GET.get("past", "").lower() == "true"
-        events = EventPage.objects.child_of(self).live().public().annotate(
-            effective_end=Coalesce("end_date", "start_date")
-        )
+        from .calendar import agenda_context
 
-        if show_past:
-            events = events.filter(
-                effective_end__lt=timezone.localdate()
-            ).order_by("-start_date")
-        else:
-            events = events.filter(
-                effective_end__gte=timezone.localdate()
-            ).order_by("start_date", "start_time", "pk")
-
-        # Filter by event type
-        event_type = request.GET.get("type")
-        if event_type and event_type in EventType.values:
-            events = events.filter(event_type=event_type)
-
-        context["events"] = events
-        context["show_past"] = show_past
-        context["event_types"] = EventType.choices
+        context.update(agenda_context(self, request))
         return context
 
 

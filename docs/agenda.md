@@ -1,5 +1,13 @@
 # Agenda
 
+Incluye calendario mensual (lunes a domingo) con navegación por meses.
+En móviles se puede desplazar horizontalmente. Los indicativos especiales
+publicados, públicos y del mismo idioma aparecen automáticamente si tienen
+fecha de inicio, durante todos los días hasta su fecha final. Sin fecha final
+se muestran sólo el día de inicio. Cada entrada enlaza con la ficha original;
+no hay que duplicarla como actividad. Los filtros afectan al calendario y al
+listado; el archivo afecta sólo al listado.
+
 El arranque de producción ejecuta las migraciones y `setup_radioclub`.
 Este comando crea Agenda bajo Inicio y sus versiones en galego e inglés si
 existen las portadas traducidas, sin sustituir contenido editorial.

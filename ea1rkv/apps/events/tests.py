@@ -12,6 +12,27 @@ from ea1rkv.apps.home.models import HomePage
 
 
 class AgendaTests(TestCase):
+    def test_callsigns_in_calendar_and_listing(self):
+        from ea1rkv.apps.club.models import CallsignsPage, SpecialCallsignPage
+        from wagtail.models import PageViewRestriction
+
+        today = timezone.localdate()
+        parent = CallsignsPage.objects.get()
+        callsign = parent.add_child(instance=SpecialCallsignPage(
+            title="Special", slug="special", callsign="EGTEST",
+            start_date=today-timedelta(days=2), end_date=today+timedelta(days=2),
+        ))
+        callsign.save_revision().publish()
+        response = self.client.get(self.agenda.url + "?type=callsign")
+        self.assertContains(response, "EGTEST")
+        self.assertEqual(list(response.context["events"]), [callsign])
+        day = next(d for week in response.context["calendar_weeks"] for d in week if d["date"] == today)
+        self.assertEqual(day["items"], [callsign])
+        response = self.client.get(self.agenda.url + "?month=invalid")
+        self.assertEqual(response.status_code, 200)
+        PageViewRestriction.objects.create(page=callsign, restriction_type="login")
+        self.assertNotContains(self.client.get(self.agenda.url), "EGTEST")
+
     def setUp(self):
         call_command("setup_radioclub", stdout=StringIO())
         self.agenda = EventIndexPage.objects.get()

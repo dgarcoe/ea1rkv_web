@@ -250,3 +250,33 @@ msgstr "Outra actividade"
 
 msgid "Hora local de Vigo"
 msgstr "Hora local de Vigo"
+
+msgid "Calendario"
+msgstr "Calendario"
+
+msgid "Actividades e indicativos especiales"
+msgstr "Actividades e indicativos especiais"
+
+msgid "Indicativos especiales"
+msgstr "Indicativos especiais"
+
+msgid "Lunes"
+msgstr "Luns"
+
+msgid "Martes"
+msgstr "Martes"
+
+msgid "Miércoles"
+msgstr "Mércores"
+
+msgid "Jueves"
+msgstr "Xoves"
+
+msgid "Viernes"
+msgstr "Venres"
+
+msgid "Sábado"
+msgstr "Sábado"
+
+msgid "Domingo"
+msgstr "Domingo"
