@@ -218,6 +218,9 @@ msgstr "Aínda non hai actividades anteriores."
 msgid "Próximamente anunciaremos nuevas actividades."
 msgstr "Proximamente anunciaremos novas actividades."
 
+msgid "Se repite mensualmente"
+msgstr "Repítese mensualmente"
+
 msgid "Actividad finalizada"
 msgstr "Actividade finalizada"
 

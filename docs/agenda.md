@@ -34,3 +34,11 @@ docker compose -f docker-compose.prod.external.yml up -d --build
 
 Si usas el overlay de estadísticas, conserva también
 `-f docker-compose.analytics.yml` en el comando de Compose.
+
+## Actividades periódicas
+
+Para una reunión mensual, crea una sola actividad y en **Repetición** elige
+«Mensual: día de la semana». Para la reunión del radioclub del primer viernes,
+selecciona «primero» y «viernes», y establece una fecha final de repetición.
+La Agenda genera automáticamente cada aparición en el calendario. No crees
+una página por cada mes.

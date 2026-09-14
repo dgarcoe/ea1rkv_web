@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import date, timedelta
 from io import StringIO
 
 from django.core.exceptions import ValidationError
@@ -63,6 +63,20 @@ class AgendaTests(TestCase):
                           end_date=timezone.localdate()-timedelta(days=1))
         with self.assertRaises(ValidationError):
             event.clean()
+
+    def test_first_friday_recurrence_is_generated(self):
+        from ea1rkv.apps.events.calendar import occurrence_dates
+        from ea1rkv.apps.events.models import Recurrence
+
+        event = EventPage(
+            title="Reunión mensual", start_date=date(2026, 1, 1),
+            recurrence=Recurrence.MONTHLY_NTH, recurrence_week=1,
+            recurrence_weekday=4, recurrence_until=date(2026, 3, 31),
+        )
+        self.assertEqual(
+            occurrence_dates(event, date(2026, 1, 1), date(2026, 3, 31)),
+            [date(2026, 1, 2), date(2026, 2, 6), date(2026, 3, 6)],
+        )
 
     def test_setup_preserves_content_and_links_translations(self):
         home = HomePage.objects.get()

@@ -4,6 +4,8 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from datetime import date
+import calendar
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
@@ -22,6 +24,11 @@ class EventType(models.TextChoices):
     WORKSHOP = "workshop", _("Taller")
     SOCIAL = "social", _("Encuentro social")
     OTHER = "other", _("Otra actividad")
+
+
+class Recurrence(models.TextChoices):
+    NONE = "none", _("No se repite")
+    MONTHLY_NTH = "monthly_nth", _("Mensual: día de la semana")
 
 
 class EventIndexPage(Page):
@@ -65,6 +72,16 @@ class EventPage(Page):
     )
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
+    recurrence = models.CharField(max_length=20, choices=Recurrence.choices, default=Recurrence.NONE)
+    recurrence_week = models.PositiveSmallIntegerField(
+        choices=[(1, _("primero")), (2, _("segundo")), (3, _("tercero")), (4, _("cuarto")), (5, _("último"))],
+        default=1,
+    )
+    recurrence_weekday = models.PositiveSmallIntegerField(
+        choices=[(0, _("lunes")), (1, _("martes")), (2, _("miércoles")), (3, _("jueves")), (4, _("viernes")), (5, _("sábado")), (6, _("domingo"))],
+        default=4,
+    )
+    recurrence_until = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=300, blank=True)
     locator = models.CharField(
         max_length=10,
@@ -103,6 +120,10 @@ class EventPage(Page):
                 FieldPanel("end_date"),
                 FieldPanel("start_time"),
                 FieldPanel("end_time"),
+                FieldPanel("recurrence"),
+                FieldPanel("recurrence_week"),
+                FieldPanel("recurrence_weekday"),
+                FieldPanel("recurrence_until"),
             ],
             heading="Fechas y horario (hora local de Vigo)",
         ),
@@ -151,6 +172,8 @@ class EventPage(Page):
                 and (not self.end_date or self.end_date == self.start_date)
                 and self.end_time <= self.start_time):
             raise ValidationError({"end_time": "La hora final debe ser posterior a la inicial; para actividades nocturnas indica la fecha final."})
+        if self.recurrence != Recurrence.NONE and self.recurrence_until and self.recurrence_until < self.start_date:
+            raise ValidationError({"recurrence_until": "La repetición debe terminar después de la fecha inicial."})
 
     @property
     def is_multiday(self):
