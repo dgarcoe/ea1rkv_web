@@ -22,6 +22,12 @@ Las actividades se ordenan por fecha y las de varios días se mantienen en
 próximas hasta finalizar su último día. Después pasan al archivo. Se puede
 filtrar por tipo. Una actividad sin fecha final dura un solo día.
 
+Al publicar una actividad en el idioma principal (español), se crean y
+publican automáticamente las versiones que falten en galego e inglés. Copian
+fechas, recurrencia, horarios, lugar, datos de radio, imagen y textos. Después
+se editan los textos en cada idioma. Las traducciones ya existentes nunca se
+sobrescriben al volver a publicar la versión española.
+
 Para cambiar la posición del menú, reordena las páginas hijas de Inicio.
 No se crean actividades de ejemplo. No requiere cambios en nginx.
 

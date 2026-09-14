@@ -150,6 +150,15 @@ class Command(BaseCommand):
             site.site_name = "EA1RKV · Vigo-Val Miñor"
             site.save(update_fields=["hostname", "port", "site_name"])
         RadioclubSettings.objects.get_or_create(site=site)
+        # Backfill language copies for events that were published before the
+        # automatic publication integration was installed.
+        from ea1rkv.apps.events.models import EventPage
+        from ea1rkv.apps.events.translation import replicate_event_translations
+
+        for event in EventPage.objects.filter(
+            locale_id=site.root_page.locale_id, live=True
+        ):
+            replicate_event_translations(event)
         self.stdout.write(
             self.style.SUCCESS(
                 "Inicio, Blog, Servicios e Indicativos especiales preparados. Edita los contenidos desde /admin/."
