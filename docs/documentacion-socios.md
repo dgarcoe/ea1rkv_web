@@ -22,3 +22,12 @@ Las descargas exigen la sesión autorizada y una página publicada, no usan
 /media/ ni /documents/. Borradores no publicados no aparecen. Las respuestas
 son no-cache y noindex. Los cambios de categoría/título se guardan por revisión.
 Este acceso es provisional y compartido; no identifica a cada socio.
+
+Antes de cada descarga se solicita un correo válido y el marcado obligatorio
+de «Confirmo que soy socio del URV-Val Miñor». El correo se recuerda para
+rellenarlo en la siguiente descarga, pero la confirmación se pide siempre.
+Wagtail muestra en **Fragmentos → Correos de descargas** la primera y última
+descarga, el contador y el último documento; la lista se puede exportar. El
+texto de información sobre el uso del correo se edita en la página. Debe
+indicar el responsable, finalidad, conservación y vía para ejercer derechos
+que correspondan al radioclub. Los administradores pueden eliminar registros.

@@ -7,7 +7,7 @@ from django.core.management import call_command
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
-from .models import ClubDocumentsPage, ClubDocument
+from .models import ClubDocument, ClubDocumentsPage, MemberDownloadEmail
 
 
 @override_settings(CLUB_DOCUMENTS_PASSWORD="test-club-password")
@@ -22,10 +22,15 @@ class PrivateDocumentsTests(TestCase):
         self.storage._location = self.temp.name
         self.storage.__dict__.pop("location", None)
         self.storage.__dict__.pop("base_location", None)
-        self.doc = self.page.private_documents.create(title="Acta secreta", date=date.today(),
-            file=SimpleUploadedFile("acta.pdf", b"private-pdf-content"))
+        self.doc = self.page.private_documents.create(
+            title="Acta secreta",
+            date=date.today(),
+            file=SimpleUploadedFile("acta.pdf", b"private-pdf-content"),
+        )
         self.page.save_revision().publish()
-        self.url = reverse("club_document_download", args=[self.page.pk, self.doc.download_key])
+        self.url = reverse(
+            "club_document_download", args=[self.page.pk, self.doc.download_key]
+        )
 
     def tearDown(self):
         self.storage._location = self.original_location
@@ -38,26 +43,60 @@ class PrivateDocumentsTests(TestCase):
 
     def test_gate_and_download(self):
         self.assertNotContains(self.client.get(self.page.url), "Acta secreta")
-        self.assertNotContains(self.client.get(self.page.url), "Introducción confidencial")
+        self.assertNotContains(
+            self.client.get(self.page.url), "Introducción confidencial"
+        )
         self.assertEqual(self.client.get(self.url).status_code, 302)
         self.assertEqual(self.login().status_code, 302)
         response = self.client.get(self.page.url)
         self.assertContains(response, "Acta secreta")
         self.assertIn("no-store", response["Cache-Control"])
         response = self.client.get(self.url)
+        self.assertContains(response, "Confirmo que soy socio del URV-Val Miñor")
+        self.assertEqual(MemberDownloadEmail.objects.count(), 0)
+        response = self.client.post(
+            self.url,
+            {"email": "SOCIO@example.com", "confirmed_member": "on"},
+        )
         self.assertEqual(b"".join(response.streaming_content), b"private-pdf-content")
         self.assertIn("attachment", response["Content-Disposition"])
+        contact = MemberDownloadEmail.objects.get()
+        self.assertEqual(contact.email, "socio@example.com")
+        self.assertEqual(contact.download_count, 1)
+        self.assertEqual(contact.last_document, "Acta secreta")
+        self.assertContains(self.client.get(self.url), 'value="socio@example.com"')
+        self.client.post(
+            self.url,
+            {"email": "socio@example.com", "confirmed_member": "on"},
+        )
+        contact.refresh_from_db()
+        self.assertEqual(contact.download_count, 2)
         with self.assertRaises(ValueError):
-            self.doc.file.url
+            str(self.doc.file.url)
+
+    def test_email_and_membership_confirmation_are_required(self):
+        self.login()
+        self.client.post(self.url, {"email": "not-an-email", "confirmed_member": "on"})
+        self.client.post(self.url, {"email": "socio@example.com"})
+        self.assertEqual(MemberDownloadEmail.objects.count(), 0)
 
     def test_rotation_logout_and_drafts(self):
         self.login()
         with override_settings(CLUB_DOCUMENTS_PASSWORD="changed"):
             self.assertEqual(self.client.get(self.url).status_code, 302)
-        draft = self.page.private_documents.create(title="Borrador secreto", date=date.today(), file="unpublished.pdf")
+        draft = self.page.private_documents.create(
+            title="Borrador secreto", date=date.today(), file="unpublished.pdf"
+        )
         self.page.save_revision()
         self.assertNotContains(self.client.get(self.page.url), "Borrador secreto")
-        self.assertEqual(self.client.get(reverse("club_document_download", args=[self.page.pk, draft.download_key])).status_code, 404)
+        self.assertEqual(
+            self.client.get(
+                reverse(
+                    "club_document_download", args=[self.page.pk, draft.download_key]
+                )
+            ).status_code,
+            404,
+        )
         self.client.post(self.page.url, {"logout": "1"})
         self.assertEqual(self.client.get(self.url).status_code, 302)
 
@@ -70,8 +109,18 @@ class PrivateDocumentsTests(TestCase):
 
     def test_csrf_and_unpublished_page(self):
         client = Client(enforce_csrf_checks=True)
-        self.assertEqual(client.post(self.page.url, {"password": "test-club-password"}).status_code, 403)
+        self.assertEqual(
+            client.post(self.page.url, {"password": "test-club-password"}).status_code,
+            403,
+        )
         self.login()
+        self.assertEqual(
+            client.post(
+                self.url,
+                {"email": "socio@example.com", "confirmed_member": "on"},
+            ).status_code,
+            403,
+        )
         self.page.unpublish()
         self.assertEqual(self.client.get(self.url).status_code, 404)
 
