@@ -56,12 +56,14 @@ INSTALLED_APPS = [
     "ea1rkv.apps.events",
     "ea1rkv.apps.gallery",
     "ea1rkv.apps.members",
+    "ea1rkv.apps.backups",
     "ea1rkv.apps.contact",
     "ea1rkv.apps.search",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "ea1rkv.apps.backups.middleware.RestoreMaintenanceMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -148,6 +150,12 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+
+# Persistent, non-public storage used by the superuser-only backup centre.
+BACKUP_ROOT = Path(os.environ.get("BACKUP_ROOT", BASE_DIR / "backups"))
+BACKUP_MAX_UPLOAD_SIZE = int(
+    os.environ.get("BACKUP_MAX_UPLOAD_SIZE", 4 * 1024 * 1024 * 1024)
+)
 
 # --- Wagtail Settings ---
 

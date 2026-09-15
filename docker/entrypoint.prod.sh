@@ -3,13 +3,13 @@ set -eu
 
 # Initialize mounted volume roots, then permanently drop privileges.
 if [ "$(id -u)" = "0" ]; then
-    mkdir -p /app/media /app/staticfiles /app/privatefiles
-    chown app:app /app/media /app/staticfiles /app/privatefiles
+    mkdir -p /app/media /app/staticfiles /app/privatefiles /app/backups
+    chown app:app /app/media /app/staticfiles /app/privatefiles /app/backups
     exec gosu app:app "$0" "$@"
 fi
 
-if [ ! -w /app/media ] || [ ! -w /app/staticfiles ]; then
-    echo "Media/static volumes must be writable by app." >&2
+if [ ! -w /app/media ] || [ ! -w /app/staticfiles ] || [ ! -w /app/privatefiles ] || [ ! -w /app/backups ]; then
+    echo "Media, static, private and backup volumes must be writable by app." >&2
     exit 1
 fi
 
