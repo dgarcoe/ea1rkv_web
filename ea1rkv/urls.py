@@ -14,8 +14,10 @@ from ea1rkv.apps.base.sitemaps import MultilingualSitemap
 from ea1rkv.apps.base.views import robots_txt
 from ea1rkv.apps.blog.feeds import BlogFeed
 from ea1rkv.apps.search.views import search
+from ea1rkv.apps.members.views import download
 
 urlpatterns = [
+    path("club-files/<int:page_id>/<uuid:document_id>/", download, name="club_document_download"),
     path("admin/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("django-admin/", admin.site.urls),

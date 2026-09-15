@@ -4,6 +4,7 @@ from operator import or_
 from django.db.models import Q
 from wagtail.contrib.sitemaps import Sitemap
 from wagtail.models import Page
+from ea1rkv.apps.members.models import ClubDocumentsPage
 
 
 class MultilingualSitemap(Sitemap):
@@ -17,6 +18,7 @@ class MultilingualSitemap(Sitemap):
         )
         return (
             Page.objects.filter(path_filter)
+            .exclude(pk__in=ClubDocumentsPage.objects.values("pk"))
             .live()
             .public()
             .order_by("path")

@@ -56,7 +56,7 @@ def main_menu(context, parent=None, calling_page=None):
 
     for menuitem in menuitems:
         menuitem.active = (
-            calling_page is not None
+            isinstance(calling_page, Page)
             and calling_page.url_path.startswith(menuitem.url_path)
         )
 

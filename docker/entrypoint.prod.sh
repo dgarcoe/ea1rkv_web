@@ -3,8 +3,8 @@ set -eu
 
 # Initialize mounted volume roots, then permanently drop privileges.
 if [ "$(id -u)" = "0" ]; then
-    mkdir -p /app/media /app/staticfiles
-    chown app:app /app/media /app/staticfiles
+    mkdir -p /app/media /app/staticfiles /app/privatefiles
+    chown app:app /app/media /app/staticfiles /app/privatefiles
     exec gosu app:app "$0" "$@"
 fi
 

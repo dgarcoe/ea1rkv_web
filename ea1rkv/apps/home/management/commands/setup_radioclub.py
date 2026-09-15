@@ -13,6 +13,7 @@ from ea1rkv.apps.events.models import EventIndexPage
 from ea1rkv.apps.club.models import CallsignsPage, ServicesPage
 from ea1rkv.apps.home.default_content import CLUB_DESCRIPTION
 from ea1rkv.apps.home.models import HomePage
+from ea1rkv.apps.members.models import ClubDocumentsPage
 
 
 class Command(BaseCommand):
@@ -80,6 +81,12 @@ class Command(BaseCommand):
             )
             blog.save_revision().publish()
         for model, title, slug, intro in (
+            (
+                ClubDocumentsPage,
+                "Documentación para socios",
+                "documentacion-socios",
+                "<p>Documentación interna del radioclub. Aquí encontrarás actas y otros documentos para socios.</p>",
+            ),
             (
                 EventIndexPage,
                 "Agenda",

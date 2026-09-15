@@ -1,11 +1,15 @@
 """Member models for EA1RKV radioclub members directory."""
 
 from django.db import models
+from django import forms
+import uuid
 
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail.fields import RichTextField
+from .private import PrivateStorage, private_upload
 
 
 class MemberIndexPage(Page):
@@ -28,6 +32,35 @@ class MemberIndexPage(Page):
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
     ]
+
+
+class ClubDocumentsPage(Page):
+    intro = RichTextField("Introducción", blank=True)
+    parent_page_types = ["home.HomePage"]
+    subpage_types = []
+    content_panels = Page.content_panels + [
+        FieldPanel("intro"),
+        InlinePanel("private_documents", label="Documento", heading="Documentación privada"),
+    ]
+    search_fields = []
+
+    class Meta:
+        verbose_name = "Documentación para socios"
+
+    def serve(self, request, *args, **kwargs):
+        from .views import documents_page
+        return documents_page(request, self)
+
+
+class ClubDocument(Orderable):
+    download_key = models.UUIDField(default=uuid.uuid4, editable=False)
+    page = ParentalKey(ClubDocumentsPage, related_name="private_documents", on_delete=models.CASCADE)
+    title = models.CharField("Título", max_length=200)
+    category = models.CharField("Categoría", max_length=100, default="Actas")
+    date = models.DateField("Fecha")
+    description = models.TextField("Descripción", blank=True)
+    file = models.FileField("Archivo privado", storage=PrivateStorage(), upload_to=private_upload)
+    panels = [FieldPanel(name) for name in ("title", "category", "date", "description")] + [FieldPanel("file", widget=forms.FileInput)]
 
 
 class Member(Orderable):

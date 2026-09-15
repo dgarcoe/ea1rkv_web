@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+privatefiles
+media
+staticfiles
+*.sqlite3
+**/__pycache__
+.venv
+venv

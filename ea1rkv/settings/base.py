@@ -119,6 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # --- Internationalization ---
 
 LANGUAGE_CODE = "es"
+CLUB_DOCUMENTS_PASSWORD = os.environ.get("CLUB_DOCUMENTS_PASSWORD", "")
 
 LANGUAGES = [
     ("es", _("Spanish")),

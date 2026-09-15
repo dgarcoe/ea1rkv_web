@@ -91,6 +91,7 @@ class HomePage(Page):
         "events.EventIndexPage",
         "gallery.GalleryIndexPage",
         "members.MemberIndexPage",
+        "members.ClubDocumentsPage",
         "contact.ContactPage",
     ]
 

@@ -40,6 +40,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
+      - private_volume:/app/privatefiles
     env_file:
       - .env
     environment:
@@ -72,6 +73,7 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  private_volume:
 
 networks:
   ea1rfi-network:

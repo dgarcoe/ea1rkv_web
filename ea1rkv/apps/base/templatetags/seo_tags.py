@@ -57,6 +57,8 @@ def seo_meta(context):
         return {"robots": "noindex,follow"}
 
     page = page.specific
+    if page._meta.label_lower == "members.clubdocumentspage":
+        return {"title": "Documentación para socios | EA1RKV", "robots": "noindex,nofollow"}
     is_home = page._meta.label_lower == "home.homepage"
     editorial_title = (page.seo_title or "").strip()
     title = editorial_title or (
