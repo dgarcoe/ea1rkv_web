@@ -31,9 +31,12 @@ Otros contenedores en la red compartida también pueden enviar esta cabecera.
 
 Visita primero una página pública. En el VPS:
 ```bash
-umask 077
-bash scripts/visits-report.sh > visitas.html
+( umask 077; bash scripts/visits-report.sh > visitas.html )
 ```
+
+Si ves «No write permission for directory: .», actualiza la rama antes de
+reintentar. GoAccess utiliza `/tmp` como directorio de trabajo escribible dentro
+del contenedor; el HTML sigue saliendo por stdout hacia `visitas.html`.
 
 Comprueba que termine sin errores y el archivo no esté vacío. Descárgalo por
 SFTP/scp y ábrelo en el navegador. No lo publiques en static/media ni lo

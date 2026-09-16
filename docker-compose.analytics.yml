@@ -13,6 +13,9 @@ services:
     profiles: [analytics]
     build:
       context: ./docker/goaccess
+    # GoAccess checks its current directory for write access even when
+    # --output=html writes the report to stdout.
+    working_dir: /tmp
     network_mode: none
     read_only: true
     tmpfs:
