@@ -65,7 +65,12 @@ function initLibraryFilterPosition() {
         sessionStorage.removeItem(key);
         var position = Number(saved);
         if (Number.isFinite(position)) {
-            window.scrollTo({ top: position, left: 0, behavior: 'auto' });
+            var restore = function () {
+                window.scrollTo({ top: position, left: 0, behavior: 'auto' });
+            };
+            // pageshow runs after the browser's own history/fragment restoration.
+            window.addEventListener('pageshow', function () { setTimeout(restore, 0); }, { once: true });
+            setTimeout(restore, 0);
         }
     }
 }
