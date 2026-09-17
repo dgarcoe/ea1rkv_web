@@ -312,3 +312,42 @@ msgstr "Saturday"
 
 msgid "Domingo"
 msgstr "Sunday"
+
+msgid "Nombre o indicativo"
+msgstr "Name or callsign"
+
+msgid "Comentario"
+msgstr "Comment"
+
+msgid "Acepto que mi nombre o indicativo y mi comentario se publiquen en esta web."
+msgstr "I agree to my name or callsign and comment being published on this website."
+
+msgid "Los comentarios están cerrados."
+msgstr "Comments are closed."
+
+msgid "Espera un minuto antes de enviar otro comentario."
+msgstr "Wait a minute before submitting another comment."
+
+msgid "Comentario recibido. Aparecerá cuando lo apruebe un administrador."
+msgstr "Comment received. It will appear once an administrator approves it."
+
+msgid "Comentarios"
+msgstr "Comments"
+
+msgid "Todavía no hay comentarios publicados."
+msgstr "No comments have been published yet."
+
+msgid "Anteriores"
+msgstr "Previous"
+
+msgid "Siguientes"
+msgstr "Next"
+
+msgid "Deja tu comentario"
+msgstr "Leave a comment"
+
+msgid "Los comentarios se revisan antes de publicarse. No incluyas datos privados."
+msgstr "Comments are reviewed before publication. Do not include private information."
+
+msgid "Enviar comentario"
+msgstr "Submit comment"

@@ -1,0 +1,41 @@
+{% load i18n %}
+<section id="comments" class="mt-5 pt-4 border-top" aria-labelledby="comments-title">
+    <h2 id="comments-title">{% translate "Comentarios" %}</h2>
+    {% for message in messages %}
+        <p role="status" class="alert alert-info">{{ message }}</p>
+    {% endfor %}
+    {% for comment in approved_comments %}
+        <article class="card p-3 mb-3">
+            <h3 class="h6">{{ comment.name }}</h3>
+            <time class="small text-muted" datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d/m/Y H:i" }}</time>
+            <div class="mt-2" style="overflow-wrap:anywhere">{{ comment.text|linebreaksbr }}</div>
+        </article>
+    {% empty %}
+        <p>{% translate "Todavía no hay comentarios publicados." %}</p>
+    {% endfor %}
+    {% if approved_comments.has_previous %}
+        <a href="?comments_page={{ approved_comments.previous_page_number }}#comments">{% translate "Anteriores" %}</a>
+    {% endif %}
+    {% if approved_comments.has_next %}
+        <a href="?comments_page={{ approved_comments.next_page_number }}#comments">{% translate "Siguientes" %}</a>
+    {% endif %}
+    {% if page.comments_enabled %}
+        <h3 class="h4 mt-4">{% translate "Deja tu comentario" %}</h3>
+        <p>{% translate "Los comentarios se revisan antes de publicarse. No incluyas datos privados." %}</p>
+        <form method="post" action="#comments">
+            {% csrf_token %}
+            {{ comment_form.website }}
+            {% for error in comment_form.non_field_errors %}<p role="alert" class="text-danger">{{ error }}</p>{% endfor %}
+            {% for field in comment_form.visible_fields %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">{% translate "Enviar comentario" %}</button>
+        </form>
+    {% else %}
+        <p>{% translate "Los comentarios están cerrados." %}</p>
+    {% endif %}
+</section>

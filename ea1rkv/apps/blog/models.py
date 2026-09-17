@@ -92,6 +92,7 @@ class BlogIndexPage(Page):
 class BlogPage(Page):
     """Individual blog post."""
 
+    comments_enabled = models.BooleanField("Permitir comentarios", default=False)
     date = models.DateField(default=timezone.now, help_text="Post publication date")
     intro = models.TextField(
         max_length=500,
@@ -131,6 +132,7 @@ class BlogPage(Page):
         FieldPanel("header_image"),
         FieldPanel("intro"),
         FieldPanel("content"),
+        FieldPanel("comments_enabled"),
         MultiFieldPanel(
             [
                 FieldPanel("categories"),
@@ -153,3 +155,37 @@ class BlogPage(Page):
         verbose_name = "Blog Post"
         ordering = ["-date"]
 
+
+
+    def get_context(self, request, *args, **kwargs):
+        from .forms import CommentForm
+        context = super().get_context(request, *args, **kwargs)
+        context["comment_form"] = CommentForm()
+        context["approved_comments"] = Paginator(
+            self.blog_comments.filter(status="approved").order_by("created_at", "pk"), 30
+        ).get_page(request.GET.get("comments_page"))
+        return context
+
+    def serve(self, request, *args, **kwargs):
+        from .views import serve_blog
+        return serve_blog(request, self)
+
+
+class BlogComment(models.Model):
+    page = models.ForeignKey(BlogPage, related_name="blog_comments", on_delete=models.CASCADE, verbose_name="Entrada")
+    name = models.CharField("Nombre o indicativo", max_length=100)
+    text = models.TextField("Comentario", max_length=3000)
+    created_at = models.DateTimeField("Fecha", auto_now_add=True)
+    status = models.CharField("Estado", max_length=10, default="pending", choices=[
+        ("pending", "Pendiente"), ("approved", "Aprobado"), ("rejected", "Rechazado")
+    ], db_index=True)
+    panels = [FieldPanel("page", read_only=True), FieldPanel("name", read_only=True),
+              FieldPanel("text", read_only=True), FieldPanel("status")]
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Comentario del blog"
+        verbose_name_plural = "Comentarios del blog"
+
+    def __str__(self):
+        return f"{self.name}: {self.text[:60]}"

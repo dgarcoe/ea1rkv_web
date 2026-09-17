@@ -283,3 +283,42 @@ msgstr "Sábado"
 
 msgid "Domingo"
 msgstr "Domingo"
+
+msgid "Nombre o indicativo"
+msgstr "Nome ou indicativo"
+
+msgid "Comentario"
+msgstr "Comentario"
+
+msgid "Acepto que mi nombre o indicativo y mi comentario se publiquen en esta web."
+msgstr "Acepto que o meu nome ou indicativo e o meu comentario se publiquen nesta web."
+
+msgid "Los comentarios están cerrados."
+msgstr "Os comentarios están pechados."
+
+msgid "Espera un minuto antes de enviar otro comentario."
+msgstr "Agarda un minuto antes de enviar outro comentario."
+
+msgid "Comentario recibido. Aparecerá cuando lo apruebe un administrador."
+msgstr "Comentario recibido. Aparecerá cando o aprobe un administrador."
+
+msgid "Comentarios"
+msgstr "Comentarios"
+
+msgid "Todavía no hay comentarios publicados."
+msgstr "Aínda non hai comentarios publicados."
+
+msgid "Anteriores"
+msgstr "Anteriores"
+
+msgid "Siguientes"
+msgstr "Seguintes"
+
+msgid "Deja tu comentario"
+msgstr "Deixa o teu comentario"
+
+msgid "Los comentarios se revisan antes de publicarse. No incluyas datos privados."
+msgstr "Os comentarios revísanse antes de publicarse. Non inclúas datos privados."
+
+msgid "Enviar comentario"
+msgstr "Enviar comentario"
