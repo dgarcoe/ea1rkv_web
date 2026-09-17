@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     initSmoothScroll();
+    initLibraryFilterPosition();
     initFormValidation();
 });
 
@@ -40,4 +41,31 @@ function initFormValidation() {
             form.classList.add('was-validated');
         });
     });
+}
+
+
+/** Keep the media library in view when a server-side filter reloads the page. */
+function initLibraryFilterPosition() {
+    var key = 'ea1rkv-library-scroll';
+    var library = document.getElementById('biblioteca');
+    var controls = document.querySelectorAll('.library-filters, .library-tabs a');
+    if (!library || !controls.length) return;
+
+    controls.forEach(function (control) {
+        control.addEventListener('submit', function () {
+            sessionStorage.setItem(key, String(library.getBoundingClientRect().top + window.scrollY));
+        });
+        control.addEventListener('click', function () {
+            sessionStorage.setItem(key, String(library.getBoundingClientRect().top + window.scrollY));
+        });
+    });
+
+    var saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+        sessionStorage.removeItem(key);
+        var position = Number(saved);
+        if (Number.isFinite(position)) {
+            window.scrollTo({ top: position, left: 0, behavior: 'auto' });
+        }
+    }
 }

@@ -7,7 +7,7 @@
         <a href="?#biblioteca" class="btn btn-outline-primary">{% translate "Mostrar todo" %} ({{ library_total }})</a>
         {% for value, label, count, query in library_tabs %}<a href="?{{ query }}#biblioteca" class="btn {% if library_type == value %}btn-primary{% else %}btn-outline-primary{% endif %}" {% if library_type == value %}aria-current="true"{% endif %}>{% translate label %} ({{ count }})</a>{% endfor %}
     </nav>
-    <form method="get" action="#biblioteca" class="library-filters card p-3 mb-4">
+    <form method="get" action="#biblioteca" data-library-filter class="library-filters card p-3 mb-4">
         <div class="row g-3 align-items-end">
             <div class="col-md-4">
                 <label for="library-type" class="form-label">{% translate "Tipo de contenido" %}</label>
