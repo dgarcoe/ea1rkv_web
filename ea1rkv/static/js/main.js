@@ -70,7 +70,7 @@ function initLibraryFilterPosition() {
                 var previous = root.style.scrollBehavior;
                 root.style.scrollBehavior = 'auto';
                 window.scrollTo(0, position);
-                requestAnimationFrame(function () { root.style.scrollBehavior = previous; });
+                requestAnimationFrame(function () { root.style.scrollBehavior = previous; root.classList.remove('library-filter-pending'); });
             };
             // pageshow runs after the browser's own history/fragment restoration.
             window.addEventListener('pageshow', function () { setTimeout(restore, 0); }, { once: true });
