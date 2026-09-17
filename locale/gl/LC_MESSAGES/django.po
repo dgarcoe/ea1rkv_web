@@ -322,3 +322,15 @@ msgstr "Os comentarios revísanse antes de publicarse. Non inclúas datos privad
 
 msgid "Enviar comentario"
 msgstr "Enviar comentario"
+
+msgid "Buscar en esta biblioteca"
+msgstr "Buscar nesta biblioteca"
+
+msgid "Enlace a este contenido"
+msgstr "Ligazón a este contido"
+
+msgid "Visor de imágenes"
+msgstr "Visor de imaxes"
+
+msgid "Cerrar"
+msgstr "Pechar"

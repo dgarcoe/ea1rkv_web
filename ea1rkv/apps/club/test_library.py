@@ -86,6 +86,14 @@ class MediaLibraryTests(TestCase):
         self.assertNotContains(response, "autoplay")
         self.assertEqual(response.context["library_count"], 5)
 
+    def test_search_combines_with_filters(self):
+        self.fill_library()
+        response = self.client.get(self.page.url, {"buscar": "FOTOGRAFÍA"})
+        self.assertEqual(response.context["library_count"], 1)
+        self.assertEqual(response.context["library_entries"][0].kind, "image")
+        response = self.client.get(self.page.url, {"buscar": "documento", "tipo": "audio"})
+        self.assertEqual(response.context["library_count"], 0)
+
     def test_each_type_filter_and_combined_group_filter(self):
         self.fill_library()
         for kind, _ in CallsignMedia.TYPES:

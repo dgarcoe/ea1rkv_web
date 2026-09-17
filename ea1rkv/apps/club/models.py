@@ -185,21 +185,26 @@ class SpecialCallsignPage(Page):
         selected_type = request.GET.get("tipo", "")
         if selected_type not in dict(CallsignMedia.TYPES):
             selected_type = ""
+        search = request.GET.get("buscar", "").strip()[:200]
+        from django.utils.html import strip_tags
         selected_group = request.GET.get("grupo", "")
         group_names = list(dict.fromkeys(item.group for item in items if item.group))
         filtered = [item for item in items if
                     (not selected_type or item.kind == selected_type) and
-                    (not selected_group or item.group == selected_group)]
+                    (not selected_group or item.group == selected_group) and
+                    (not search or search.casefold() in (item.title + " " + strip_tags(str(item.description)) + " " + item.credit).casefold())]
         entries = Paginator(filtered, 12).get_page(request.GET.get("biblioteca_pagina"))
         groups = OrderedDict()
         for item in entries:
             groups.setdefault(item.group or _("Material de la actividad"), []).append(item)
         context.update({
+            "library_search": search,
+            "library_tabs": [(value, label, sum(i.kind == value for i in items), urlencode({"tipo": value, "grupo": selected_group, "buscar": search})) for value, label in CallsignMedia.TYPES],
             "library_types": CallsignMedia.TYPES, "library_type": selected_type,
             "library_group": selected_group, "library_group_names": group_names,
             "library_groups": groups.items(), "library_entries": entries,
             "library_total": len(items), "library_count": len(filtered),
-            "library_query": urlencode({"tipo": selected_type, "grupo": selected_group}),
+            "library_query": urlencode({"tipo": selected_type, "grupo": selected_group, **({"buscar": search} if search else {})}),
         })
         return context
 

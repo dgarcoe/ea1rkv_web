@@ -351,3 +351,15 @@ msgstr "Comments are reviewed before publication. Do not include private informa
 
 msgid "Enviar comentario"
 msgstr "Submit comment"
+
+msgid "Buscar en esta biblioteca"
+msgstr "Search this library"
+
+msgid "Enlace a este contenido"
+msgstr "Link to this item"
+
+msgid "Visor de imágenes"
+msgstr "Image viewer"
+
+msgid "Cerrar"
+msgstr "Close"
