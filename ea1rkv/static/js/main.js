@@ -66,7 +66,11 @@ function initLibraryFilterPosition() {
         var position = Number(saved);
         if (Number.isFinite(position)) {
             var restore = function () {
-                window.scrollTo({ top: position, left: 0, behavior: 'auto' });
+                var root = document.documentElement;
+                var previous = root.style.scrollBehavior;
+                root.style.scrollBehavior = 'auto';
+                window.scrollTo(0, position);
+                requestAnimationFrame(function () { root.style.scrollBehavior = previous; });
             };
             // pageshow runs after the browser's own history/fragment restoration.
             window.addEventListener('pageshow', function () { setTimeout(restore, 0); }, { once: true });
