@@ -2,18 +2,27 @@
 
 from django.contrib.syndication.views import Feed
 
-from ea1rkv.apps.blog.models import BlogPage
+from wagtail.models import Site
+
+from ea1rkv.apps.blog.models import BlogIndexPage, BlogPage
 
 
 class BlogFeed(Feed):
     """RSS feed for the latest blog posts."""
 
     title = "EA1RKV - Vigo Val Miñor Radioclub"
-    link = "/blog/"
-    description = "Latest news and articles from EA1RKV Radioclub"
+    description = "Noticias y artículos del radioclub EA1RKV"
 
-    def items(self):
-        return BlogPage.objects.live().order_by("-date")[:20]
+    def get_object(self, request):
+        return Site.find_for_request(request)
+
+    def link(self, site):
+        blog = BlogIndexPage.objects.child_of(site.root_page).live().public().first()
+        return blog.full_url if blog else site.root_page.full_url
+
+    def items(self, site):
+        return (BlogPage.objects.descendant_of(site.root_page).live().public()
+                .order_by("-date", "-pk")[:20])
 
     def item_title(self, item):
         return item.title
@@ -26,3 +35,4 @@ class BlogFeed(Feed):
 
     def item_link(self, item):
         return item.full_url
+

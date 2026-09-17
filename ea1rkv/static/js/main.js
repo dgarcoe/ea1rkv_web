@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     initSmoothScroll();
+    initLibraryFilterPosition();
     initFormValidation();
 });
 
@@ -40,4 +41,40 @@ function initFormValidation() {
             form.classList.add('was-validated');
         });
     });
+}
+
+
+/** Keep the media library in view when a server-side filter reloads the page. */
+function initLibraryFilterPosition() {
+    var key = 'ea1rkv-library-scroll';
+    var library = document.getElementById('biblioteca');
+    var controls = document.querySelectorAll('.library-filters, .library-tabs a');
+    if (!library || !controls.length) return;
+
+    controls.forEach(function (control) {
+        control.addEventListener('submit', function () {
+            sessionStorage.setItem(key, String(library.getBoundingClientRect().top + window.scrollY));
+        });
+        control.addEventListener('click', function () {
+            sessionStorage.setItem(key, String(library.getBoundingClientRect().top + window.scrollY));
+        });
+    });
+
+    var saved = sessionStorage.getItem(key);
+    if (saved !== null) {
+        sessionStorage.removeItem(key);
+        var position = Number(saved);
+        if (Number.isFinite(position)) {
+            var restore = function () {
+                var root = document.documentElement;
+                var previous = root.style.scrollBehavior;
+                root.style.scrollBehavior = 'auto';
+                window.scrollTo(0, position);
+                requestAnimationFrame(function () { root.style.scrollBehavior = previous; root.classList.remove('library-filter-pending'); });
+            };
+            // pageshow runs after the browser's own history/fragment restoration.
+            window.addEventListener('pageshow', function () { setTimeout(restore, 0); }, { once: true });
+            setTimeout(restore, 0);
+        }
+    }
 }

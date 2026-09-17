@@ -18,6 +18,7 @@ env/
 db.sqlite3
 staticfiles/
 media/
+backups/
 *.log
 
 # Environment
@@ -53,3 +54,4 @@ node_modules/
 
 # Locale compiled files
 *.mo
+privatefiles/

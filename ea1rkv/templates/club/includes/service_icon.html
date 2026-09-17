@@ -1,0 +1,22 @@
+{% comment %}Decorative service icons drawn locally; no font or CDN dependency.{% endcomment %}
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{% if icon == "qsl" %}
+  <rect x="2" y="4" width="20" height="16" rx="2"/>
+  <circle cx="7" cy="10" r="2"/>
+  <path d="M4 16c0-3 6-3 6 0m3-7h6m-6 4h6m-6 4h4"/>
+{% elif icon == "aprs" %}
+  <path d="m2 6 6-3 8 3 6-3v15l-6 3-8-3-6 3Zm6-3v15m8-12v15"/>
+{% elif icon == "echolink" %}
+  <path d="m9 15 6-6m-5-3 2-2a5 5 0 0 1 7 7l-3 3m-2 4-2 2a5 5 0 0 1-7-7l3-3"/>
+{% elif icon == "remote" %}
+  <rect x="2" y="3" width="20" height="14" rx="2"/>
+  <path d="M8 21h8m-4-4v4m-6-9 3-3-3-3m6 7h5"/>
+{% elif icon == "training" %}
+  <path d="m2 8 10-5 10 5-10 5Zm4 2v7c4 3 8 3 12 0v-7m4-2v9"/>
+{% elif icon == "contest" %}
+  <path d="M7 3h10v6a5 5 0 0 1-10 0Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4m-5 2v6m-5 1h10"/>
+{% else %}
+  <circle cx="12" cy="9" r="2"/>
+  <path d="m12 11-5 10m5-10 5 10m-8-4h6M8 5a6 6 0 0 0 0 8m8-8a6 6 0 0 1 0 8M5 2a10 10 0 0 0 0 14M19 2a10 10 0 0 1 0 14"/>
+{% endif %}
+</svg>

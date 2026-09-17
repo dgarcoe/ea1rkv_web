@@ -1,16 +1,17 @@
-{% load static wagtailcore_tags i18n wagtail_settings_tags %}
+{% load static wagtailcore_tags i18n wagtailsettings_tags navigation_tags %}
 
 {% get_settings use_default_site=True %}
+{% get_site_root as site_root %}
 
-<footer class="bg-dark text-light py-5 mt-5">
+<footer class="bg-dark text-light py-5">
     <div class="container">
         <div class="row">
             {# Club Info #}
             <div class="col-lg-4 mb-4 mb-lg-0">
                 <h5 class="text-uppercase mb-3">EA1RKV</h5>
-                <p class="mb-1">Vigo Val Miñor Radioclub</p>
+                <p class="mb-1">{{ settings.base.RadioclubSettings.club_name }}</p>
                 {% if settings.base.RadioclubSettings.address %}
-                    <p class="small text-secondary">{{ settings.base.RadioclubSettings.address }}</p>
+                    <p class="small text-light">{{ settings.base.RadioclubSettings.address }}</p>
                 {% endif %}
                 {% if settings.base.RadioclubSettings.email %}
                     <p class="mb-1">
@@ -21,7 +22,7 @@
                     </p>
                 {% endif %}
                 {% if settings.base.RadioclubSettings.locator %}
-                    <p class="small text-secondary">
+                    <p class="small text-light">
                         <i class="bi bi-geo-alt me-1"></i>
                         {% trans "Grid Locator" %}: {{ settings.base.RadioclubSettings.locator }}
                     </p>
@@ -30,20 +31,17 @@
 
             {# Quick Links #}
             <div class="col-lg-4 mb-4 mb-lg-0">
-                <h5 class="text-uppercase mb-3">{% trans "Quick Links" %}</h5>
+                <h5 class="text-uppercase mb-3">Explora</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-1"><a href="/blog/" class="text-secondary text-decoration-none">{% trans "News" %}</a></li>
-                    <li class="mb-1"><a href="/events/" class="text-secondary text-decoration-none">{% trans "Events" %}</a></li>
-                    <li class="mb-1"><a href="/gallery/" class="text-secondary text-decoration-none">{% trans "Gallery" %}</a></li>
-                    <li class="mb-1"><a href="/members/" class="text-secondary text-decoration-none">{% trans "Members" %}</a></li>
-                    <li class="mb-1"><a href="/contact/" class="text-secondary text-decoration-none">{% trans "Contact" %}</a></li>
-                    <li class="mb-1"><a href="/feed/" class="text-secondary text-decoration-none"><i class="bi bi-rss me-1"></i>RSS Feed</a></li>
+                    <li class="mb-2"><a href="{% pageurl site_root %}" class="text-light">Inicio</a></li>
+                    {% for item in site_root.get_children.live.public.in_menu %}<li class="mb-2"><a href="{% pageurl item %}" class="text-light">{{ item.title }}</a></li>{% endfor %}
+                    <li class="mb-2"><a href="{% url 'blog_feed' %}" class="text-light">RSS del blog</a></li>
                 </ul>
             </div>
 
             {# Social Media #}
             <div class="col-lg-4">
-                <h5 class="text-uppercase mb-3">{% trans "Follow Us" %}</h5>
+                <h5 class="text-uppercase mb-3">En la red</h5>
                 <div class="d-flex gap-3 fs-4">
                     {% if settings.base.SocialMediaSettings.facebook %}
                         <a href="{{ settings.base.SocialMediaSettings.facebook }}" class="text-light" target="_blank" rel="noopener" aria-label="Facebook">
@@ -78,15 +76,16 @@
 
         <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-                <p class="small text-secondary mb-0">
-                    &copy; {% now "Y" %} EA1RKV - Vigo Val Miñor Radioclub. {% trans "All rights reserved." %}
+                <p class="small text-light mb-0">
+                    &copy; {% now "Y" %} EA1RKV - {{ settings.base.RadioclubSettings.club_name }}. Todos los derechos reservados.
                 </p>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <p class="small text-secondary mb-0">
-                    {% trans "Powered by" %} <a href="https://wagtail.org" class="text-secondary" target="_blank" rel="noopener">Wagtail</a>
+                <p class="small text-light mb-0">
+                    {% trans "Powered by" %} <a href="https://wagtail.org" class="text-light" target="_blank" rel="noopener">Wagtail</a>
                 </p>
             </div>
         </div>
     </div>
 </footer>
+

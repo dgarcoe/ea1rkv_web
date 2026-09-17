@@ -109,3 +109,115 @@ footer a:hover {
         padding: 1rem 0;
     }
 }
+
+
+/* Primera versión: inicio y blog. */
+:root { --ea1rkv-primary: #164b68; --ea1rkv-dark: #102735; --ea1rkv-accent: #a44213; }
+body { font-size: 1rem; line-height: 1.65; color: #203440; }
+h1, h2 { font-family: Georgia, 'Times New Roman', serif; line-height: 1.15; }
+h1 { font-size: clamp(2.25rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+a, p, h1, h2, h3 { overflow-wrap: anywhere; }
+a { text-underline-offset: .2em; }
+a:focus-visible, button:focus-visible { outline: 3px solid #b34a15; outline-offset: 5px; }
+.skip-link { position: absolute; top: -6rem; left: 1rem; z-index: 10000; background: white; padding: 1rem; }
+.skip-link:focus { top: 1rem; }
+.club-header { border-bottom: 1px solid #dce4e8; background: white; }
+.club-brand { display: flex; flex-direction: column; text-decoration: none; color: #102735; }
+.club-brand strong { font: 700 1.65rem ui-monospace, monospace; letter-spacing: .06em; }
+.club-brand span { font-size: .875rem; }
+.club-menu { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.club-menu a, .club-header .nav-link { color: #203440; text-decoration: none; padding-block: .5rem; display: inline-block; }
+.club-header [aria-current] { border-bottom: 2px solid #a44213; font-weight: 700; }
+.club-hero { background: #102735; color: #fff; padding: clamp(3rem, 7vw, 6rem) 0; border-bottom: .5rem solid #e8b45c; }
+.club-hero-layout { display: flex; align-items: center; gap: 3rem; }
+.club-hero-layout > div { flex: 1; min-width: 0; }
+.club-hero-layout figure { flex: 1; min-width: 0; }
+.club-hero h1 { font-family: ui-monospace, monospace; font-weight: 700; font-size: clamp(3rem, 10vw, 7rem); letter-spacing: -.04em; }
+.eyebrow { font: 600 .875rem ui-monospace, monospace; letter-spacing: .12em; margin-bottom: 1.25rem; }
+.club-hero .eyebrow { color: #f0c982; }
+.club-subtitle { font-size: clamp(1.35rem, 2.6vw, 2rem); line-height: 1.4; max-width: 38rem; }
+.btn-club { background: #e8b45c; color: #102735; font-weight: 700; padding: .75rem 1.25rem; }
+.btn-club:hover { background: #f0c982; color: #102735; }
+.club-photo { width: 100%; height: auto; border-radius: .25rem; }
+.club-section { padding-block: clamp(3rem, 6vw, 5rem); }
+.club-intro { font-size: 1.125rem; }
+.club-news { background: #edf3f6; }
+.post-card { border: 1px solid #dae4e9; box-shadow: none; border-radius: .25rem; overflow: hidden; }
+.post-card h3 a { color: #102735; text-decoration: none; }
+.post-card h3 a:hover { text-decoration: underline; }
+.post-meta { font-size: .875rem; color: #526572; }
+.blog-heading { max-width: 48rem; margin-bottom: 2.5rem; }
+.empty-blog { border-top: 1px solid #c6d4dc; padding-block: 2rem; margin: 0; }
+.article-body { font-size: 1.125rem; line-height: 1.85; }
+.article-body iframe { max-width: 100%; }
+footer.bg-dark { background: #102735 !important; }
+footer a:hover { color: #f0c982 !important; }
+.btn-primary { background: #164b68; border-color: #164b68; }
+.btn-outline-primary { color: #164b68; border-color: #164b68; }
+.btn-outline-primary:hover { background: #164b68; border-color: #164b68; }
+@media (max-width: 767px) { .club-hero-layout { flex-direction: column; align-items: stretch; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+
+/* Editable full-width photo header; the dark layer preserves text contrast. */
+.club-hero { position: relative; isolation: isolate; overflow: hidden; }
+.club-hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.club-hero-with-image::before { content: ""; position: absolute; inset: 0; background: rgba(9, 25, 35, .72); z-index: -1; }
+.club-hero-layout { position: relative; }
+.club-photo-credit { position: relative; font-size: .875rem; margin-top: 2rem; color: #fff; }
+.club-intro img, .article-body img { max-width: 100%; height: auto; }
+.club-intro .richtext-image.left, .article-body .richtext-image.left { float: left; margin: 0 1.5rem 1rem 0; }
+.club-intro .richtext-image.right, .article-body .richtext-image.right { float: right; margin: 0 0 1rem 1.5rem; }
+.club-intro, .article-body { display: flow-root; }
+.rich-text table { border-collapse: collapse; max-width: 100%; display: block; overflow-x: auto; margin: 1.5rem 0; }
+.rich-text td, .rich-text th { border: 1px solid #cbd5e1; padding: .65rem .9rem; }
+.rich-text th { background: #f1f5f9; }
+.callsign-library { scroll-margin-top: 6rem; }
+.callsign-cover { display: block; width: 100%; height: auto; }
+.library-description { overflow-wrap: anywhere; }
+.library-description > :last-child { margin-bottom: 0; }
+.library-image { width: 100%; height: auto; max-height: 32rem; object-fit: contain; background: #f1f5f9; }
+.library-item video { max-height: 32rem; background: #101b2b; }
+@media (max-width: 600px) { .richtext-image.left, .richtext-image.right { float: none !important; margin: 1rem 0 !important; } }
+
+/* Keep decorative slides layered while hidden so opacity can cross-fade.
+   Override Bootstrap's [hidden] display rule only for these backgrounds. */
+.club-hero .hero-slide {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 1200ms ease-in-out;
+}
+.club-hero .hero-slide[hidden] {
+    display: block !important;
+    opacity: 0;
+}
+.club-hero .hero-slide .club-hero-image {
+    z-index: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+    .club-hero .hero-slide {
+        transition: none;
+    }
+}
+
+/* Compact language links, above the main navigation without overlap. */
+.club-header { position: relative; padding-top: 2rem; }
+.club-language-corner { position: absolute; top: .25rem; right: .75rem; }
+.club-language-flags { display: flex; gap: .125rem; }
+.club-language-flag { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 28px; border-radius: 3px; }
+.club-language-flag svg { border: 1px solid #cbd5e1; border-radius: 2px; }
+.club-language-flag[aria-current] { background: #e2edf3; }
+.club-language-flag[aria-disabled] { opacity: .35; }
+
+.services-page .frequency-table { min-width: 760px; }
+.frequency-table th { background: #102735; color: #fff; white-space: nowrap; }
+.frequency-value { font-weight: 700; color: #164b68; white-space: nowrap; }
+.service-card { border: 1px solid #dae4e9; border-radius: .5rem; padding: 1.5rem; background: #fff; box-shadow: 0 .25rem 1rem rgba(16,39,53,.06); }
+.service-card h3 { margin-top: .75rem; font-size: 1.35rem; }
+.service-icon { width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-items: center; background: #12bfe3; color: #fff; font-weight: 700; text-transform: uppercase; }
+.service-remote { margin-top: 1rem; padding: .75rem 1rem; background: #edf3f6; border-left: 3px solid #12bfe3; }
+.service-remote dt { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+.service-remote dd { margin: .25rem 0 0; overflow-wrap: anywhere; }

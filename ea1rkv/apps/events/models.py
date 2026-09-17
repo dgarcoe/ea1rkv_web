@@ -2,9 +2,13 @@
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from datetime import date
+import calendar
 
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel
-from wagtail.fields import StreamField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
 from wagtail.search import index
 
@@ -14,12 +18,17 @@ from ea1rkv.apps.base.blocks import BODY_BLOCKS
 class EventType(models.TextChoices):
     """Types of radioclub events."""
 
-    CONTEST = "contest", "Contest"
-    FIELD_DAY = "field_day", "Field Day"
-    MEETING = "meeting", "Meeting"
-    WORKSHOP = "workshop", "Workshop"
-    SOCIAL = "social", "Social Event"
-    OTHER = "other", "Other"
+    CONTEST = "contest", _("Concurso")
+    FIELD_DAY = "field_day", _("Actividad al aire libre")
+    MEETING = "meeting", _("Reunión")
+    WORKSHOP = "workshop", _("Taller")
+    SOCIAL = "social", _("Encuentro social")
+    OTHER = "other", _("Otra actividad")
+
+
+class Recurrence(models.TextChoices):
+    NONE = "none", _("No se repite")
+    MONTHLY_NTH = "monthly_nth", _("Mensual: día de la semana")
 
 
 class EventIndexPage(Page):
@@ -31,36 +40,19 @@ class EventIndexPage(Page):
         FieldPanel("intro"),
     ]
 
-    max_count = 1
+    max_count_per_parent = 1
     parent_page_types = ["home.HomePage"]
     subpage_types = ["events.EventPage"]
 
     class Meta:
-        verbose_name = "Events Index"
+        verbose_name = "Agenda"
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
 
-        show_past = request.GET.get("past", "").lower() == "true"
-        events = EventPage.objects.child_of(self).live()
+        from .calendar import agenda_context
 
-        if show_past:
-            events = events.filter(
-                start_date__lt=timezone.now().date()
-            ).order_by("-start_date")
-        else:
-            events = events.filter(
-                start_date__gte=timezone.now().date()
-            ).order_by("start_date")
-
-        # Filter by event type
-        event_type = request.GET.get("type")
-        if event_type and event_type in EventType.values:
-            events = events.filter(event_type=event_type)
-
-        context["events"] = events
-        context["show_past"] = show_past
-        context["event_types"] = EventType.choices
+        context.update(agenda_context(self, request))
         return context
 
 
@@ -80,6 +72,16 @@ class EventPage(Page):
     )
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
+    recurrence = models.CharField(max_length=20, choices=Recurrence.choices, default=Recurrence.NONE)
+    recurrence_week = models.PositiveSmallIntegerField(
+        choices=[(1, _("primero")), (2, _("segundo")), (3, _("tercero")), (4, _("cuarto")), (5, _("último"))],
+        default=1,
+    )
+    recurrence_weekday = models.PositiveSmallIntegerField(
+        choices=[(0, _("lunes")), (1, _("martes")), (2, _("miércoles")), (3, _("jueves")), (4, _("viernes")), (5, _("sábado")), (6, _("domingo"))],
+        default=4,
+    )
+    recurrence_until = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=300, blank=True)
     locator = models.CharField(
         max_length=10,
@@ -101,6 +103,7 @@ class EventPage(Page):
         help_text="Brief event description for listings",
     )
     body = StreamField(BODY_BLOCKS, use_json_field=True, blank=True)
+    content = RichTextField("Descripción", blank=True)
     header_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -117,31 +120,36 @@ class EventPage(Page):
                 FieldPanel("end_date"),
                 FieldPanel("start_time"),
                 FieldPanel("end_time"),
+                FieldPanel("recurrence"),
+                FieldPanel("recurrence_week"),
+                FieldPanel("recurrence_weekday"),
+                FieldPanel("recurrence_until"),
             ],
-            heading="Date & Time",
+            heading="Fechas y horario (hora local de Vigo)",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("location"),
                 FieldPanel("locator"),
             ],
-            heading="Location",
+            heading="Lugar",
         ),
         MultiFieldPanel(
             [
                 FieldPanel("frequency"),
                 FieldPanel("mode"),
             ],
-            heading="Radio Details",
+            heading="Datos de radio",
         ),
         FieldPanel("header_image"),
         FieldPanel("intro"),
-        FieldPanel("body"),
+        FieldPanel("content"),
     ]
 
     search_fields = Page.search_fields + [
         index.SearchField("intro"),
         index.SearchField("body"),
+        index.SearchField("content"),
         index.SearchField("location"),
     ]
 
@@ -149,12 +157,23 @@ class EventPage(Page):
     subpage_types = []
 
     class Meta:
-        verbose_name = "Event"
+        verbose_name = "Actividad"
         ordering = ["-start_date"]
 
     @property
     def is_past(self):
-        return self.start_date < timezone.now().date()
+        return (self.end_date or self.start_date) < timezone.localdate()
+
+    def clean(self):
+        super().clean()
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValidationError({"end_date": "La fecha final debe ser igual o posterior a la inicial."})
+        if (self.start_time and self.end_time
+                and (not self.end_date or self.end_date == self.start_date)
+                and self.end_time <= self.start_time):
+            raise ValidationError({"end_time": "La hora final debe ser posterior a la inicial; para actividades nocturnas indica la fecha final."})
+        if self.recurrence != Recurrence.NONE and self.recurrence_until and self.recurrence_until < self.start_date:
+            raise ValidationError({"recurrence_until": "La repetición debe terminar después de la fecha inicial."})
 
     @property
     def is_multiday(self):

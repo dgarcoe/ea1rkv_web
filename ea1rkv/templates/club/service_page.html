@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% block breadcrumbs %}{% breadcrumbs page %}{% endblock %}
+{% block content %}
+<article class="container club-section">
+    <header class="blog-heading"><p class="eyebrow">{{ page.get_kind_display }}</p><h1>{{ page.title }}</h1>{% if page.summary %}<p class="lead">{{ page.summary }}</p>{% endif %}</header>
+    <div class="row g-5"><div class="col-lg-8">
+        {% if page.photo %}<figure>{% image page.photo width-1000 class="img-fluid rounded" %}</figure>{% endif %}
+        <div class="article-body">{{ page.content|richtext }}</div>
+    </div><div class="col-lg-4">
+        {% if page.technical_details %}<h2 class="h4">Datos técnicos</h2><dl>
+        {% for label, value in page.technical_details %}<dt class="mt-3">{{ label }}</dt><dd>{{ value }}</dd>{% endfor %}
+        </dl>{% endif %}
+    </div></div>
+    <p class="mt-5"><a href="{% pageurl page.get_parent %}">Volver a servicios</a></p>
+</article>
+{% endblock %}
