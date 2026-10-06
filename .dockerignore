@@ -8,3 +8,5 @@ staticfiles
 **/__pycache__
 .venv
 venv
+
+eg1912t-export*/

@@ -260,6 +260,7 @@ def youtube_video_id(url):
 
 
 class CallsignMedia(Orderable):
+    source_key = models.CharField(max_length=200, blank=True, editable=False)
     TYPES = [("document", gettext_noop("Documentos")), ("image", gettext_noop("Imágenes")), ("video", gettext_noop("Vídeos")),
              ("audio", gettext_noop("Audio")), ("youtube", gettext_noop("YouTube"))]
     VIDEO_EXTENSIONS = {"mp4", "webm", "m4v"}
