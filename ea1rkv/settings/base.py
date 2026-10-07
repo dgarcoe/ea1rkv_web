@@ -159,6 +159,12 @@ BACKUP_MAX_UPLOAD_SIZE = int(
 
 # --- Wagtail Settings ---
 
+# Wagtail inline libraries submit multiple fields per media item.
+# Keep a finite limit while allowing large imported libraries to be saved.
+DATA_UPLOAD_MAX_NUMBER_FIELDS = int(
+    os.environ.get("DJANGO_DATA_UPLOAD_MAX_NUMBER_FIELDS", "10000")
+)
+
 WAGTAIL_SITE_NAME = "EA1RKV - Vigo Val Miñor Radioclub"
 
 WAGTAILADMIN_BASE_URL = os.environ.get("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
