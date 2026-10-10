@@ -1,5 +1,7 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+{% load static wagtailcore_tags wagtailimages_tags navigation_tags i18n %}
+
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/agenda.css' %}">{% endblock %}
 
 {% block body_class %}events-index{% endblock %}
 
@@ -15,21 +17,41 @@
         <p class="lead text-muted mb-4">{{ self.intro }}</p>
     {% endif %}
 
+    <section aria-label="{% trans 'Calendario' %}" class="mb-5">
+        <nav class="d-flex justify-content-between align-items-center gap-3 mb-3" aria-label="{% trans 'Calendario' %}">
+            <a class="btn btn-outline-primary" href="?month={{ previous_month }}&amp;type={{ selected_type }}">{% trans "Anterior" %}</a>
+            <h2 class="h4 mb-0">{{ calendar_month|date:"F Y" }}</h2>
+            <a class="btn btn-outline-primary" href="?month={{ next_month }}&amp;type={{ selected_type }}">{% trans "Siguiente" %}</a>
+        </nav>
+        <div class="agenda-scroll" tabindex="0" role="region" aria-label="{% trans 'Calendario' %}">
+            <table class="agenda-calendar">
+                <caption>{% trans "Actividades e indicativos especiales" %}</caption>
+                <thead><tr>{% for day in weekdays %}<th scope="col">{{ day }}</th>{% endfor %}</tr></thead>
+                <tbody>{% for week in calendar_weeks %}<tr>{% for day in week %}
+                    <td class="{% if not day.current %}agenda-outside{% endif %} {% if day.today %}agenda-today{% endif %}">
+                        <time datetime="{{ day.date|date:'Y-m-d' }}">{{ day.date|date:"j" }}</time>
+                        {% for item in day.items %}<a class="agenda-entry {% if item.event_type == 'callsign' %}agenda-callsign{% endif %}" href="{% pageurl item %}">{{ item.callsign|default:item.title }}</a>{% endfor %}
+                    </td>
+                {% endfor %}</tr>{% endfor %}</tbody>
+            </table>
+        </div>
+    </section>
+
     {# Toggle past/upcoming #}
     <div class="mb-4 d-flex gap-2 flex-wrap">
         <a href="{% pageurl self %}"
            class="btn btn-sm {% if not show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            {% trans "Upcoming" %}
+            {% trans "Próximas actividades" %}
         </a>
         <a href="{% pageurl self %}?past=true"
            class="btn btn-sm {% if show_past %}btn-primary{% else %}btn-outline-primary{% endif %}">
-            {% trans "Past Events" %}
+            {% trans "Actividades anteriores" %}
         </a>
 
         <span class="border-start mx-2"></span>
 
         {% for value, label in event_types %}
-            <a href="{% pageurl self %}?{% if show_past %}past=true&{% endif %}type={{ value }}"
+            <a href="{% pageurl self %}?month={{ calendar_month|date:'Y-m' }}&amp;{% if show_past %}past=true&amp;{% endif %}type={{ value }}"
                class="btn btn-sm {% if request.GET.type == value %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
                 {{ label }}
             </a>
@@ -48,11 +70,12 @@
                             <div class="small text-uppercase">{{ event.start_date|date:"M Y" }}</div>
                         </div>
                         <div>
-                            <span class="badge bg-secondary mb-1">{{ event.get_event_type_display }}</span>
-                            <h5 class="mb-1">
+                            <span class="badge bg-secondary mb-1">{% if event.agenda_label %}{{ event.agenda_label }}{% else %}{{ event.get_event_type_display }}{% endif %}</span>
+                            <h2 class="h5 mb-1">
                                 <a href="{% pageurl event %}" class="text-decoration-none text-dark">{{ event.title }}</a>
-                            </h5>
-                            <p class="mb-2 small">{{ event.intro|truncatewords:25 }}</p>
+                            </h2>
+                            <p class="mb-2 small">{% if event.event_type == 'callsign' %}{{ event.summary }}{% else %}{{ event.intro|truncatewords:25 }}{% endif %}</p>
+                            {% if event.end_date %}<p class="small">{{ event.start_date|date:"SHORT_DATE_FORMAT" }} – {{ event.end_date|date:"SHORT_DATE_FORMAT" }}</p>{% endif %}
                             <div class="small text-muted">
                                 {% if event.location %}
                                     <span class="me-3"><i class="bi bi-geo-alt me-1"></i>{{ event.location }}</span>
@@ -76,9 +99,9 @@
         <div class="col-12">
             <p class="text-muted text-center py-5">
                 {% if show_past %}
-                    {% trans "No past events found." %}
+                    {% trans "Todavía no hay actividades anteriores." %}
                 {% else %}
-                    {% trans "No upcoming events." %}
+                    {% trans "Próximamente anunciaremos nuevas actividades." %}
                 {% endif %}
             </p>
         </div>

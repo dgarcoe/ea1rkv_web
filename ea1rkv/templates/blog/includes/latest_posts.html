@@ -5,7 +5,7 @@
     <div class="row g-0">
         {% if post.header_image %}
         <div class="col-4">
-            {% image post.header_image fill-200x150 class="img-fluid rounded-start" %}
+            {% image post.header_image width-400 class="img-fluid rounded-start latest-post-image" %}
         </div>
         {% endif %}
         <div class="{% if post.header_image %}col-8{% else %}col-12{% endif %}">

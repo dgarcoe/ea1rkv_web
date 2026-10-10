@@ -1,0 +1,19 @@
+{% if title %}<title>{{ title }}</title>{% endif %}
+{% if description %}<meta name="description" content="{{ description }}">{% endif %}
+<meta name="robots" content="{{ robots }}">
+{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
+{% for alternate in alternates %}<link rel="alternate" hreflang="{{ alternate.language }}" href="{{ alternate.url }}">{% endfor %}
+{% if default_url %}<link rel="alternate" hreflang="x-default" href="{{ default_url }}">{% endif %}
+{% if google_site_verification %}<meta name="google-site-verification" content="{{ google_site_verification }}">{% endif %}
+{% if title %}<meta property="og:type" content="{% if is_article %}article{% else %}website{% endif %}">
+<meta property="og:site_name" content="EA1RKV">
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="{{ og_locale }}">
+<meta name="twitter:card" content="{% if image %}summary_large_image{% else %}summary{% endif %}">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if image %}<meta property="og:image" content="{{ image }}">
+<meta name="twitter:image" content="{{ image }}">{% endif %}
+<script type="application/ld+json">{{ structured_data }}</script>{% endif %}

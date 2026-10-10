@@ -1,0 +1,53 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags %}
+
+{% block titletag %}Copias de seguridad{% endblock %}
+
+{% block content %}
+    {% include "wagtailadmin/shared/header.html" with title="Copias de seguridad" icon="download" %}
+    <div class="nice-padding">
+        <p>Cada archivo contiene la base de datos, las imágenes, los documentos públicos y la documentación privada. Guárdalo en un lugar seguro.</p>
+
+        <form action="{% url 'admin_backups:create' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="button button-longrunning" data-clicked-text="Creando copia…">
+                <span class="icon icon-download" aria-hidden="true"></span>
+                Crear copia completa
+            </button>
+        </form>
+
+        <h2>Copias conservadas en el servidor</h2>
+        {% if backups %}
+            <table class="listing">
+                <thead><tr><th>Archivo</th><th>Fecha UTC</th><th>Tamaño</th><th></th></tr></thead>
+                <tbody>
+                    {% for backup in backups %}
+                        <tr>
+                            <td>{{ backup.name }}</td>
+                            <td>{{ backup.modified|date:"Y-m-d H:i:s" }}</td>
+                            <td>{{ backup.size|filesizeformat }}</td>
+                            <td><a class="button button-small" href="{% url 'admin_backups:download' backup.name %}">Descargar</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Todavía no hay copias guardadas.</p>
+        {% endif %}
+
+        <hr>
+        <h2>Restaurar una copia</h2>
+        <div class="help-block help-warning">
+            <p><strong>Atención:</strong> reemplazará la base de datos y todos los archivos actuales. Antes de hacerlo se creará automáticamente una copia de seguridad del estado existente.</p>
+        </div>
+        <form action="{% url 'admin_backups:restore' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul class="fields">
+                {% for field in restore_form %}
+                    {% include "wagtailadmin/shared/field.html" with field=field %}
+                {% endfor %}
+            </ul>
+            <button type="submit" class="button button-secondary button-longrunning" data-clicked-text="Restaurando…">Restaurar copia</button>
+        </form>
+    </div>
+{% endblock %}

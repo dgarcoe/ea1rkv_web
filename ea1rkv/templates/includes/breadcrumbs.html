@@ -1,11 +1,11 @@
 {% load wagtailcore_tags %}
 
 {% if ancestors %}
-<nav aria-label="breadcrumb" class="bg-light">
+<nav aria-label="Ruta de navegación" class="bg-light">
     <div class="container">
         <ol class="breadcrumb py-2 mb-0 small">
             <li class="breadcrumb-item">
-                <a href="/"><i class="bi bi-house"></i></a>
+                <a href="/">Inicio</a>
             </li>
             {% for ancestor in ancestors %}
                 {% if forloop.last %}
@@ -20,3 +20,4 @@
     </div>
 </nav>
 {% endif %}
+

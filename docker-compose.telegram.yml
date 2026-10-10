@@ -1,0 +1,22 @@
+# Overlay for docker-compose.prod.external.yml (include analytics too if enabled).
+services:
+  telegram:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.prod
+    entrypoint: ["python", "manage.py", "telegram_worker", "--loop"]
+    user: app
+    env_file:
+      - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: ea1rkv.settings.production
+    volumes:
+      - media_volume:/app/media
+    depends_on:
+      web:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      disable: true
+    networks:
+      - ea1rfi-network

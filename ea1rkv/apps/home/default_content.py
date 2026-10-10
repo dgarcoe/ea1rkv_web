@@ -1,0 +1,3 @@
+"""Initial editorial copy; stored in Wagtail and freely editable after setup."""
+
+CLUB_DESCRIPTION = '<p>Somos la Unión de Radioafeccionados de Vigo-Val Miñor, con indicativo <b>EA1RKV</b>. Un punto de encuentro para quienes compartimos la curiosidad por las ondas, la comunicación y la experimentación con la radio.</p><p>Queremos acercar la radioafición a nuestro entorno y crear un espacio para aprender, intercambiar conocimientos y compartir experiencias. Tanto si llevas años en las ondas como si estás empezando a descubrir este mundo, aquí tienes un lugar para conocerlo mejor.</p><p>En esta web encontrarás la presentación del radioclub y nuestro blog, donde compartiremos noticias, experiencias y artículos sobre radioafición desde Vigo y Val Miñor.</p>'

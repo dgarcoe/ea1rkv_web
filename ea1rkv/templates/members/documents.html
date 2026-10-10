@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% block content %}
+<section class="container py-5">
+<h1>{{ page.title }}</h1>
+{% if authorized %}
+{{ private_intro|richtext }}
+<form method="post">{% csrf_token %}<button name="logout" class="btn btn-outline-secondary" value="1">Cerrar acceso</button></form>
+{% regroup documents|dictsort:"category" by category as categories %}
+{% for category in categories %}
+<h2 class="mt-4">{{ category.grouper }}</h2>
+{% for document in category.list %}
+<article class="card p-3 mb-3"><h3 class="h5">{{ document.title }}</h3>
+<p>{{ document.date }} · {{ document.description|linebreaksbr }}</p>
+<a href="{% url 'club_document_download' page.pk document.download_key %}">Descargar documento</a></article>
+{% endfor %}
+{% empty %}<p class="mt-4">Todavía no hay documentos disponibles.</p>{% endfor %}
+{% else %}
+<p>Introduce la contraseña facilitada por el radioclub para consultar la documentación.</p>
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}
+<form method="post">{% csrf_token %}<label for="club-password">Contraseña</label>
+<input id="club-password" name="password" type="password" autocomplete="current-password" required class="form-control mb-3">
+<button class="btn btn-primary">Acceder</button></form>
+{% endif %}
+</section>
+{% endblock %}

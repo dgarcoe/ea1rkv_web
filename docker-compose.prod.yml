@@ -31,6 +31,8 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
+      - private_volume:/app/privatefiles
+      - backup_volume:/app/backups
     env_file:
       - .env
     environment:
@@ -51,7 +53,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
@@ -59,3 +62,5 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  private_volume:
+  backup_volume:

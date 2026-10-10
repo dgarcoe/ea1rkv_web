@@ -1,0 +1,11 @@
+<nav class="club-language-flags" aria-label="Galego / Español / English">
+{% for option in options %}
+    {% if option.url %}
+    <a class="club-language-flag" href="{{ option.url }}" lang="{{ option.code }}" hreflang="{{ option.code }}" aria-label="{{ option.label }}" title="{{ option.label }}" {% if option.active %}aria-current="true"{% endif %}>
+    {% else %}
+    <span class="club-language-flag" lang="{{ option.code }}" aria-label="{{ option.label }}" title="{{ option.label }}" aria-disabled="true">
+    {% endif %}
+        {% include "includes/language_flag.html" with code=option.code %}
+    {% if option.url %}</a>{% else %}</span>{% endif %}
+{% endfor %}
+</nav>
