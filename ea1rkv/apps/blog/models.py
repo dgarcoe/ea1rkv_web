@@ -92,6 +92,11 @@ class BlogIndexPage(Page):
 class BlogPage(Page):
     """Individual blog post."""
 
+    announce_telegram = models.BooleanField(
+        "Anunciar en Telegram", default=False,
+        help_text="Sólo en la primera publicación en español. Las actualizaciones no generan anuncios.",
+    )
+
     comments_enabled = models.BooleanField("Permitir comentarios", default=False)
     date = models.DateField(default=timezone.now, help_text="Post publication date")
     intro = models.TextField(
@@ -133,6 +138,7 @@ class BlogPage(Page):
         FieldPanel("intro"),
         FieldPanel("content"),
         FieldPanel("comments_enabled"),
+        FieldPanel("announce_telegram"),
         MultiFieldPanel(
             [
                 FieldPanel("categories"),
@@ -169,6 +175,18 @@ class BlogPage(Page):
     def serve(self, request, *args, **kwargs):
         from .views import serve_blog
         return serve_blog(request, self)
+
+
+class TelegramDelivery(models.Model):
+    page = models.OneToOneField(BlogPage, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20, default="pending", db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    next_attempt = models.DateTimeField(default=timezone.now)
+    attempts = models.PositiveIntegerField(default=0)
+    message_id = models.BigIntegerField(null=True, blank=True)
+    error = models.CharField(max_length=200, blank=True)
+    chat_id = models.CharField(max_length=200)
 
 
 class BlogComment(models.Model):

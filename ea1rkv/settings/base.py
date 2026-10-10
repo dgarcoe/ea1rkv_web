@@ -208,6 +208,11 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Telegram is opt-in; credentials never belong in source control.
+TELEGRAM_ENABLED = os.environ.get("TELEGRAM_ENABLED", "False").lower() == "true"
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+
 # --- Email ---
 
 EMAIL_BACKEND = os.environ.get(
